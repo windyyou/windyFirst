@@ -1,0 +1,79 @@
+@import "components/side-nav";
+@import "components/TopNav/top-nav";
+@import "components/TopNav/message-dropdown";
+@import "components/TopNav/task-dropdown";
+@import "components/TopNav/profile-dropdown";
+@import "components/Dashboard/timeline";
+@import "components/Dashboard/aggregation-info-panel";
+@import "components/Dashboard/billing-trends-panel";
+@import "components/Dashboard/quota-panel";
+
+@import "components/Instance/related-resources";
+@import "components/Instance/snapshots";
+@import "components/Instance/monitor";
+@import "components/Instance/new";
+
+html, body {
+  height: 100%;
+  padding-top: 25px;
+}
+
+.main-content {
+  position: inherit;
+  margin: 0 0 0 250px;
+  padding: 10px 0;
+  min-width: 750px;
+}
+
+.panel {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.anticon-6x {
+  font-size: 6em;
+}
+
+.font-huge {
+  font-size: 3.5em;
+  font-weight: bold;
+}
+
+.panel-heading > .action-button {
+  margin-top: -5px;
+}
+
+.table-view {
+  padding: 0 15px;
+}
+.table-view .table-actions button {
+  margin-right: 5px;
+}
+
+.table-view .table {
+  padding-top: 10px;
+}
+
+.tab-view {
+  padding: 0 15px;
+}
+
+.basic-info label {
+  text-align: right;
+}
+
+a.delete {
+  color: #E01515;
+}
+
+a.delete:hover {
+  color: tint(#E01515, 20%);
+}
+
+a.add {
+  color: #60BE29;
+}
+
+a.add:hover {
+  color: tint(#60BE29, 20%);
+}

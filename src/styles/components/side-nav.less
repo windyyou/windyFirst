@@ -1,0 +1,30 @@
+.sidebar {
+  border-right: 1px solid #e7e7e7;
+  background-color: #333;
+
+  @media (min-width: 768px) {
+    z-index: 1;
+    position: fixed;
+    width: 250px;
+    /*noinspection CssInvalidPropertyValue*/
+    height: calc(~"100% - 50px");
+    overflow-y: auto;
+  }
+}
+
+.sidebar .ant-menu-dark,
+.sidebar .ant-menu-dark .ant-menu-sub {
+  color: #e7e7e7;
+}
+
+.sidebar .ant-menu-dark .ant-menu-submenu > .ant-menu-submenu-title {
+  font-size: 14px;
+}
+
+.sidebar .ant-menu-inline, .ant-menu-vertical {
+  border-right: none;
+}
+
+.sidebar .ant-menu-light .ant-menu-item {
+  border-bottom: 1px solid #e7e7e7;
+}

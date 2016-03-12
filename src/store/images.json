@@ -1,0 +1,10 @@
+[
+  { "name": "CentOS 6.4 64bit", "size": "20GB", "datetime": "2016-03-03 04:27:21", "status": "可用" },
+  { "name": "CentOS 6.5 32bit", "size": "20GB", "datetime": "2016-03-03 03:27:21", "status": "可用" },
+  { "name": "CentOS 6.5 64bit", "size": "20GB", "datetime": "2016-03-02 04:27:21", "status": "可用" },
+  { "name": "CentOS 7.0 32bit", "size": "20GB", "datetime": "2016-03-02 04:27:21", "status": "可用" },
+  { "name": "CentOS 7.0 64bit", "size": "20GB", "datetime": "2016-03-02 04:27:21", "status": "可用" },
+  { "name": "Ubuntu 12.04 64bit", "size": "20GB", "datetime": "2016-03-02 04:27:21", "status": "可用" },
+  { "name": "Ubuntu 14.04 64bit", "size": "20GB", "datetime": "2016-03-02 04:27:21", "status": "可用" },
+  { "name": "Windows Server 2008 R2 Enterprise 64bit (cn)", "size": "20GB", "datetime": "2016-03-02 04:27:21", "status": "可用" }
+]

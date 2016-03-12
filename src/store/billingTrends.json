@@ -1,0 +1,9 @@
+[
+  { "name": "1", "instance": 4000, "storage": 2400, "network": 2400 },
+  { "name": "2", "instance": 3000, "storage": 1398, "network": 2210 },
+  { "name": "3", "instance": 2000, "storage": 9800, "network": 2290 },
+  { "name": "4", "instance": 2780, "storage": 3908, "network": 2000 },
+  { "name": "5", "instance": 1890, "storage": 4800, "network": 2181 },
+  { "name": "6", "instance": 2390, "storage": 3800, "network": 2500 },
+  { "name": "7", "instance": 3490, "storage": 4300, "network": 2100 }
+]
