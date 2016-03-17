@@ -4,11 +4,16 @@ import './styles/customize.less';
 
 import React from 'react';
 import { render } from 'react-dom';
-import { Router, browserHistory } from 'react-router';
+import { browserHistory } from 'react-router';
+import { syncHistoryWithStore } from 'react-router-redux';
 
-import routes from './routes/routes';
+import Root from './containers/Root';
+import configureStore from './store/configureStore';
+
+const store = configureStore();
+const history = syncHistoryWithStore(browserHistory, store);
 
 render(
-  <Router history={browserHistory} routes={routes} />,
+  <Root store={store} history={history} />,
   document.getElementById('root')
 );

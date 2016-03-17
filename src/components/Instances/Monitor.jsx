@@ -6,12 +6,12 @@ import Col from 'antd/lib/col';
 
 import MonitorChart from './MonitorChart';
 
-import cpu from '../../store/cpuMonitor.json';
-import memory from '../../store/memoryMonitor.json';
-import diskRead from '../../store/diskReadMonitor.json';
-import diskWrite from '../../store/diskWriteMonitor.json';
-import netIn from '../../store/networkInMonitor.json';
-import netOut from '../../store/networkOutMonitor.json';
+import cpu from '../../api/mock/cpuMonitor.json';
+import memory from '../../api/mock/memoryMonitor.json';
+import diskRead from '../../api/mock/diskReadMonitor.json';
+import diskWrite from '../../api/mock/diskWriteMonitor.json';
+import netIn from '../../api/mock/networkInMonitor.json';
+import netOut from '../../api/mock/networkOutMonitor.json';
 
 const Button = Radio.Button;
 const Group = Radio.Group;

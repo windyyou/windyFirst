@@ -5,7 +5,7 @@ import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import Icon from 'antd/lib/icon';
 
-import snapshots from '../../store/snapshots.json';
+import snapshots from '../../api/mock/snapshots.json';
 
 export default class Snapshots extends React.Component {
   render() {

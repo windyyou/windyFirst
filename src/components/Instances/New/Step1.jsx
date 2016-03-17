@@ -5,8 +5,8 @@ import Radio from 'antd/lib/radio';
 
 import FormButtonArea from './FormButtonArea';
 
-import images from '../../../store/images.json';
-import snapshots from '../../../store/snapshots.json';
+import images from '../../../api/mock/images.json';
+import snapshots from '../../../api/mock/snapshots.json';
 
 import startsWith from 'lodash/startsWith';
 import isEqual from 'lodash/isEqual';
@@ -35,7 +35,6 @@ class Step1 extends React.Component {
   };
 
   handleSystemChange = (e) => {
-    console.log(e.target.name, e.target.value);
     this.setState({
       ...this.state,
       [e.target.name]: e.target.value,

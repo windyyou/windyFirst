@@ -7,7 +7,7 @@ import InputNumber from 'antd/lib/input-number';
 
 import FormButtonArea from './FormButtonArea';
 
-import keyPairs from '../../../store/keyPairs.json';
+import keyPairs from '../../../api/mock/keyPairs.json';
 
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;

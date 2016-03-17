@@ -41,7 +41,6 @@ export default class NewInstance extends React.Component {
   }
 
   handleSpecChange = (e) => {
-    console.log(e.target.name, e.target.value);
     this.setState({
       ...this.state,
       spec: {

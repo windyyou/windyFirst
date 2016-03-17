@@ -6,9 +6,9 @@ import Select from 'antd/lib/select';
 
 import FormButtonArea from './FormButtonArea';
 
-import cpus from '../../../store/cpus.json';
-import memorys from '../../../store/memorys.json';
-import networks from '../../../store/networks.json';
+import cpus from '../../../api/mock/cpus.json';
+import memorys from '../../../api/mock/memorys.json';
+import networks from '../../../api/mock/networks.json';
 
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
