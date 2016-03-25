@@ -1,0 +1,5 @@
+[
+  { "ago": "3分钟前", "name": "snapshot1", "size": "20GB", "datetime": "2016-03-03 04:27:21", "status": "可用" },
+  { "ago": "1小时前", "name": "snapshot2", "size": "20GB", "datetime": "2016-03-03 03:27:21", "status": "可用" },
+  { "ago": "1天前", "name": "snapshot3", "size": "20GB", "datetime": "2016-03-02 04:27:21", "status": "可用" }
+]

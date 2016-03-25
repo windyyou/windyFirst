@@ -11,8 +11,8 @@
     "prebuild": "npm run clean",
     "clean": "rimraf dist coverage **/*.log",
     "dev": "cross-env NODE_ENV=development node devServer.js",
-    "lint": "jscs . & eslint .",
-    "lint:fix": "jscs --fix . & eslint --fix ."
+    "lint": "jscs . & eslint . --ext \"js,jsx\"",
+    "lint:fix": "jscs --fix . & eslint --fix . --ext \"js,jsx\""
   },
   "author": "BetaRabbit",
   "license": "MIT",

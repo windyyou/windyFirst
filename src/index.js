@@ -1,5 +1,4 @@
 import './styles/base.less';
-import 'antd/style/index.less';
 import './styles/customize.less';
 
 import React from 'react';

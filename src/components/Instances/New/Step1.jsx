@@ -46,10 +46,10 @@ class Step1 extends React.Component {
     images.map((image) => {
       let re = /^(\w+)\s+\w+/ig;
       let name = re.exec(image.name)[1];
-      systems = uniqWith([...systems, { name: name, value: name }], isEqual);//去重
+      systems = uniqWith([...systems, { name: name, value: name }], isEqual);// 去重
     });
     return systems;
-  };
+  }
 
   render() {
     const { spec } = this.props;
@@ -68,7 +68,7 @@ class Step1 extends React.Component {
       initialValue: spec.name,
     });
 
-    /*根据已选系统类型筛选系统镜像*/
+    /* 根据已选系统类型筛选系统镜像*/
     const systemType = this.state.systemType;
     const systems = this.filterImageSystem(images);
     const imageData = spec.imageType == 'image' ?
@@ -78,9 +78,9 @@ class Step1 extends React.Component {
       <Radio key={image.name} value={image.name} name="image">
         <div className="image-option">{image.name}</div>
       </Radio>);
-    /*系统选择控件*/
+    /* 系统选择控件*/
     const sysOp =
-      <FormItem
+      (<FormItem
         {...formItemLayout}
         label="系统:"
       >
@@ -100,9 +100,9 @@ class Step1 extends React.Component {
             </RadioButton>
           )}
         </RadioGroup>
-      </FormItem>;
+      </FormItem>);
 
-    /*是否显示系统选择控件*/
+    /* 是否显示系统选择控件*/
     const sysOpItem = spec.imageType == 'image' ? sysOp : null;
 
     return (
@@ -135,7 +135,7 @@ class Step1 extends React.Component {
             </RadioGroup>
           </FormItem>
 
-          {/*系统选择控件*//*系统选择控件*/}
+          {/* 系统选择控件*//* 系统选择控件*/}
           {sysOpItem}
 
           <FormItem
@@ -153,7 +153,7 @@ class Step1 extends React.Component {
           </FormItem>
         </div>
 
-        <FormButtonArea {...this.props} handleSubmit={this.handleSubmit}/>
+        <FormButtonArea {...this.props} handleSubmit={this.handleSubmit} />
       </Form>
     );
   }

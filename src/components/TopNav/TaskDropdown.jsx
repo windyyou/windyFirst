@@ -23,7 +23,7 @@ export default class TaskDropdown extends React.Component {
           <li>
             <a href="#" className="text-center">
               <strong>更多任务</strong>
-              <Icon type="right"/>
+              <Icon type="right" />
             </a>
           </li>
         </ul>
@@ -38,7 +38,7 @@ export default class TaskDropdown extends React.Component {
           overlay={ this.getContent() }
           trigger={ ['click'] }
         >
-          <a href="#"><Icon type="bars"/> 任务</a>
+          <a href="#"><Icon type="bars" /> 任务</a>
         </Dropdown>
       </li>
     );

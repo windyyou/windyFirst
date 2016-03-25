@@ -49,9 +49,9 @@ class Step2 extends React.Component {
       label="子网:"
     >
       <Select value={spec.subnet}
-              style={{ width: 200 }}
-              showSearch={false}
-              onChange={this.handleNetworkChange}>
+        style={{ width: 200 }}
+        showSearch={false}
+        onChange={this.handleNetworkChange}>
         {networks.map((net, i) => <OptGroup key={i} label={net.name}>
           {net.subnet.map((sub, j) => <Option key={j} value={sub}>{sub}</Option>)}
         </OptGroup>)}
@@ -96,7 +96,7 @@ class Step2 extends React.Component {
           <FormItem
             {...formItemLayout}
             label="网络:"
-            extra={<span>私有网络可在云主机创建完成后单独设置。<a href='#'>了解更多</a></span>}
+            extra={<span>私有网络可在云主机创建完成后单独设置。<a href="#">了解更多</a></span>}
           >
             <RadioGroup
               name="networkType"
@@ -111,7 +111,7 @@ class Step2 extends React.Component {
           {spec.networkType == 'private' ? this.networkField(spec, formItemLayout) : null}
         </div>
 
-        <FormButtonArea {...this.props} handleSubmit={this.handleSubmit}/>
+        <FormButtonArea {...this.props} handleSubmit={this.handleSubmit} />
       </Form>
     );
   }

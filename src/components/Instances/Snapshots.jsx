@@ -33,7 +33,7 @@ export default class Snapshots extends React.Component {
             <Col span="4">
               <Icon style={{ color: '#60BE29' }} type="check-circle" /> {snapshot.status}
             </Col>
-            <Col span="1"><a className="delete" href="#"><Icon type="minus-circle-o"/></a></Col>
+            <Col span="1"><a className="delete" href="#"><Icon type="minus-circle-o" /></a></Col>
           </Row>)}
         </div>
       </div>

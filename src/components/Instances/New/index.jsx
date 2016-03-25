@@ -87,7 +87,7 @@ export default class NewInstance extends React.Component {
         <div className="steps">
           <Steps current={this.state.current - 1}>
             {steps.map((step, i) =>
-              <Step title={step.title} description={step.description} key={i}/>
+              <Step title={step.title} description={step.description} key={i} />
             )}
           </Steps>
         </div>
@@ -105,7 +105,7 @@ export default class NewInstance extends React.Component {
               })}
           </Col>
           <Col span="8" offset="2">
-            <Preview spec={this.state.spec}/>
+            <Preview spec={this.state.spec} />
           </Col>
         </Row>
       </div>

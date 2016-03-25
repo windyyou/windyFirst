@@ -4,7 +4,7 @@ import { Route, IndexRoute } from 'react-router';
 import { scrollToLeftTop } from '../utils/domUtils';
 
 import Instances from '../components/Instances';
-import List from '../components/Instances/List';
+import List from '../containers/Instances/List';
 import Detail from '../components/Instances/Detail';
 import New from '../components/Instances/New';
 import Step1 from '../components/Instances/New/Step1';

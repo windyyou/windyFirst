@@ -81,9 +81,9 @@ class Step3 extends React.Component {
       label="密钥:"
     >
       <Select value={spec.keyPair}
-              style={{ width: 200 }}
-              showSearch={false}
-              onChange={this.handleKeyPairChange}>
+        style={{ width: 200 }}
+        showSearch={false}
+        onChange={this.handleKeyPairChange}>
         {keyPairs.map((key, i) => <Option key={i} value={key.name}>{key.name}</Option>)}
       </Select>
     </FormItem>
@@ -103,7 +103,7 @@ class Step3 extends React.Component {
             {...formItemLayout}
             label="用户名:"
           >
-            <Input defaultValue={spec.username} disabled={true}/>
+            <Input defaultValue={spec.username} disabled />
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -135,7 +135,7 @@ class Step3 extends React.Component {
           </FormItem>
         </div>
 
-        <FormButtonArea {...this.props} handleSubmit={this.handleSubmit}/>
+        <FormButtonArea {...this.props} handleSubmit={this.handleSubmit} />
       </Form>
     );
   }

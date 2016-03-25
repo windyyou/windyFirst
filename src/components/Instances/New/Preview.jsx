@@ -35,7 +35,7 @@ export default class Preview extends React.Component {
             </tr>
             </tbody>
           </table>
-          <hr/>
+          <hr />
           <div className="price">
             <label>总价格:</label>
             <span className="quantity">{spec.quantity}</span> X <span className="unit">

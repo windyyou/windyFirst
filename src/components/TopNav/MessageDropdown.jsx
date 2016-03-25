@@ -40,7 +40,7 @@ export default class MessageDropdown extends React.Component {
           trigger={['click']}
         >
           <a href="#">
-            <Icon type="message"/> <Badge dot={true}>消息</Badge>
+            <Icon type="message" /> <Badge dot>消息</Badge>
           </a>
         </Dropdown>
       </li>

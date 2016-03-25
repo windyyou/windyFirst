@@ -11,7 +11,7 @@ export default class AggregationInfoPanel extends React.Component {
         <div className="panel-heading">
           <Row type="flex">
             <Col span="6">
-              <Icon type={this.props.iconType} className="anticon-6x"/>
+              <Icon type={this.props.iconType} className="anticon-6x" />
             </Col>
             <Col span="18" className="text-right">
               <div >{this.props.title}</div>

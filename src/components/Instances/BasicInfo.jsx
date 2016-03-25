@@ -4,7 +4,7 @@ import Col from 'antd/lib/col';
 import Icon from 'antd/lib/icon';
 
 export default class BasicInfo extends React.Component {
-  render () {
+  render() {
     return (
       <div className="basic-info">
         <Row>
@@ -27,7 +27,7 @@ export default class BasicInfo extends React.Component {
           </Col>
           <Col span="10">
             <span className="content">
-              <Icon style={{ color: '#FAC450' }} type="minus-circle"/> shutdown
+              <Icon style={{ color: '#FAC450' }} type="minus-circle" /> shutdown
             </span>
           </Col>
           <Col span="2">

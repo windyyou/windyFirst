@@ -1,0 +1,4 @@
+[
+  {"name": "private1", "subnet": ["sub1", "sub2"]},
+  {"name": "private2", "subnet": ["sub3", "sub4"]}
+]

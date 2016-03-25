@@ -12,7 +12,7 @@ module.exports = {
       'webpack-hot-middleware/client?reload=true',
       './index.js',
     ],
-    vendors: ['react'],
+    vendors: ['react', 'react-dom', 'redux', 'react-redux', 'react-router', 'react-router-redux'],
   },
 
   output: {

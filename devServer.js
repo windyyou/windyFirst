@@ -12,6 +12,11 @@ const compiler = webpack(config);
 
 app.use('/api', jsonServer.router('./src/api/mock/db.json'));
 
+// Allow HTML5 mode routing, MUST be last.
+app.use(historyApiFallback({
+  verbose: false,
+}));
+
 app.use(webpackDevMiddle(compiler, {
   publicPath: config.output.publicPath,
   stats: {
@@ -25,11 +30,6 @@ app.use(webpackDevMiddle(compiler, {
 }));
 
 app.use(webpackHotMiddleware(compiler));
-
-// Allow HTML5 mode routing, MUST be last.
-app.use(historyApiFallback({
-  verbose: false,
-}));
 
 app.listen(PORT, (err) => {
   if (err) {

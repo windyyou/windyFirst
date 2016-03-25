@@ -6,20 +6,14 @@ import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 
 export default class QuotaPanel extends React.Component {
-  render() {
-    const { data } = this.props;
-    return (
-      <div className="panel panel-default quota-panel">
-        <div className="panel-heading">
-          <Icon type="book"/> 资源配额
-          <Button type="ghost" className="pull-right action-button">申请配额</Button>
-        </div>
-        <div className="panel-body">
-          <Row>
-            {Object.keys(data).map((key, i) => <div key={i}>
-              <label>{key}</label>
-              <Row className="quota-group">
-                {data[key].map((d, j) => <Col key={j} span="12">
+  renderQuota(entities) {
+    if (entities.length) {
+      return (
+        <Row>
+          {entities.map(({ quotaType, data }, i) => <div key={i}>
+            <label>{quotaType}</label>
+            <Row className="quota-group">
+              {data.map((d, j) => <Col key={j} span="12">
                   <div className="quota-progress">
                     <div>
                       {`${d.type}(${d.unit})`}
@@ -32,11 +26,57 @@ export default class QuotaPanel extends React.Component {
                     />
                   </div>
                 </Col>)}
-              </Row>
-            </div>)}
-          </Row>
+            </Row>
+          </div>)}
+        </Row>
+      );
+    } else {
+      return <span>没有配额</span>;
+    }
+  }
+
+  renderFetching() {
+    return (
+      <span>loading...</span>
+    );
+  }
+
+  renderError(error) {
+    return (
+      <span>{error.message}</span>
+    );
+  }
+
+  render() {
+    const quota = this.props.data;
+    return (
+      <div className="panel panel-default quota-panel">
+        <div className="panel-heading">
+          <Icon type="book" /> 资源配额
+          <Button type="ghost" className="pull-right action-button">申请配额</Button>
+        </div>
+        <div className="panel-body">
+          {quota.isFetching ? this.renderFetching() : quota.error ?
+            this.renderError(quota.error) : this.renderQuota(quota.entities)}
         </div>
       </div>
     );
   }
 }
+
+QuotaPanel.propTypes = {
+  data: React.PropTypes.shape({
+    isFetching: React.PropTypes.bool.isRequired,
+    error: React.PropTypes.object,
+    entities: React.PropTypes.arrayOf(React.PropTypes.shape({
+      quotaType:React.PropTypes.string.isRequired,
+      data:React.PropTypes.arrayOf(React.PropTypes.shape({
+        type: React.PropTypes.string.isRequired,
+        unit: React.PropTypes.string.isRequired,
+        used: React.PropTypes.number.isRequired,
+        total: React.PropTypes.number.isRequired,
+      })
+    ),
+    })),
+  }).isRequired,
+};

@@ -14,12 +14,12 @@ export default class TopNav extends React.Component {
       <header>
         <nav className="navbar navbar-default navbar-fixed-top">
           <div className="navbar-header">
-            <a href="/" className="navbar-brand"><Icon type="cloud-o"/> 云海私有云</a>
+            <a href="/" className="navbar-brand"><Icon type="cloud-o" /> 云海私有云</a>
           </div>
           <span className="region">
-            <Select defaultValue='区域-1'
-                    style={{ width: 100 }}
-                    showSearch={false}
+            <Select defaultValue="区域-1"
+              style={{ width: 100 }}
+              showSearch={false}
             >
               <Option value={1}>区域-1</Option>
               <Option value={2}>区域-2</Option>
