@@ -30,9 +30,9 @@ export default class QuotaPanel extends React.Component {
           </div>)}
         </Row>
       );
-    } else {
-      return <span>没有配额</span>;
     }
+
+    return <span>没有配额</span>;
   }
 
   renderFetching() {
@@ -49,6 +49,8 @@ export default class QuotaPanel extends React.Component {
 
   render() {
     const quota = this.props.data;
+    const quotas = quota.error ? this.renderError(quota.error) : this.renderQuota(quota.entities);
+
     return (
       <div className="panel panel-default quota-panel">
         <div className="panel-heading">
@@ -56,8 +58,7 @@ export default class QuotaPanel extends React.Component {
           <Button type="ghost" className="pull-right action-button">申请配额</Button>
         </div>
         <div className="panel-body">
-          {quota.isFetching ? this.renderFetching() : quota.error ?
-            this.renderError(quota.error) : this.renderQuota(quota.entities)}
+          {quota.isFetching ? this.renderFetching() : quotas}
         </div>
       </div>
     );
@@ -69,8 +70,8 @@ QuotaPanel.propTypes = {
     isFetching: React.PropTypes.bool.isRequired,
     error: React.PropTypes.object,
     entities: React.PropTypes.arrayOf(React.PropTypes.shape({
-      quotaType:React.PropTypes.string.isRequired,
-      data:React.PropTypes.arrayOf(React.PropTypes.shape({
+      quotaType: React.PropTypes.string.isRequired,
+      data: React.PropTypes.arrayOf(React.PropTypes.shape({
         type: React.PropTypes.string.isRequired,
         unit: React.PropTypes.string.isRequired,
         used: React.PropTypes.number.isRequired,

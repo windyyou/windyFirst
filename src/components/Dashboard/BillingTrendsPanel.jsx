@@ -60,6 +60,8 @@ export default class BillingTrendsPanel extends React.Component {
           </ResponsiveContainer>
       );
     }
+
+    return null;
   }
 
   renderFetching() {

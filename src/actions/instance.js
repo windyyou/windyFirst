@@ -29,7 +29,7 @@ export function filterInstances(filter) {
   };
 }
 
-export function fetchInstanceByKey(key) {
+export function fetchInstance(id) {
   return (dispatch) => dispatch({
     types: [
       FETCH_INSTANCE_REQUEST,
@@ -37,7 +37,7 @@ export function fetchInstanceByKey(key) {
       FETCH_INSTANCE_FAILURE,
     ],
     payload: {
-      promise: instanceAPI.fetchInstances(params),
+      promise: instanceAPI.fetchInstance(id),
     },
   });
 }

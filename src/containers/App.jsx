@@ -1,5 +1,5 @@
 import React from 'react';
-import TopNav from '../components/TopNav';
+import TopNav from '../containers/TopNav';
 import SideNav from '../components/SideNav';
 
 export default function App(props) {

@@ -4,7 +4,8 @@ import Col from 'antd/lib/col';
 import Icon from 'antd/lib/icon';
 
 export default class BasicInfo extends React.Component {
-  render() {
+
+  renderBasicInfo() {
     return (
       <div className="basic-info">
         <Row>
@@ -12,13 +13,13 @@ export default class BasicInfo extends React.Component {
             <label>名称</label>
           </Col>
           <Col span="10">
-            <span className="content">laboris</span>
+            <span className="content">{this.props.instance.currentInstance.name}</span>
           </Col>
           <Col span="2">
             <label>内网IP</label>
           </Col>
           <Col span="10">
-            <span className="content">28.254.168.179</span>
+            <span className="content">{this.props.instance.currentInstance.ip}</span>
           </Col>
         </Row>
         <Row>
@@ -26,15 +27,16 @@ export default class BasicInfo extends React.Component {
             <label>状态</label>
           </Col>
           <Col span="10">
-            <span className="content">
-              <Icon style={{ color: '#FAC450' }} type="minus-circle" /> shutdown
-            </span>
+          <span className="content">
+            <Icon className={this.props.instance.currentInstance.status} type="minus-circle" />
+            {this.props.instance.currentInstance.status}
+          </span>
           </Col>
           <Col span="2">
             <label>公网IP</label>
           </Col>
           <Col span="10">
-            <span className="content">62.143.237.212</span>
+            <span className="content">{this.props.instance.currentInstance.floatingIp}</span>
           </Col>
         </Row>
         <Row>
@@ -42,13 +44,17 @@ export default class BasicInfo extends React.Component {
             <label>配置</label>
           </Col>
           <Col span="10">
-            <span className="content">ea</span>
+            <span className="content">{this.props.instance.currentInstance.type}</span>
           </Col>
           <Col span="2">
             <label>镜像</label>
           </Col>
           <Col span="10">
-            <span className="content"><a href="#">do</a></span>
+            <span className="content">
+              <a href="#">
+                {this.props.instance.currentInstance.image}
+              </a>
+            </span>
           </Col>
         </Row>
         <Row>
@@ -56,10 +62,52 @@ export default class BasicInfo extends React.Component {
             <label>创建时间</label>
           </Col>
           <Col span="10">
-            <span className="content">Sunday, February 28, 2016 6:35 PM</span>
+            <span className="content">{this.props.instance.currentInstance.createdAt}</span>
           </Col>
         </Row>
       </div>
     );
   }
+
+  renderFetching() {
+    return (
+      <span>loading...</span>
+    );
+  }
+
+  renderError(error) {
+    return (
+      <span>{error.message}</span>
+    );
+  }
+
+  render() {
+    const basic = this.props.instance;
+
+    const basicInfo = basic.error ?
+      this.renderError(basic.error) :
+      this.renderBasicInfo();
+
+    return (
+      <div className="basic-info">
+        {this.props.instance.isFetching ? this.renderFetching() : basicInfo}
+      </div>
+    );
+  }
 }
+
+BasicInfo.propTypes = {
+  instance: React.PropTypes.shape({
+    isFetching: React.PropTypes.bool.isRequired,
+    error: React.PropTypes.object,
+    currentInstance: React.PropTypes.shape({
+      createdAt: React.PropTypes.string.isRequired,
+      type: React.PropTypes.string.isRequired,
+      floatingIp: React.PropTypes.string.isRequired,
+      ip: React.PropTypes.string.isRequired,
+      image: React.PropTypes.string.isRequired,
+      status: React.PropTypes.string.isRequired,
+      name: React.PropTypes.string.isRequired,
+    }),
+  }).isRequired,
+};

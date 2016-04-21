@@ -10,7 +10,22 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 const compiler = webpack(config);
 
-app.use('/api', jsonServer.router('./src/api/mock/db.json'));
+const router = jsonServer.router('./src/api/mock/db.json');
+app.use(jsonServer.rewriter({
+  '/api/monitors/instance/:id/cpu': '/api/instanceCpuMonitor',
+  '/api/monitors/instance/:id/memory': '/api/instanceMemoryMonitor',
+  '/api/monitors/instance/:id/disk-write': '/api/instanceDiskWriteMonitor',
+  '/api/monitors/instance/:id/disk-read': '/api/instanceDiskReadMonitor',
+  '/api/monitors/instance/:id/network-in': '/api/instanceNetworkInMonitor',
+  '/api/monitors/instance/:id/network-out': '/api/instanceNetworkOutMonitor',
+  '/api/floating-ips': '/api/floatingIps',
+  '/api/virtual-nics': '/api/virtualNics',
+  '/api/subnets/count': '/api/subnetsCount',
+  '/api/bare-metals': '/api/bareMetals',
+  '/api/security-groups': '/api/securityGroups',
+  '/api/notification-lists': '/api/notificationLists',
+}));
+app.use('/api', router);
 
 // Allow HTML5 mode routing, MUST be last.
 app.use(historyApiFallback({

@@ -5,10 +5,41 @@ import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import Icon from 'antd/lib/icon';
 
-import snapshots from '../../api/mock/snapshots.json';
-
 export default class Snapshots extends React.Component {
+  renderSnapshots() {
+    return (
+      <div>
+        {this.props.instance.currentInstance.snapshots.map((snapshot, i) => <Row key={i}>
+          <Col span="4">{snapshot.ago}</Col>
+          <Col span="5"><Link to="#">{snapshot.name}</Link></Col>
+          <Col span="4">{snapshot.size}</Col>
+          <Col span="6">{snapshot.timestamp}</Col>
+          <Col span="4">
+            <Icon style={{ color: '#60BE29' }} type="check-circle" /> {snapshot.status}
+          </Col>
+          <Col span="1"><a className="delete" href="#"><Icon type="minus-circle-o" /></a></Col>
+        </Row>)}
+      </div>
+    );
+  }
+
+  renderFetching() {
+    return (
+      <span>loading...</span>
+    );
+  }
+
+  renderError(error) {
+    return (
+      <span>{error.message}</span>
+    );
+  }
+
   render() {
+    const snapshots = this.props.instance.error ?
+      this.renderError(this.props.instance.error) :
+      this.renderSnapshots(this.props);
+
     return (
       <div className="instance-snapshots">
         <div className="instance-snapshots-action">
@@ -21,23 +52,30 @@ export default class Snapshots extends React.Component {
             <Col span="4">容量</Col>
             <Col span="6">创建时间</Col>
             <Col span="4">状态</Col>
-            <Col span="1"></Col>
+            <Col span="1" />
           </Row>
         </div>
         <div className="instance-snapshots-body">
-          {snapshots.map((snapshot, i) => <Row key={i}>
-            <Col span="4">{snapshot.ago}</Col>
-            <Col span="5"><Link to="#">{snapshot.name}</Link></Col>
-            <Col span="4">{snapshot.size}</Col>
-            <Col span="6">{snapshot.datetime}</Col>
-            <Col span="4">
-              <Icon style={{ color: '#60BE29' }} type="check-circle" /> {snapshot.status}
-            </Col>
-            <Col span="1"><a className="delete" href="#"><Icon type="minus-circle-o" /></a></Col>
-          </Row>)}
+          {this.props.instance.isFetching ? this.renderFetching() : snapshots}
         </div>
       </div>
-
     );
   }
 }
+
+Snapshots.propTypes = {
+  instance: React.PropTypes.shape({
+    isFetching: React.PropTypes.bool.isRequired,
+    error: React.PropTypes.object,
+    currentInstance: React.PropTypes.shape({
+      snapshots: React.PropTypes.arrayOf(React.PropTypes.shape({
+        id: React.PropTypes.string.isRequired,
+        ago: React.PropTypes.string.isRequired,
+        name: React.PropTypes.string.isRequired,
+        size: React.PropTypes.number.isRequired,
+        timestamp: React.PropTypes.string.isRequired,
+        status: React.PropTypes.string.isRequired,
+      })),
+    }),
+  }).isRequired,
+};

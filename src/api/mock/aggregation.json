@@ -3,13 +3,13 @@
     "type": "info",
     "iconType": "desktop",
     "title": "云主机总数 (个)",
-    "value": "60"
+    "value": "0"
   },
   {
     "type": "danger",
     "iconType": "pay-circle-o",
-    "title": "剩余运行时间预估 (小时)",
-    "value": "2.76"
+    "title": "剩余时间预估 (小时)",
+    "value": "0"
   },
   {
     "type": "success",
@@ -21,6 +21,6 @@
     "type": "warning",
     "iconType": "mail",
     "title": "未读消息 (条)",
-    "value": "30"
+    "value": "0"
   }
 ]

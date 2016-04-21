@@ -13,10 +13,33 @@ import classNames from 'classnames';
 import includes from '../../../node_modules/lodash/includes';
 import uniq from '../../../node_modules/lodash/uniq';
 
-import { fetchInstances, filterInstances,fetchInstanceByKey } from '../../actions/instance';
+import { fetchInstances, filterInstances } from '../../actions/instance';
 
 const InputGroup = Input.Group;
 const MenuItem = Menu.Item;
+
+function renderLink(text, row) {
+  return <Link to={`/instances/${row.id}`}>{text}</Link>;
+}
+
+function getColumns(data) {
+  const statusFilter = uniq(data.map(record => record.status))
+    .map(st => ({ text: st, value: st }));
+
+  return [
+    { title: '名称', dataIndex: 'name', render: renderLink },
+    { title: '状态', dataIndex: 'status', filters: statusFilter,
+      onFilter(value, record) {
+        return record.status === value;
+      },
+    },
+    { title: '内网IP', dataIndex: 'ip' },
+    { title: '公网IP', dataIndex: 'floatingIp' },
+    { title: '镜像', dataIndex: 'image' },
+    { title: '配置', dataIndex: 'type' },
+    { title: '创建时间', dataIndex: 'createdAt' },
+  ];
+}
 
 function loadData(props) {
   props.fetchInstances();
@@ -29,7 +52,7 @@ class List extends React.Component {
       error: React.PropTypes.object,
       filter: React.PropTypes.string,
       instanceList: React.PropTypes.arrayOf(React.PropTypes.shape({
-        key: React.PropTypes.string.isRequired,
+        id: React.PropTypes.string.isRequired,
         name: React.PropTypes.string.isRequired,
         status: React.PropTypes.string.isRequired,
         ip: React.PropTypes.string.isRequired,
@@ -41,7 +64,6 @@ class List extends React.Component {
     }),
     fetchInstances: React.PropTypes.func.isRequired,
     filterInstances: React.PropTypes.func.isRequired,
-    fetchInstanceByKey: React.PropTypes.func.isRequired,
   };
 
   static contextTypes = {
@@ -58,35 +80,6 @@ class List extends React.Component {
 
   componentDidMount() {
     loadData(this.props);
-  }
-
-  getColumns(data) {
-  // noinspection Eslint
-    const statusFilter = uniq(data.map(record => record.status))
-      .map(st => {// jscs:ignore requireShorthandArrowFunctions
-        return {
-          text: st,
-          value: st,
-        };
-      });
-
-    return [
-      { title: '名称', dataIndex: 'name', render: this.renderLink },
-      { title: '状态', dataIndex: 'status', filters: statusFilter,
-        onFilter(value, record) {
-          return record.status === value;
-        },
-      },
-      { title: '内网IP', dataIndex: 'ip' },
-      { title: '公网IP', dataIndex: 'floatingIp' },
-      { title: '镜像', dataIndex: 'image' },
-      { title: '配置', dataIndex: 'type' },
-      { title: '创建时间', dataIndex: 'createdAt' },
-    ];
-  }
-
-  renderLink(text, row) {
-    return <Link to={`/instances/${row.key}`} onclick={this.handleDetailClick(row.key)}>{text}</Link>;
   }
 
   getMenu() {
@@ -111,6 +104,10 @@ class List extends React.Component {
     );
   }
 
+  getRowKey(instance) {
+    return instance.id;
+  }
+
   handleChange = (selectedRowKeys) => {
     this.setState({ selectedRowKeys });
   };
@@ -120,26 +117,18 @@ class List extends React.Component {
     this.context.router.push('/instances/new/step-1');
   };
 
-  handleDetailClick = (key) => {
-    this.props.fetchInstanceByKey(key);
-  };
-
   handleInputChange = (e) => {
     this.props.filterInstances(e.target.value);
   };
 
-  renderInstance(rowSelection, columns, showData) {
+  renderInstance(rowSelection, columns, instance) {
     return (<Table
+      rowKey={this.getRowKey}
       rowSelection={rowSelection}
       columns={columns}
-      dataSource={showData}
+      dataSource={instance.instanceList}
+      loading={instance.isFetching}
     />);
-  }
-
-  renderFetching() {
-    return (
-      <span>loading...</span>
-    );
   }
 
   renderError(error) {
@@ -151,11 +140,11 @@ class List extends React.Component {
   render() {
     const { instance } = this.props;
     const menu = this.getMenu();
-    const columns = this.getColumns(instance.instanceList);
+    const columns = getColumns(instance.instanceList);
     const rowSelection = {
       onChange: this.handleChange,
     };
-    const hasSelected = this.state.selectedRowKeys.length > 0;
+    const hasSelected = this.state.selectedRowKeys.length === 1;
     const btnCls = classNames({
       'ant-search-btn': true,
       'ant-search-btn-noempty': !!instance.filter.trim(),
@@ -166,19 +155,19 @@ class List extends React.Component {
     });
     const instances = instance.error ?
       this.renderError(instance.error) :
-      this.renderInstance(rowSelection, columns, instance.instanceList);
+      this.renderInstance(rowSelection, columns, instance);
 
     return (
       <div className="table-view">
         <div className="table-actions">
           <Button type="primary" size="large" onClick={this.handleCreateClick}>创建云主机</Button>
-          <Button type="primary" size="large" disabled={!hasSelected}>Console</Button>
-          <Button type="primary" size="large" disabled={!hasSelected}>开机</Button>
-          <Button type="primary" size="large" disabled={!hasSelected}>关机</Button>
+          <Button type="ghost" size="large" disabled={!hasSelected}>Console</Button>
+          <Button type="ghost" size="large" disabled={!hasSelected}>开机</Button>
+          <Button type="ghost" size="large" disabled={!hasSelected}>关机</Button>
           <Dropdown overlay={menu} trigger={['click']}>
-            <Button type="primary" size="large">更多</Button>
+            <Button type="ghost" size="large">更多<Icon type="down" /></Button>
           </Dropdown>
-          <Button type="primary" size="large">
+          <Button type="ghost" size="large">
             <Icon type="reload" />
           </Button>
           <InputGroup className={searchCls}>
@@ -194,7 +183,7 @@ class List extends React.Component {
           </InputGroup>
         </div>
         <div className="table">
-          {instance.isFetching ? this.renderFetching() : instances}
+          {instances}
         </div>
       </div>
     );
@@ -220,7 +209,6 @@ function mapDispatchToProps(dispatch) {
   return {
     fetchInstances: () => dispatch(fetchInstances()),
     filterInstances: (filter) => dispatch(filterInstances(filter)),
-    fetchInstanceByKey: (key) => dispatch(fetchInstanceByKey(key)),
   };
 }
 

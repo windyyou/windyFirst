@@ -7,16 +7,34 @@ import InputNumber from 'antd/lib/input-number';
 
 import FormButtonArea from './FormButtonArea';
 
-import keyPairs from '../../../api/mock/keyPairs.json';
-
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 const RadioButton = Radio.Button;
 const Option = Select.Option;
 
 class Step3 extends React.Component {
+  static propTypes = {
+    form: React.PropTypes.object.isRequired,
+    spec: React.PropTypes.shape({
+      password: React.PropTypes.string.isRequired,
+      keypair: React.PropTypes.string.isRequired,
+      username: React.PropTypes.string.isRequired,
+      credentialType: React.PropTypes.string.isRequired,
+      quantity: React.PropTypes.number.isRequired,
+    }),
+    keypair: React.PropTypes.shape({
+      isFetching: React.PropTypes.bool.isRequired,
+      error: React.PropTypes.object,
+      entities: React.PropTypes.arrayOf(React.PropTypes.shape({
+        name: React.PropTypes.string.isRequired,
+      })),
+    }),
+    handleSubmit: React.PropTypes.func.isRequired,
+    handleSpecChange: React.PropTypes.func.isRequired,
+  };
+
   handleSubmit = (e) => {
-    this.props.form.validateFields((errors, values) => {
+    this.props.form.validateFields((errors) => {
       if (!!errors) {
         return;
       }
@@ -25,10 +43,10 @@ class Step3 extends React.Component {
     });
   };
 
-  handleKeyPairChange = (value) => {
+  handleKeypairChange = (value) => {
     const event = {
       target: {
-        name: 'keyPair',
+        name: 'keypair',
         value,
       },
     };
@@ -59,10 +77,7 @@ class Step3 extends React.Component {
     });
 
     return (
-      <FormItem
-        {...formItemLayout}
-        label="密码:"
-      >
+      <FormItem {...formItemLayout} label="密码:">
         <Input
           {...passwordProps}
           placeholder="密码"
@@ -75,19 +90,44 @@ class Step3 extends React.Component {
     );
   };
 
-  keyPairField = (spec, formItemLayout) => (
-    <FormItem
-      {...formItemLayout}
-      label="密钥:"
-    >
-      <Select value={spec.keyPair}
-        style={{ width: 200 }}
-        showSearch={false}
-        onChange={this.handleKeyPairChange}>
-        {keyPairs.map((key, i) => <Option key={i} value={key.name}>{key.name}</Option>)}
-      </Select>
-    </FormItem>
-  );
+  renderFetching() {
+    return (
+      <span>loading...</span>
+    );
+  }
+
+  renderError(error) {
+    return (
+      <span>{error.message}</span>
+    );
+  }
+
+  renderKeypair(formItemLayout) {
+    const { spec, keypair } = this.props;
+    const isFetching = keypair.isFetching;
+    const error = keypair.error;
+    let contents = '';
+    if (isFetching) {
+      contents = this.renderFetching();
+    } else if (error) {
+      contents = this.renderError(error);
+    } else {
+      contents = (
+        <Select value={spec.keypair}
+          style={{ width: 200 }}
+          showSearch={false}
+          onChange={this.handleKeypairChange}
+        >
+        {keypair.entities.map((key, i) => <Option key={i} value={key.name}>{key.name}</Option>)}
+      </Select>);
+    }
+
+    return (
+      <FormItem {...formItemLayout} label="密钥:">
+        {contents}
+      </FormItem>
+    );
+  }
 
   render() {
     const { spec } = this.props;
@@ -99,16 +139,10 @@ class Step3 extends React.Component {
     return (
       <Form horizontal form={this.props.form}>
         <div className="form-area">
-          <FormItem
-            {...formItemLayout}
-            label="用户名:"
-          >
+          <FormItem {...formItemLayout} label="用户名:">
             <Input defaultValue={spec.username} disabled />
           </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="登录方式:"
-          >
+          <FormItem {...formItemLayout} label="登录方式:">
             <RadioGroup
               name="credentialType"
               value={spec.credentialType}
@@ -116,15 +150,12 @@ class Step3 extends React.Component {
               onChange={this.props.handleSpecChange}
             >
               <RadioButton value="password" name="credentialType">密码</RadioButton>
-              <RadioButton value="keyPair" name="credentialType">密钥</RadioButton>
+              <RadioButton value="keypair" name="credentialType">密钥</RadioButton>
             </RadioGroup>
           </FormItem>
-          {spec.credentialType == 'password' ?
-            this.passwordField(spec, formItemLayout) : this.keyPairField(spec, formItemLayout)}
-          <FormItem
-            {...formItemLayout}
-            label="数量:"
-          >
+          {spec.credentialType === 'password' ?
+            this.passwordField(spec, formItemLayout) : this.renderKeypair(formItemLayout)}
+          <FormItem {...formItemLayout} label="数量:">
             <InputNumber
               min={1}
               max={100}

@@ -28,9 +28,9 @@ export default class OperationsPanel extends React.Component {
           )}
         </Timeline>
       );
-    } else {
-      return <span>没有操作记录</span>;
     }
+
+    return (<span>没有操作记录</span>);
   }
 
   renderFetching() {
@@ -47,6 +47,7 @@ export default class OperationsPanel extends React.Component {
 
   render() {
     const { entities, isFetching, error } = this.props.operation;
+    const operations = error ? this.renderError(error) : this.renderOperations(entities);
 
     return (
       <div className="panel timeline-panel panel-default">
@@ -54,8 +55,7 @@ export default class OperationsPanel extends React.Component {
           <Icon type="calendar" /> 操作记录
         </div>
         <div className="panel-body">
-          {isFetching ? this.renderFetching() : error ?
-            this.renderError(error) : this.renderOperations(entities)}
+          {isFetching ? this.renderFetching() : operations}
         </div>
       </div>
     );

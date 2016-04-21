@@ -13,6 +13,8 @@
 @import "components/Instance/monitor";
 @import "components/Instance/new";
 @import "components/Instance/index";
+@import "components/Instance/basic-info";
+@import "components/Notification/notification-info";
 
 html, body {
   height: 100%;
@@ -23,7 +25,7 @@ html, body {
   position: inherit;
   margin: 0 0 0 250px;
   padding: 10px 0;
-  min-width: 750px;
+  min-width: 1000px;
 }
 
 .panel {
@@ -77,4 +79,12 @@ a.add {
 
 a.add:hover {
   color: tint(#60BE29, 20%);
+}
+
+.ant-dropdown-menu-item-disabled > a, .ant-dropdown-menu-submenu-title-disabled > a {
+  cursor: not-allowed;
+  pointer-events: none;
+  color: #ccc;
+  background-color: #f4f4f4;
+  border-color: #d9d9d9;
 }

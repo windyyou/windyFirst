@@ -1,5 +1,0 @@
-[
-  { "type": "云主机", "unit": "个", "used": 1, "total": 10 },
-  { "type": "CPU", "unit": "个", "used": 1, "total": 10 },
-  { "type": "内存", "unit": "GB", "used": 1, "total": 10 }
-]

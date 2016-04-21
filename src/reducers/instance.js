@@ -10,13 +10,13 @@ import {
 } from '../constants/instance';
 
 const INITIAL_STATE = {
-  // 通用标示
+  // 表示数据加载中
   isFetching: false,
 
   // 列表
   instanceList: [],
 
-  // 通用标示
+  // 错误信息
   error: null,
 
   // 搜索内容
@@ -26,7 +26,20 @@ const INITIAL_STATE = {
   instanceConfig: null,
 
   // 当前对象及相关信息
-  currentInstance: null,
+  currentInstance: {
+    keypairs: [],
+    disks: [],
+    networks: [],
+    snapshots: [],
+    createdAt: '',
+    type: '',
+    floatingIp: '',
+    ip: '',
+    image: '',
+    status: '',
+    name: '',
+    id: '',
+  },
 
   // 创建对象
   newInstance: null,

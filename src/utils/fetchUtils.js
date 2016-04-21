@@ -15,7 +15,7 @@ export function checkStatus(response) {
 }
 
 export function paramToQuery(url, params) {
-  if (!Object.keys(params)) {
+  if (!Object.keys(params).length) {
     return url;
   }
 

@@ -13,8 +13,8 @@ export function fetchInstances(params = {}) {
     .then(json => json);
 }
 
-export function fetchInstanceByKey(key) {
-  const url= `${API}?key=${key}`;
+export function fetchInstance(id) {
+  const url = `${API}/${id}`;
   return fetch(url, {
     credentials: 'same-origin',
   }).then(checkStatus)

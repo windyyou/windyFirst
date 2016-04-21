@@ -4,7 +4,7 @@ import { createStructuredSelector } from 'reselect';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 
-import AggregationInfoPanel from '../components/Dashboard/AggregationInfoPanel';
+import AggregationInfos from '../components/Dashboard/AggregationInfos';
 import OperationsPanel from '../components/Dashboard/OperationsPanel';
 import BillingTrendsPanel from '../components/Dashboard/BillingTrendsPanel';
 import QuotaPanel from '../components/Dashboard/QuotaPanel';
@@ -12,8 +12,7 @@ import QuotaPanel from '../components/Dashboard/QuotaPanel';
 import { fetchOperations } from '../actions/operation';
 import { fetchQuotas } from '../actions/quota';
 import { fetchBillings } from '../actions/billing';
-
-import aggregationData from '../api/mock/aggregation.json';
+import { fetchAggregations } from '../actions/aggregation';
 
 const propTypes = {
   operation: React.PropTypes.object.isRequired,
@@ -22,12 +21,15 @@ const propTypes = {
   fetchQuotas: React.PropTypes.func.isRequired,
   billing: React.PropTypes.object.isRequired,
   fetchBillings: React.PropTypes.func.isRequired,
+  aggregation: React.PropTypes.object.isRequired,
+  fetchAggregations: React.PropTypes.func.isRequired,
 };
 
 function loadData(props) {
   props.fetchOperations();
   props.fetchQuotas();
   props.fetchBillings();
+  props.fetchAggregations();
 }
 
 class Dashboard extends React.Component {
@@ -38,18 +40,7 @@ class Dashboard extends React.Component {
   render() {
     return (
       <div>
-        <Row type="flex">
-          {aggregationData.map((data, i) =>
-            <Col span="6" key={i}>
-              <AggregationInfoPanel
-                type={data.type}
-                iconType={data.iconType}
-                title={data.title}
-                value={data.value}
-              />
-            </Col>
-          )}
-        </Row>
+        <AggregationInfos aggregation={this.props.aggregation} />
         <Row type="flex">
           <Col span="16">
             <BillingTrendsPanel data={this.props.billing} />
@@ -66,11 +57,12 @@ class Dashboard extends React.Component {
 
 Dashboard.propTypes = propTypes;
 
-function mapStateToProps(state) {
+function mapStateToProps() {
   return createStructuredSelector({
     operation: state => state.operation,
     quota: state => state.quota,
     billing: state => state.billing,
+    aggregation: state => state.aggregation,
   });
 }
 
@@ -79,6 +71,7 @@ function mapDispatchToProps(dispatch) {
     fetchOperations: () => dispatch(fetchOperations({ _limit: 5 })),
     fetchQuotas: () => dispatch(fetchQuotas()),
     fetchBillings: () => dispatch(fetchBillings()),
+    fetchAggregations: () => dispatch(fetchAggregations()),
   };
 }
 
