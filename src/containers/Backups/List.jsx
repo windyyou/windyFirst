@@ -3,6 +3,7 @@ import Button from 'antd/lib/button';
 import Table from 'antd/lib/table';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
+import Popconfirm from 'antd/lib/popconfirm';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -11,12 +12,16 @@ import classNames from 'classnames';
 import includes from '../../../node_modules/lodash/includes';
 import uniq from '../../../node_modules/lodash/uniq';
 
-import { fetchBackups, filterBackups } from '../../actions/backup';
+import { fetchBackups, filterBackups, deleteBackup } from '../../actions/backup';
 
 const InputGroup = Input.Group;
 
 function renderLink(text, row) {
-  return <Link to={`/backups/${row.id}`}>{text}</Link>;
+  return <Link to={`/app/backups/${row.id}`}>{text}</Link>;
+}
+
+function renderVolume(text) {
+  return <Link to={`/app/backups/${text.id}`}>{text.name}</Link>;
 }
 
 function getColumns(data) {
@@ -31,8 +36,8 @@ function getColumns(data) {
       },
     },
     { title: '容量', dataIndex: 'size' },
-    { title: '云硬盘', dataIndex: 'cloudDisk', render: renderLink },
-    { title: '创建时间', dataIndex: 'ago' },
+    { title: '云硬盘', dataIndex: 'volume', render: renderVolume },
+    { title: '创建时间', dataIndex: 'createdAt' },
   ];
 }
 
@@ -43,20 +48,23 @@ function loadData(props) {
 class List extends React.Component {
   static propTypes = {
     backup: React.PropTypes.shape({
-      isFetching: React.PropTypes.bool.isRequired,
-      error: React.PropTypes.object,
       filter: React.PropTypes.string,
-      backupList: React.PropTypes.arrayOf(React.PropTypes.shape({
-        id: React.PropTypes.number.isRequired,
-        name: React.PropTypes.string.isRequired,
-        status: React.PropTypes.string.isRequired,
-        size: React.PropTypes.string.isRequired,
-        cloudDisk: React.PropTypes.string.isRequired,
-        ago: React.PropTypes.string.isRequired,
-      })),
-    }),
+      list: React.PropTypes.shape({
+        isFetching: React.PropTypes.bool.isRequired,
+        error: React.PropTypes.object,
+        data: React.PropTypes.arrayOf(React.PropTypes.shape({
+          id: React.PropTypes.string.isRequired,
+          name: React.PropTypes.string.isRequired,
+          status: React.PropTypes.string.isRequired,
+          size: React.PropTypes.string.isRequired,
+          volume: React.PropTypes.object.isRequired,
+          createdAt: React.PropTypes.string.isRequired,
+        })).isRequired,
+      }).isRequired,
+    }).isRequired,
     fetchBackups: React.PropTypes.func.isRequired,
     filterBackups: React.PropTypes.func.isRequired,
+    deleteBackup: React.PropTypes.func.isRequired,
   };
 
   static contextTypes = {
@@ -79,26 +87,37 @@ class List extends React.Component {
     return backup.id;
   }
 
+  handleDelete = () => {
+    this.props.deleteBackup(this.state.selectedRowKeys[0]);
+    this.setState({ ...this.state, selectedRowKeys: [] });
+    this.context.router.push('/app/backups/');
+  };
+
   handleChange = (selectedRowKeys) => {
     this.setState({ selectedRowKeys });
   };
 
   handleCreateClick = (event) => {
     event.preventDefault();
-    this.context.router.push('/instances/new/step-1');
+    this.context.router.push('/app/instances/new/step-1');
+  };
+
+  handleReload = (e) => {
+    e.preventDefault();
+    loadData(this.props);
   };
 
   handleInputChange = (e) => {
     this.props.filterBackups(e.target.value);
   };
 
-  renderBackup(rowSelection, columns, showData) {
+  renderBackup(rowSelection, columns, backup) {
     return (<Table
       rowKey={this.getRowKey}
       rowSelection={rowSelection}
       columns={columns}
-      dataSource={showData}
-      loading={this.props.backup.isFetching}
+      dataSource={backup.data}
+      loading={backup.isFetching}
     />);
   }
 
@@ -110,7 +129,7 @@ class List extends React.Component {
 
   render() {
     const { backup } = this.props;
-    const columns = getColumns(backup.backupList);
+    const columns = getColumns(backup.list.data);
     const rowSelection = {
       onChange: this.handleChange,
     };
@@ -125,7 +144,7 @@ class List extends React.Component {
     });
     const backups = backup.error ?
       this.renderError(backup.error) :
-      this.renderBackup(rowSelection, columns, backup.backupList);
+      this.renderBackup(rowSelection, columns, backup.list);
 
     return (
       <div className="table-view">
@@ -138,8 +157,10 @@ class List extends React.Component {
           >
             创建云硬盘
           </Button>
-          <Button type="dashed" size="large" disabled={!hasSelected}>删除</Button>
-          <Button type="ghost" size="large">
+          <Popconfirm title="确定要删除这个备份吗？" onConfirm={this.handleDelete}>
+            <Button type="dashed" size="large" disabled={!hasSelected}>删除</Button>
+          </Popconfirm>
+          <Button type="ghost" size="large" onClick={this.handleReload}>
             <Icon type="reload" />
           </Button>
           <InputGroup className={searchCls}>
@@ -163,16 +184,16 @@ class List extends React.Component {
 }
 
 const getFilteredBackups = createSelector(
-  state => state.backup.entities,
+  state => state.backup.list.data,
   state => state.backup.filter,
-  (entities, filter) => entities.filter(backup => includes(backup.name, filter))
+  (listData, filter) => listData.filter(backup => includes(backup.name, filter))
 );
 
 function mapStateToProps(state) {
   return {
     backup: {
       ...state.backup,
-      backupList: getFilteredBackups(state),
+      list: { ...state.backup.list, data: getFilteredBackups(state) },
     },
   };
 }
@@ -181,6 +202,7 @@ function mapDispatchToProps(dispatch) {
   return {
     fetchBackups: () => dispatch(fetchBackups()),
     filterBackups: (filter) => dispatch(filterBackups(filter)),
+    deleteBackup: (id) => dispatch(deleteBackup(id)),
   };
 }
 

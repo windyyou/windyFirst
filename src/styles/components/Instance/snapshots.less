@@ -11,3 +11,23 @@
 .instance-snapshots .instance-snapshots-body .row:hover {
   background-color: #eaf8fe;
 }
+
+.instance-snapshots .instance-snapshots-body .available::before {
+  content: "\E62F";
+  color: green;
+}
+
+.instance-snapshots .instance-snapshots-body .error::before {
+  color: black;
+  content: "\E631";
+}
+
+.instance-snapshots .instance-snapshots-body .deleting::before {
+  content: "\E639";
+  color: red;
+}
+
+.instance-snapshots .instance-snapshots-body .creating::before {
+  content: "\E639";
+  color: yellow;
+}

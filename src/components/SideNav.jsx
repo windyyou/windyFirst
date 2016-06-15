@@ -3,19 +3,153 @@ import Menu from 'antd/lib/menu';
 import Icon from 'antd/lib/icon';
 
 const SubMenu = Menu.SubMenu;
+const MENUS = [
+  {
+    key: 'compute_network',
+    title: '计算和网络',
+    icon: 'desktop',
+    items: [
+      { path: '/app', title: '总览' },
+      { path: '/app/instances', title: '云主机' },
+      { path: '/app/snapshots', title: '快照' },
+      { path: '/app/bare-metals', title: '物理机' },
+      { path: '/app/security-groups', title: '安全组' },
+    ],
+    subs: [
+      {
+        key: 'network',
+        title: '网络',
+        items: [
+          { path: '/app/networks', title: '私有网络' },
+          { path: '/app/subnets', title: '子网' },
+          { path: '/app/ports', title: '虚拟网卡' },
+          { path: '/app/floating-ips', title: '公网IP' },
+          { path: '/app/routers', title: '路由' },
+        ],
+      },
+    ],
+  },
+  {
+    key: 'security',
+    title: '安全',
+    icon: 'lock',
+    items: [
+      { path: '/app/keypairs', title: '密钥' },
+    ],
+  },
+  {
+    key: 'storage',
+    title: '存储',
+    icon: 'hdd',
+    items: [
+      { path: '/app/volumes', title: '云硬盘' },
+      { path: '/app/backups', title: '备份' },
+    ],
+  },
+  {
+    key: 'service',
+    title: '服务',
+    icon: 'appstore-o',
+    items: [
+      { path: '/app/load-balancers', title: '负载均衡' },
+      { path: '/app/firewalls', title: '防火墙' },
+      { path: '/app/vpns', title: 'VPN' },
+      { path: '/app/databases', title: '数据库' },
+      { path: '/app/alarms', title: '监控报警' },
+    ],
+  },
+  {
+    key: 'deploy',
+    title: '部署',
+    icon: 'edit',
+    items: [
+      { path: '/app/pools', title: '资源池' },
+    ],
+  },
+  {
+    key: 'notification',
+    title: '通知',
+    icon: 'notification',
+    items: [
+      { path: '/app/notifications', title: '通知消息' },
+      { path: '/app/operations', title: '操作日志' },
+      { path: '/app/notification-lists', title: '通知列表' },
+    ],
+  },
+  {
+    key: 'billing',
+    title: '计费',
+    icon: 'pay-circle-o',
+    items: [
+      { path: '/app/unit-prices', title: '单价' },
+      { path: '/app/bills', title: '账单' },
+      { path: '/app/charges', title: '充值' },
+    ],
+  },
+  {
+    key: 'management',
+    title: '管理',
+    icon: 'team',
+    items: [
+      { path: '/app/users', title: '用户' },
+    ],
+  },
+];
 
 export default function SideNav(props, context) {
   function getSelectedKeys(path) {
-    if (path === '/') {
-      return ['/'];
+    if (path === '/app') {
+      return ['/app'];
     }
 
-    return [`/${path.split('/')[1]}`];
+    return [`/app/${path.split('/').splice(2, 1)}`];
+  }
+
+  function getOpenKeys(selectedKeys, openKeys = [], menus = []) {
+    for (const menu of menus) {
+      openKeys.push(menu.key);
+
+      if (menu.items.some(item => selectedKeys.includes(item.path))) {
+        return true;
+      }
+
+      if (getOpenKeys(selectedKeys, openKeys, menu.subs)) {
+        return true;
+      }
+
+      openKeys.pop();
+    }
+
+    return false;
+  }
+
+  function getSubMenus(menus = []) {
+    return menus.map(menu => {
+      const { key, title, icon, subs } = menu;
+      let { items } = menu;
+      if (!Array.isArray(items)) {
+        items = [];
+      }
+
+      const menuTitle = icon ?
+        <span><Icon type={icon} />{title}</span> :
+        <span>{title}</span>;
+      return (
+        <SubMenu key={key} title={menuTitle}>
+          {items.map(item => <Menu.Item key={item.path}>{item.title}</Menu.Item>)}
+          {getSubMenus(subs)}
+        </SubMenu>
+      );
+    });
   }
 
   function handleClick(event) {
     context.router.push(event.key);
   }
+
+  const selectedKeys = getSelectedKeys(props.location.pathname);
+  const openKeys = [];
+  getOpenKeys(selectedKeys, openKeys, MENUS);
 
   return (
     <aside className="sidebar">
@@ -23,56 +157,11 @@ export default function SideNav(props, context) {
         <Menu
           mode="inline"
           theme="dark"
-          defaultSelectedKeys={getSelectedKeys(window.location.pathname)}
-          defaultOpenKeys={['sub1', 'sub2', 'sub8']}
+          defaultSelectedKeys={selectedKeys}
+          defaultOpenKeys={openKeys}
           onClick={handleClick}
         >
-          <SubMenu key="sub1" title={<span><Icon type="desktop" />计算和网络</span>}>
-            <Menu.Item key="/">总览</Menu.Item>
-            <Menu.Item key="/instances">云主机</Menu.Item>
-            <Menu.Item key="/snapshots">快照</Menu.Item>
-            <SubMenu key="sub9" title={<span>网络</span>}>
-              <Menu.Item key="/networks">私有网络</Menu.Item>
-              <Menu.Item key="/subnets">子网</Menu.Item>
-              <Menu.Item key="/virtual-nics">虚拟网卡</Menu.Item>
-              <Menu.Item key="/floating-ips">公网IP</Menu.Item>
-            </SubMenu>
-            <Menu.Item key="/routers">路由</Menu.Item>
-            <Menu.Item key="/security-groups">安全组</Menu.Item>
-            <Menu.Item key="/bare-metals">物理机</Menu.Item>
-          </SubMenu>
-          <SubMenu key="sub8" title={<span><Icon type="lock" />安全</span>}>
-            <Menu.Item key="/keypairs">密钥</Menu.Item>
-          </SubMenu>
-          <SubMenu key="sub2" title={<span><Icon type="hdd" />存储</span>}>
-            <Menu.Item key="/disks">云硬盘</Menu.Item>
-            <Menu.Item key="/backups">备份</Menu.Item>
-          </SubMenu>
-          <SubMenu key="sub3" title={<span><Icon type="appstore-o" />服务</span>}>
-            <Menu.Item key="8">负载均衡</Menu.Item>
-            <Menu.Item key="/firewalls">防火墙</Menu.Item>
-            <Menu.Item key="10">VPN</Menu.Item>
-            <Menu.Item key="11">数据库</Menu.Item>
-            <Menu.Item key="/alarms">监控报警</Menu.Item>
-          </SubMenu>
-
-          <SubMenu key="sub5" title={<span><Icon type="edit" />Auto Design</span>}>
-            <Menu.Item key="16">模板</Menu.Item>
-          </SubMenu>
-          <SubMenu key="sub4" title={<span><Icon type="notification" />通知</span>}>
-            <Menu.Item key="/notifications">通知消息</Menu.Item>
-            <Menu.Item key="14">日志</Menu.Item>
-            <Menu.Item key="15">警报</Menu.Item>
-            <Menu.Item key="/notification-lists">通知列表</Menu.Item>
-          </SubMenu>
-          <SubMenu key="sub6" title={<span><Icon type="pay-circle-o" />计费</span>}>
-            <Menu.Item key="17">单价</Menu.Item>
-            <Menu.Item key="18">账单</Menu.Item>
-            <Menu.Item key="19">充值</Menu.Item>
-          </SubMenu>
-          <SubMenu key="sub7" title={<span><Icon type="team" />管理</span>}>
-            <Menu.Item key="20">用户</Menu.Item>
-          </SubMenu>
+          {getSubMenus(MENUS)}
         </Menu>
       </nav>
     </aside>
@@ -81,4 +170,10 @@ export default function SideNav(props, context) {
 
 SideNav.contextTypes = {
   router: React.PropTypes.object,
+};
+
+SideNav.propTypes = {
+  location: React.PropTypes.shape({
+    pathname: React.PropTypes.string.isRequired,
+  }).isRequired,
 };

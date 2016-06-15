@@ -1,0 +1,85 @@
+.network-topology {
+  pointer-events: all;
+
+  .enter {
+    fill: green;
+  }
+
+  .update {
+    fill: #333;
+  }
+
+  .exit {
+    fill: brown;
+  }
+
+  .node {
+    fill: white;
+    cursor: pointer;
+  }
+
+  .node.selected .frame {
+    stroke: #3c8dbc;
+  }
+
+  .node.selected .content {
+    fill: #3c8dbc;
+  }
+
+  .node.selected path {
+    fill: #3c8dbc;
+    stroke: #3c8dbc;
+  }
+
+  .node .frame {
+    fill: white;
+    stroke: black;
+    stroke-width: 3;
+  }
+
+  .node .content {
+    fill: black;
+    font: 20px anticon;
+  }
+
+  .node path {
+    fill: black;
+    stroke: black;
+  }
+
+  .node-label {
+    fill: black;
+    stroke-width: 0;
+    font-size: 12px;
+  }
+
+  .vm-count {
+    fill: black;
+    font-size: 20px;
+    stroke-width: 0;
+
+  }
+
+  line.link {
+    stroke: black;
+    stroke-width: 1;
+  }
+
+  line.link.highlight {
+    stroke-width: 3;
+  }
+
+  line.link.selected {
+    stroke: #3c8dbc;
+  }
+
+  path.hull {
+    stroke-linejoin: round;
+    stroke-width: 10;
+    opacity: 0.2;
+  }
+
+  .panel.info {
+    margin: 0;
+  }
+}

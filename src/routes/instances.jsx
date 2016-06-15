@@ -10,7 +10,7 @@ import Step2 from '../components/Instances/New/Step2';
 import Step3 from '../components/Instances/New/Step3';
 
 export default (
-  <Route path="/instances" component={Instances}>
+  <Route path="instances" component={Instances}>
     <IndexRoute component={List} />
     <Route path="new" component={New}>
       <IndexRoute component={Step1} />

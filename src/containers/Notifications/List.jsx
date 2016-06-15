@@ -10,7 +10,11 @@ import { createSelector } from 'reselect';
 import classNames from 'classnames';
 import includes from '../../../node_modules/lodash/includes';
 
-import { fetchNotifications, filterNotifications, putNotification } from '../../actions/notification';
+import {
+  fetchNotifications,
+  filterNotifications,
+  deleteNotification,
+} from '../../actions/notification';
 
 const InputGroup = Input.Group;
 
@@ -20,25 +24,21 @@ function loadData(props) {
 
 class List extends React.Component {
   static propTypes = {
-    notification: React.PropTypes.shape({
+    list: React.PropTypes.shape({
       isFetching: React.PropTypes.bool.isRequired,
       error: React.PropTypes.object,
-      filter: React.PropTypes.string,
-      entities: React.PropTypes.arrayOf(React.PropTypes.shape({
+      filter: React.PropTypes.string.isRequired,
+      data: React.PropTypes.arrayOf(React.PropTypes.shape({
         id: React.PropTypes.string.isRequired,
         name: React.PropTypes.string.isRequired,
         type: React.PropTypes.string.isRequired,
-        status: React.PropTypes.string.isRequired,
+        read: React.PropTypes.bool.isRequired,
         createdAt: React.PropTypes.string.isRequired,
-      })),
-    }),
-
-    // currentEntity: React.PropTypes.object.isRequired,
+      })).isRequired,
+    }).isRequired,
     fetchNotifications: React.PropTypes.func.isRequired,
     filterNotifications: React.PropTypes.func.isRequired,
-
-    // putNotification: React.PropTypes.func.isRequired,
-    route: React.PropTypes.object,
+    deleteNotification: React.PropTypes.func.isRequired,
   };
 
   static contextTypes = {
@@ -49,56 +49,24 @@ class List extends React.Component {
     super(props);
 
     this.state = {
-      currentPage: 1,
       selectedRowKeys: [],
     };
   }
 
   componentDidMount() {
     loadData(this.props);
-
-    // this.context.router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
   }
 
   getRowKey(notification) {
     return notification.id;
   }
 
-/*  routerWillLeave = (nextLocation) => {
-    // TODO check path
-    const id = nextLocation.pathname.substring(nextLocation.pathname.lastIndexOf('/')+1, nextLocation.pathname.length);
-    // TODO changeStatus action
-    this.props.putNotification({...this.props.currentEntity, id: id, status: "已读"});
-  }*/
-
-  renderLink = (text, row) => {
-    return <Link to={`/notifications/${row.id}`}>{text}</Link>;
-  };
-
-  renderBold = (text, row) => {
-    let returnVal = '';
-    if (row.status === '未读') {
-      returnVal = <b>{text}</b>;
-    } else {
-      returnVal = `${text}`;
-    }
-
-    return returnVal;
-  };
-
-  getColumns = () => {
-    return [
-      { title: '类别', dataIndex: 'type', render: this.renderBold },
-      { title: '标题', dataIndex: 'name', render: this.renderLink },
-      { title: '状态', dataIndex: 'status', render: this.renderBold },
-      { title: '创建时间', dataIndex: 'createdAt', render: this.renderBold },
-    ];
-  };
-
-  handleClick = (id) =>
-    () => {
-      this.props.fetchNotification(id);
-    };
+  getColumns = () => [
+    { title: '类别', dataIndex: 'type', render: this.renderBold() },
+    { title: '标题', dataIndex: 'name', render: this.renderBold(this.renderLink) },
+    { title: '状态', dataIndex: 'read', render: this.renderBold(this.renderStatus) },
+    { title: '创建时间', dataIndex: 'createdAt', render: this.renderBold() },
+  ];
 
   handleChange = (selectedRowKeys) => {
     this.setState({ selectedRowKeys });
@@ -108,13 +76,28 @@ class List extends React.Component {
     this.props.filterNotifications(e.target.value);
   };
 
-  handlePageChange = (noop) => {
+  handleReload = (e) => {
+    e.preventDefault();
+    loadData(this.props);
+  };
+
+  handlePageChange = () => {
     this.setState({
       ...this.state,
-      currentPage: noop,
       selectedRowKeys: [],
     });
   };
+
+  renderLink = (text, row) =>
+    <Link to={`/app/notifications/${row.id}`}>{text}</Link>;
+
+  renderBold(func = (text) => text) {
+    return (text, row) => (row.read ? func(text, row) : <b>{func(text, row)}</b>);
+  }
+
+  renderStatus(text, row) {
+    return row.read ? '已读' : <b>未读</b>;
+  }
 
   renderNotification(rowSelection, columns, showData, pagination) {
     return (<Table
@@ -123,7 +106,7 @@ class List extends React.Component {
       pagination={pagination}
       columns={columns}
       dataSource={showData}
-      loading={this.props.notification.isFetching}
+      loading={this.props.list.isFetching}
     />);
   }
 
@@ -134,7 +117,7 @@ class List extends React.Component {
   }
 
   render() {
-    const { notification } = this.props;
+    const { list } = this.props;
     const columns = this.getColumns();
     const rowSelection = {
       selectedRowKeys: this.state.selectedRowKeys,
@@ -142,34 +125,33 @@ class List extends React.Component {
     };
     const pagination = {
       onChange: this.handlePageChange,
-      current: this.state.currentPage,
     };
 
     const hasSelected = this.state.selectedRowKeys.length > 0;
     const btnCls = classNames({
       'ant-search-btn': true,
-      'ant-search-btn-noempty': !!notification.filter.trim(),
+      'ant-search-btn-noempty': !!list.filter.trim(),
     });
     const searchCls = classNames({
       'ant-search-input': true,
       'pull-right': true,
     });
-    const notifications = notification.error ?
-      this.renderError(notification.error) :
-      this.renderNotification(rowSelection, columns, notification.entities, pagination);
+    const notifications = list.error ?
+      this.renderError(list.error) :
+      this.renderNotification(rowSelection, columns, list.data, pagination);
 
     return (
       <div className="table-view">
         <div className="table-actions">
           <Button type="ghost" size="large" disabled={!hasSelected}>标记为已读</Button>
           <Button type="ghost" size="large" disabled={!hasSelected}>标记为未读</Button>
-          <Button type="ghost" size="large">
+          <Button type="ghost" size="large" onClick={this.handleReload}>
             <Icon type="reload" />
           </Button>
           <InputGroup className={searchCls}>
             <Input
               placeholder="输入关键字" size="large"
-              value={notification.filter} onChange={this.handleInputChange}
+              value={list.filter} onChange={this.handleInputChange}
             />
             <div className="ant-input-group-wrap">
               <Button className={btnCls} size="large">
@@ -187,16 +169,17 @@ class List extends React.Component {
 }
 
 const getFilteredNotifications = createSelector(
-  state => state.notification.entities,
-  state => state.notification.filter,
-  (entities, filter) => entities.filter(notification => includes(notification.name, filter))
+  state => state.notification.list.data,
+  state => state.notification.list.filter,
+  (data, filter) => data.filter(notification => includes(notification.name, filter))
 );
 
 function mapStateToProps(state) {
   return {
-    notification: {
-      ...state.notification,
-      entities: getFilteredNotifications(state),
+    ...state.notification,
+    list: {
+      ...state.notification.list,
+      data: getFilteredNotifications(state),
     },
   };
 }
@@ -205,8 +188,7 @@ function mapDispatchToProps(dispatch) {
   return {
     fetchNotifications: () => dispatch(fetchNotifications()),
     filterNotifications: (filter) => dispatch(filterNotifications(filter)),
-
-    // putNotification: (params) => dispatch(putNotification(params)),
+    deleteNotification: (id) => dispatch(deleteNotification(id)),
   };
 }
 

@@ -2,19 +2,28 @@ import {
   FETCH_NOTIFICATIONS_REQUEST,
   FETCH_NOTIFICATIONS_SUCCESS,
   FETCH_NOTIFICATIONS_FAILURE,
+
   FILTER_NOTIFICATIONS,
+
   FETCH_NOTIFICATION_REQUEST,
   FETCH_NOTIFICATION_SUCCESS,
   FETCH_NOTIFICATION_FAILURE,
-  PUT_NOTIFICATION_REQUEST,
-  PUT_NOTIFICATION_SUCCESS,
-  PUT_NOTIFICATION_FAILURE,
-  POST_NOTIFICATION_REQUEST,
-  POST_NOTIFICATION_SUCCESS,
-  POST_NOTIFICATION_FAILURE,
+
+  UPDATE_NOTIFICATION_REQUEST,
+  UPDATE_NOTIFICATION_SUCCESS,
+  UPDATE_NOTIFICATION_FAILURE,
+
+  CREATE_NOTIFICATION_REQUEST,
+  CREATE_NOTIFICATION_SUCCESS,
+  CREATE_NOTIFICATION_FAILURE,
+
   DELETE_NOTIFICATION_REQUEST,
   DELETE_NOTIFICATION_SUCCESS,
   DELETE_NOTIFICATION_FAILURE,
+
+  MARK_NOTIFICATION_AS_READ_REQUEST,
+  MARK_NOTIFICATION_AS_READ_SUCCESS,
+  MARK_NOTIFICATION_AS_READ_FAILURE,
 } from '../constants/notification';
 import * as notificationAPI from '../api/notification';
 
@@ -27,6 +36,24 @@ export function fetchNotifications(params) {
     ],
     payload: {
       promise: notificationAPI.fetchNotifications(params),
+    },
+  });
+}
+
+export function markRead(id) {
+  return (dispatch) => dispatch({
+    types: [
+      MARK_NOTIFICATION_AS_READ_REQUEST,
+      MARK_NOTIFICATION_AS_READ_SUCCESS,
+      MARK_NOTIFICATION_AS_READ_FAILURE,
+    ],
+    payload: {
+      promise: notificationAPI.markRead(id)
+        .then((data) => {
+          dispatch(fetchNotifications());
+
+          return data;
+        }),
     },
   });
 }
@@ -46,7 +73,12 @@ export function fetchNotification(id) {
       FETCH_NOTIFICATION_FAILURE,
     ],
     payload: {
-      promise: notificationAPI.fetchNotification(id),
+      promise: notificationAPI.fetchNotification(id)
+        .then((data) => {
+          dispatch(markRead(id));
+
+          return data;
+        }),
     },
   });
 }
@@ -54,12 +86,12 @@ export function fetchNotification(id) {
 export function putNotification(params) {
   return (dispatch) => dispatch({
     types: [
-      PUT_NOTIFICATION_REQUEST,
-      PUT_NOTIFICATION_SUCCESS,
-      PUT_NOTIFICATION_FAILURE,
+      UPDATE_NOTIFICATION_REQUEST,
+      UPDATE_NOTIFICATION_SUCCESS,
+      UPDATE_NOTIFICATION_FAILURE,
     ],
     payload: {
-      promise: notificationAPI.putNotification(params),
+      promise: notificationAPI.updateNotification(params),
     },
   });
 }
@@ -67,12 +99,12 @@ export function putNotification(params) {
 export function postNotification(params) {
   return (dispatch) => dispatch({
     types: [
-      POST_NOTIFICATION_REQUEST,
-      POST_NOTIFICATION_SUCCESS,
-      POST_NOTIFICATION_FAILURE,
+      CREATE_NOTIFICATION_REQUEST,
+      CREATE_NOTIFICATION_SUCCESS,
+      CREATE_NOTIFICATION_FAILURE,
     ],
     payload: {
-      promise: notificationAPI.postNotification(params),
+      promise: notificationAPI.createNotification(params),
     },
   });
 }

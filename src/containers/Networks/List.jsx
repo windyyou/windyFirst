@@ -3,6 +3,7 @@ import Button from 'antd/lib/button';
 import Table from 'antd/lib/table';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
+import Popconfirm from 'antd/lib/popconfirm';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -11,16 +12,25 @@ import classNames from 'classnames';
 import includes from '../../../node_modules/lodash/includes';
 import uniq from '../../../node_modules/lodash/uniq';
 
-import { fetchNetworks, filterNetworks } from '../../actions/network';
+import { fetchNetworks, filterNetworks, deleteNetwork } from '../../actions/network';
 
 const InputGroup = Input.Group;
 
 function renderLink(text, row) {
-  return <Link to={`/primary/${row.id}`}>{text}</Link>;
+  return <Link to={`/app/networks/${row.id}`}>{text}</Link>;
 }
 
-function renderSubNets(text) {
-  return text.join(',');
+function renderSubNets(subnets) {
+  if (!Array.isArray(subnets)) return [];
+  return subnets.reduce((prev, curr, index) => {
+    prev.push(<Link key={curr.id} to={`/app/subnets/${curr.id}`}>{curr.name}</Link>);
+
+    if (index !== subnets.length - 1) {
+      prev.push(', ');
+    }
+
+    return prev;
+  }, []);
 }
 
 function getColumns(data) {
@@ -46,16 +56,22 @@ function loadData(props) {
 class List extends React.Component {
   static propTypes = {
     network: React.PropTypes.shape({
-      isFetching: React.PropTypes.bool.isRequired,
-      error: React.PropTypes.object,
       filter: React.PropTypes.string,
-      entities: React.PropTypes.arrayOf(React.PropTypes.shape({
-        id: React.PropTypes.string.isRequired,
-        name: React.PropTypes.string.isRequired,
-      })).isRequired,
+      list: React.PropTypes.shape({
+        isFetching: React.PropTypes.bool.isRequired,
+        error: React.PropTypes.object,
+        data: React.PropTypes.arrayOf(React.PropTypes.shape({
+          id: React.PropTypes.string.isRequired,
+          name: React.PropTypes.string.isRequired,
+          status: React.PropTypes.string.isRequired,
+          createdAt: React.PropTypes.string.isRequired,
+          subnets: React.PropTypes.array.isRequired,
+        })).isRequired,
+      }),
     }),
     fetchNetworks: React.PropTypes.func.isRequired,
     filterNetworks: React.PropTypes.func.isRequired,
+    deleteNetwork: React.PropTypes.func.isRequired,
   };
 
   static contextTypes = {
@@ -78,18 +94,29 @@ class List extends React.Component {
     return record.id;
   }
 
+  handleDelete = () => {
+    this.props.deleteNetwork(this.state.selectedRowKeys[0]);
+    this.setState({ ...this.state, selectedRowKeys: [] });
+    this.context.router.push('/app/networks');
+  };
+
   handleChange = (selectedRowKeys) => {
     this.setState({ selectedRowKeys });
   };
 
   handleCreateClick = (event) => {
     event.preventDefault();
-    this.context.router.push('/primary/new/step-1');
+    this.context.router.push('/app/networks/new');
   };
 
   handleCreateChildClick = (event) => {
     event.preventDefault();
-    this.context.router.push('/primary/child/step-1');
+    this.context.router.push(`/app/subnets/new?networkId=${this.state.selectedRowKeys[0]}`);
+  };
+
+  handleReload = (e) => {
+    e.preventDefault();
+    loadData(this.props);
   };
 
   handleInputChange = (e) => {
@@ -101,8 +128,8 @@ class List extends React.Component {
       rowKey={this.getRowKey}
       rowSelection={rowSelection}
       columns={columns}
-      dataSource={network.entities}
-      loading={network.isFetching}
+      dataSource={network.list.data}
+      loading={network.list.isFetching}
     />);
   }
 
@@ -114,7 +141,7 @@ class List extends React.Component {
 
   render() {
     const { network } = this.props;
-    const columns = getColumns(network.entities);
+    const columns = getColumns(network.list.data);
     const rowSelection = {
       onChange: this.handleChange,
     };
@@ -127,8 +154,8 @@ class List extends React.Component {
       'ant-search-input': true,
       'pull-right': true,
     });
-    const networks = network.error ?
-      this.renderError(network.error) :
+    const networks = network.list.error ?
+      this.renderError(network.list.error) :
       this.renderNetwork(rowSelection, columns, network);
 
     return (
@@ -141,8 +168,10 @@ class List extends React.Component {
             disabled={!hasSelected}
             onClick={this.handleCreateChildClick}
           >创建子网</Button>
-          <Button type="dashed" size="large" disabled={!hasSelected}>删除</Button>
-          <Button type="ghost" size="large">
+          <Popconfirm title="确定要删除这个监控吗？" onConfirm={this.handleDelete}>
+            <Button type="dashed" size="large" disabled={!hasSelected}>删除</Button>
+          </Popconfirm>
+          <Button type="ghost" size="large" onClick={this.handleReload}>
             <Icon type="reload" />
           </Button>
           <InputGroup className={searchCls}>
@@ -166,16 +195,16 @@ class List extends React.Component {
 }
 
 const getFilteredNetworks = createSelector(
-  state => state.network.entities,
+  state => state.network.list.data,
   state => state.network.filter,
-  (networkList, filter) => networkList.filter(network => includes(network.name, filter))
+  (listData, filter) => listData.filter(network => includes(network.name, filter))
 );
 
 function mapStateToProps(state) {
   return {
     network: {
       ...state.network,
-      entities: getFilteredNetworks(state),
+      list: { ...state.network.list, data: getFilteredNetworks(state) },
     },
   };
 }
@@ -184,6 +213,7 @@ function mapDispatchToProps(dispatch) {
   return {
     fetchNetworks: () => dispatch(fetchNetworks()),
     filterNetworks: (filter) => dispatch(filterNetworks(filter)),
+    deleteNetwork: (id) => dispatch(deleteNetwork(id)),
   };
 }
 

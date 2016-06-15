@@ -5,6 +5,7 @@ import Icon from 'antd/lib/icon';
 import Dropdown from 'antd/lib/dropdown';
 import Menu from 'antd/lib/menu';
 import Input from 'antd/lib/input';
+import Popconfirm from 'antd/lib/popconfirm';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -13,13 +14,21 @@ import classNames from 'classnames';
 import includes from '../../../node_modules/lodash/includes';
 import uniq from '../../../node_modules/lodash/uniq';
 
-import { fetchRouters, filterRouters } from '../../actions/router';
+import { fetchRouters, filterRouters, deleteRouter } from '../../actions/router';
 
 const InputGroup = Input.Group;
 const MenuItem = Menu.Item;
 
 function renderLink(text, row) {
-  return <Link to={`/routers/${row.id}`}>{text}</Link>;
+  return <Link to={`/app/routers/${row.id}`}>{text}</Link>;
+}
+
+function renderFloatingIp(text) {
+  return <Link to={`/app/floating-ips/${text.id}`}>{text.name}</Link>;
+}
+
+function renderPublicGateway(text) {
+  return text ? '启用' : '关闭';
 }
 
 function getColumns(data) {
@@ -33,9 +42,9 @@ function getColumns(data) {
         return record.status === value;
       },
     },
-    { title: '公网IP', dataIndex: 'floatingIp' },
-    { title: '公网网关', dataIndex: 'gateway' },
-    { title: '创建时间', dataIndex: 'ago' },
+    { title: '公网IP', dataIndex: 'floatingIp', render: renderFloatingIp },
+    { title: '公网网关', dataIndex: 'publicGateway', render: renderPublicGateway },
+    { title: '创建时间', dataIndex: 'createdAt' },
   ];
 }
 
@@ -46,20 +55,23 @@ function loadData(props) {
 class List extends React.Component {
   static propTypes = {
     router: React.PropTypes.shape({
-      isFetching: React.PropTypes.bool.isRequired,
-      error: React.PropTypes.object,
       filter: React.PropTypes.string,
-      routerList: React.PropTypes.arrayOf(React.PropTypes.shape({
-        id: React.PropTypes.string.isRequired,
-        name: React.PropTypes.string.isRequired,
-        status: React.PropTypes.string.isRequired,
-        floatingIp: React.PropTypes.string.isRequired,
-        gateway: React.PropTypes.string.isRequired,
-        ago: React.PropTypes.string.isRequired,
-      })),
+      list: React.PropTypes.shape({
+        isFetching: React.PropTypes.bool.isRequired,
+        error: React.PropTypes.object,
+        data: React.PropTypes.arrayOf(React.PropTypes.shape({
+          id: React.PropTypes.string.isRequired,
+          name: React.PropTypes.string.isRequired,
+          status: React.PropTypes.string.isRequired,
+          floatingIp: React.PropTypes.string.isRequired,
+          gateway: React.PropTypes.string.isRequired,
+          createdAt: React.PropTypes.string.isRequired,
+        })),
+      }),
     }),
     fetchRouters: React.PropTypes.func.isRequired,
     filterRouters: React.PropTypes.func.isRequired,
+    deleteRouter: React.PropTypes.func.isRequired,
   };
 
   static contextTypes = {
@@ -78,7 +90,7 @@ class List extends React.Component {
     loadData(this.props);
   }
 
-  getMenu() {
+  getMenu(hasOneSelected) {
     return (
       <Menu>
         <MenuItem key="1">
@@ -99,8 +111,10 @@ class List extends React.Component {
         <MenuItem key="6">
           <a href="#">断开子网</a>
         </MenuItem>
-        <MenuItem key="7">
-          <a href="#">删除</a>
+        <MenuItem key="7" disabled={!hasOneSelected}>
+          <Popconfirm title="确定要删除这个路由吗？" onConfirm={this.handleDelete}>
+            <a href="">删除</a>
+          </Popconfirm>
         </MenuItem>
       </Menu>
     );
@@ -110,13 +124,24 @@ class List extends React.Component {
     return router.id;
   }
 
+  handleDelete = () => {
+    this.props.deleteRouter(this.state.selectedRowKeys[0]);
+    this.setState({ ...this.state, selectedRowKeys: [] });
+    this.context.router.push('/app/routers/');
+  };
+
   handleChange = (selectedRowKeys) => {
     this.setState({ selectedRowKeys });
   };
 
   handleCreateClick = (event) => {
     event.preventDefault();
-    this.context.router.push('/instances/new/step-1');
+    this.context.router.push('/app/routers/new/step-1');
+  };
+
+  handleReload = (e) => {
+    e.preventDefault();
+    loadData(this.props);
   };
 
   handleInputChange = (e) => {
@@ -129,7 +154,7 @@ class List extends React.Component {
       rowSelection={rowSelection}
       columns={columns}
       dataSource={showData}
-      loading={this.props.router.isFetching}
+      loading={this.props.router.list.isFetching}
     />);
   }
 
@@ -141,12 +166,12 @@ class List extends React.Component {
 
   render() {
     const { router } = this.props;
-    const menu = this.getMenu();
-    const columns = getColumns(router.routerList);
+    const columns = getColumns(router.list.data);
     const rowSelection = {
       onChange: this.handleChange,
     };
     const hasOneSelected = this.state.selectedRowKeys.length === 1;
+    const menu = this.getMenu(hasOneSelected);
     const btnCls = classNames({
       'ant-search-btn': true,
       'ant-search-btn-noempty': !!router.filter.trim(),
@@ -155,9 +180,9 @@ class List extends React.Component {
       'ant-search-input': true,
       'pull-right': true,
     });
-    const routers = router.error ?
-      this.renderError(router.error) :
-      this.renderRouter(rowSelection, columns, router.routerList);
+    const routers = router.list.error ?
+      this.renderError(router.list.error) :
+      this.renderRouter(rowSelection, columns, router.list.data);
 
     return (
       <div className="table-view">
@@ -170,7 +195,7 @@ class List extends React.Component {
               更多<Icon type="down" />
             </Button>
           </Dropdown>
-          <Button type="ghost" size="large">
+          <Button type="ghost" size="large" onClick={this.handleReload}>
             <Icon type="reload" />
           </Button>
           <InputGroup className={searchCls}>
@@ -194,16 +219,16 @@ class List extends React.Component {
 }
 
 const getFilteredRouters = createSelector(
-  state => state.router.entities,
+  state => state.router.list.data,
   state => state.router.filter,
-  (entities, filter) => entities.filter(router => includes(router.name, filter))
+  (listData, filter) => listData.filter(router => includes(router.name, filter))
 );
 
 function mapStateToProps(state) {
   return {
     router: {
       ...state.router,
-      routerList: getFilteredRouters(state),
+      list: { ...state.router.list, data: getFilteredRouters(state) },
     },
   };
 }
@@ -212,6 +237,7 @@ function mapDispatchToProps(dispatch) {
   return {
     fetchRouters: () => dispatch(fetchRouters()),
     filterRouters: (filter) => dispatch(filterRouters(filter)),
+    deleteRouter: (id) => dispatch(deleteRouter(id)),
   };
 }
 

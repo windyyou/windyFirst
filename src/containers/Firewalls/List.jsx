@@ -3,6 +3,7 @@ import Button from 'antd/lib/button';
 import Table from 'antd/lib/table';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
+import Popconfirm from 'antd/lib/popconfirm';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -11,12 +12,12 @@ import classNames from 'classnames';
 import includes from '../../../node_modules/lodash/includes';
 import uniq from '../../../node_modules/lodash/uniq';
 
-import { fetchFirewalls, filterFirewalls } from '../../actions/firewall';
+import { fetchFirewalls, filterFirewalls, deleteFirewall } from '../../actions/firewall';
 
 const InputGroup = Input.Group;
 
 function renderLink(text, row) {
-  return <Link to={`/firewalls/${row.id}`}>{text}</Link>;
+  return <Link to={`/app/firewalls/${row.id}`}>{text}</Link>;
 }
 
 function getColumns(data) {
@@ -30,7 +31,7 @@ function getColumns(data) {
         return record.status === value;
       },
     },
-    { title: '容量', dataIndex: 'describe' },
+    { title: '描述', dataIndex: 'description' },
     { title: '创建时间', dataIndex: 'createdAt' },
   ];
 }
@@ -42,19 +43,22 @@ function loadData(props) {
 class List extends React.Component {
   static propTypes = {
     firewall: React.PropTypes.shape({
-      isFetching: React.PropTypes.bool.isRequired,
-      error: React.PropTypes.object,
       filter: React.PropTypes.string,
-      entities: React.PropTypes.arrayOf(React.PropTypes.shape({
-        id: React.PropTypes.string.isRequired,
-        name: React.PropTypes.string.isRequired,
-        status: React.PropTypes.string.isRequired,
-        describe: React.PropTypes.string.isRequired,
-        createdAt: React.PropTypes.string.isRequired,
-      })),
-    }),
+      list: React.PropTypes.shape({
+        isFetching: React.PropTypes.bool.isRequired,
+        error: React.PropTypes.object,
+        data: React.PropTypes.arrayOf(React.PropTypes.shape({
+          id: React.PropTypes.string.isRequired,
+          name: React.PropTypes.string.isRequired,
+          status: React.PropTypes.string.isRequired,
+          description: React.PropTypes.string.isRequired,
+          createdAt: React.PropTypes.string.isRequired,
+        })).isRequired,
+      }).isRequired,
+    }).isRequired,
     fetchFirewalls: React.PropTypes.func.isRequired,
     filterFirewalls: React.PropTypes.func.isRequired,
+    deleteFirewall: React.PropTypes.func.isRequired,
   };
 
   static contextTypes = {
@@ -77,26 +81,37 @@ class List extends React.Component {
     return firewall.id;
   }
 
+  handleDelete = () => {
+    this.props.deleteFirewall(this.state.selectedRowKeys[0]);
+    this.setState({ ...this.state, selectedRowKeys: [] });
+    this.context.router.push('/app/firewalls/');
+  };
+
   handleChange = (selectedRowKeys) => {
     this.setState({ selectedRowKeys });
   };
 
   handleCreateClick = (event) => {
     event.preventDefault();
-    this.context.router.push('/instances/new/step-1');
+    this.context.router.push('/app/instances/new/step-1');
+  };
+
+  handleReload = (e) => {
+    e.preventDefault();
+    loadData(this.props);
   };
 
   handleInputChange = (e) => {
     this.props.filterFirewalls(e.target.value);
   };
 
-  renderFirewall(rowSelection, columns, showData) {
+  renderFirewall(rowSelection, columns, firewall) {
     return (<Table
       rowKey={this.getRowKey}
       rowSelection={rowSelection}
       columns={columns}
-      dataSource={showData}
-      loading={this.props.firewall.isFetching}
+      dataSource={firewall.data}
+      loading={firewall.isFetching}
     />);
   }
 
@@ -108,7 +123,7 @@ class List extends React.Component {
 
   render() {
     const { firewall } = this.props;
-    const columns = getColumns(firewall.entities);
+    const columns = getColumns(firewall.list.data);
     const rowSelection = {
       onChange: this.handleChange,
     };
@@ -123,7 +138,7 @@ class List extends React.Component {
     });
     const firewalls = firewall.error ?
       this.renderError(firewall.error) :
-      this.renderFirewall(rowSelection, columns, firewall.entities);
+      this.renderFirewall(rowSelection, columns, firewall.list);
 
     return (
       <div className="table-view">
@@ -135,8 +150,10 @@ class List extends React.Component {
           >
             创建防火墙
           </Button>
-          <Button type="dashed" size="large" disabled={!hasSelected}>删除</Button>
-          <Button type="ghost" size="large">
+          <Popconfirm title="确定要删除这个防火墙吗？" onConfirm={this.handleDelete}>
+            <Button type="dashed" size="large" disabled={!hasSelected}>删除</Button>
+          </Popconfirm>
+          <Button type="ghost" size="large" onClick={this.handleReload}>
             <Icon type="reload" />
           </Button>
           <InputGroup className={searchCls}>
@@ -160,16 +177,16 @@ class List extends React.Component {
 }
 
 const getFilteredFirewalls = createSelector(
-  state => state.firewall.entities,
+  state => state.firewall.list.data,
   state => state.firewall.filter,
-  (entities, filter) => entities.filter(firewall => includes(firewall.name, filter))
+  (listData, filter) => listData.filter(firewall => includes(firewall.name, filter))
 );
 
 function mapStateToProps(state) {
   return {
     firewall: {
       ...state.firewall,
-      entities: getFilteredFirewalls(state),
+      list: { ...state.firewall.list, data: getFilteredFirewalls(state) },
     },
   };
 }
@@ -178,6 +195,7 @@ function mapDispatchToProps(dispatch) {
   return {
     fetchFirewalls: () => dispatch(fetchFirewalls()),
     filterFirewalls: (filter) => dispatch(filterFirewalls(filter)),
+    deleteFirewall: (id) => dispatch(deleteFirewall(id)),
   };
 }
 

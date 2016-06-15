@@ -3,6 +3,7 @@ import Tabs from 'antd/lib/tabs';
 
 import Description from '../../containers/Instances/Description';
 import Monitor from './../../containers/Instances/Monitor';
+import Topology from './../../containers/Instances/Topology';
 
 const TabPane = Tabs.TabPane;
 
@@ -14,7 +15,7 @@ export default function Detail(props) {
         <TabPane tab="监控" key="2"><Monitor {...props} /></TabPane>
         <TabPane tab="终端日志" key="3" disabled>终端日志</TabPane>
         <TabPane tab="终端" key="4" disabled>终端</TabPane>
-        <TabPane tab="拓扑" key="5">拓扑</TabPane>
+        <TabPane tab="拓扑" key="5"><Topology /></TabPane>
       </Tabs>
     </div>
   );

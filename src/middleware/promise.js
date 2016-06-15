@@ -26,15 +26,23 @@ export default () => next => action => {
   });
 
   return promise.then(
-    response => next({
-      type: SUCCESS,
-      payload: response,
-    })
+    response => {
+      next({
+        type: SUCCESS,
+        payload: response,
+      });
+
+      return response;
+    }
   ).catch(
-    error => next({
-      type: FAILURE,
-      payload: error,
-      error: true,
-    })
+    error => {
+      next({
+        type: FAILURE,
+        payload: error,
+        error: true,
+      });
+
+      return error;
+    }
   );
 };

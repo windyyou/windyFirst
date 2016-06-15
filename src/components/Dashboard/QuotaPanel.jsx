@@ -4,6 +4,7 @@ import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
+import Spin from 'antd/lib/spin';
 
 export default class QuotaPanel extends React.Component {
   renderQuota(entities) {
@@ -19,7 +20,7 @@ export default class QuotaPanel extends React.Component {
                       {`${d.type}(${d.unit})`}
                       <span className="pull-right">{`${d.used}/${d.total}`}</span>
                     </div>
-                    <Progress.Line
+                    <Progress
                       percent={d.used / d.total * 100}
                       showInfo={false}
                       strokeWidth={12}
@@ -37,7 +38,7 @@ export default class QuotaPanel extends React.Component {
 
   renderFetching() {
     return (
-      <span>loading...</span>
+      <Spin size="default" />
     );
   }
 

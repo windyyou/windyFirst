@@ -11,11 +11,11 @@ import image from './image';
 import keypair from './keypair';
 import network from './network';
 import floatingIp from './floatingIp';
-import virtualNic from './virtualNic';
+import port from './port';
 import snapshot from './snapshot';
 import aggregation from './aggregation';
 import monitor from './monitor';
-import disk from './disk';
+import volume from './volume';
 import subnet from './subnet';
 import backup from './backup';
 import bareMetal from './bareMetal';
@@ -24,6 +24,12 @@ import firewall from './firewall';
 import securityGroup from './securityGroup';
 import notification from './notification';
 import notificationList from './notificationList';
+import bill from './bill';
+import service from './service';
+import auth from './auth';
+import user from './user';
+import pool from './pool';
+import stack from './stack';
 
 const rootReducer = combineReducers({
   router,
@@ -33,7 +39,7 @@ const rootReducer = combineReducers({
   network,
   subnet,
   floatingIp,
-  virtualNic,
+  port,
   snapshot,
   operation,
   quota,
@@ -41,7 +47,7 @@ const rootReducer = combineReducers({
   billing,
   aggregation,
   monitor,
-  disk,
+  volume,
   backup,
   bareMetal,
   securityGroup,
@@ -50,6 +56,12 @@ const rootReducer = combineReducers({
   firewall,
   notification,
   notificationList,
+  bill,
+  service,
+  auth,
+  user,
+  pool,
+  stack,
 });
 
 export default rootReducer;

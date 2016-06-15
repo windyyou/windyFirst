@@ -1,45 +1,74 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
 
-import { scrollToLeftTop } from '../utils/domUtils';
+import { scrollToLeftTop } from '../utils/dom';
+import { redirectToApp, redirectToLogin } from '../utils/route';
 
 import InstanceRoutes from './instances';
 import NetworkRoutes from './networks';
 import SubnetRoutes from './subnets.jsx';
 import SnapshotRoutes from './snapshots';
 import FloatingIpRoutes from './floatingIps';
-import VirtualNicRoutes from './virtualNics';
+import PortRoutes from './ports';
 import BareMetalRoutes from './bareMetals';
 import SecurityGroupRoutes from './securityGroup';
 import KeypairRoutes from './keypairs.jsx';
 import RouterRoutes from './routers';
 import AlarmRoutes from './alarm.jsx';
 import FirewallRoutes from './firewalls.jsx';
-import DiskRoutes from './disks.jsx';
+import OperationsRoutes from './operation.jsx';
+import VolumeRoutes from './volumes.jsx';
 import BackupRoutes from './backups';
 import NotificationRoutes from './notifications';
 import NotificationListRoutes from './notificationLists';
+import Users from './user.jsx';
+import billRoutes from './bills';
+import Pools from './pool.jsx';
 import App from '../containers/App';
 import Dashboard from '../containers/Dashboard';
+import Login from '../containers/Login';
+import SignUp from '../containers/SignUp';
+import Landing from '../containers/Landing.jsx';
+import Templates from './templates';
+
+function redirectToLoginOnChange(prevState, nextState, replace) {
+  scrollToLeftTop();
+
+  redirectToLogin(nextState, replace);
+}
 
 export default (
-  <Route path="/" component={App} onChange={scrollToLeftTop}>
-    <IndexRoute component={Dashboard} />
-    {InstanceRoutes}
-    {NetworkRoutes}
-    {FloatingIpRoutes}
-    {VirtualNicRoutes}
-    {SecurityGroupRoutes}
-    {SnapshotRoutes}
-    {RouterRoutes}
-    {DiskRoutes}
-    {BackupRoutes}
-    {NotificationRoutes}
-    {NotificationListRoutes}
-    {KeypairRoutes}
-    {SubnetRoutes}
-    {AlarmRoutes}
-    {FirewallRoutes}
-    {BareMetalRoutes}
+  <Route path="/">
+    <IndexRoute component={Login} onEnter={redirectToApp} />
+    <Route path="sign-up" component={SignUp} onEnter={redirectToApp} />
+    <Route
+      path="app"
+      component={App}
+      onChange={redirectToLoginOnChange}
+      onEnter={redirectToLogin}
+    >
+      <IndexRoute component={Dashboard} />
+      {InstanceRoutes}
+      {NetworkRoutes}
+      {FloatingIpRoutes}
+      {PortRoutes}
+      {SecurityGroupRoutes}
+      {SnapshotRoutes}
+      {RouterRoutes}
+      {VolumeRoutes}
+      {BackupRoutes}
+      {NotificationRoutes}
+      {NotificationListRoutes}
+      {billRoutes}
+      {KeypairRoutes}
+      {SubnetRoutes}
+      {AlarmRoutes}
+      {FirewallRoutes}
+      {OperationsRoutes}
+      {BareMetalRoutes}
+      {Users}
+      {Pools}
+      {Templates}
+    </Route>
   </Route>
 );

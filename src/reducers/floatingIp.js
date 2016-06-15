@@ -3,13 +3,21 @@ import {
   FETCH_FLOATING_IPS_REQUEST,
   FETCH_FLOATING_IPS_SUCCESS,
   FETCH_FLOATING_IPS_FAILURE,
+
   FILTER_FLOATING_IPS,
+
+  DELETE_FLOATING_IP_REQUEST,
+  DELETE_FLOATING_IP_SUCCESS,
+  DELETE_FLOATING_IP_FAILURE,
 } from '../constants/floatingIp';
 
 const INITIAL_STATE = {
-  isFetching: false,
-  entities: [],
-  error: null,
+  // 列表
+  list: {
+    isFetching: false,
+    error: null,
+    data: [],
+  },
 
   // 搜索内容
   filter: '',
@@ -18,23 +26,60 @@ const INITIAL_STATE = {
 export default handleActions({
   [FETCH_FLOATING_IPS_REQUEST]: (state) => ({
     ...state,
-    isFetching: true,
+    list: {
+      ...state.list,
+      isFetching: true,
+    },
   }),
 
   [FETCH_FLOATING_IPS_SUCCESS]: (state, action) => ({
     ...state,
-    isFetching: false,
-    entities: action.payload,
+    list: {
+      ...state.list,
+      isFetching: false,
+      data: action.payload,
+      error: null,
+    },
   }),
 
   [FETCH_FLOATING_IPS_FAILURE]: (state, action) => ({
     ...state,
-    isFetching: false,
-    error: action.payload,
+    list: {
+      ...state.list,
+      isFetching: false,
+      error: action.payload,
+      data: [],
+    },
   }),
 
   [FILTER_FLOATING_IPS]: (state, action) => ({
     ...state,
     filter: action.payload,
+  }),
+
+  [DELETE_FLOATING_IP_REQUEST]: (state) => ({
+    ...state,
+    list: {
+      ...state.list,
+      isFetching: true,
+    },
+  }),
+
+  [DELETE_FLOATING_IP_SUCCESS]: (state, action) => ({
+    ...state,
+    list: {
+      ...state.list,
+      isFetching: false,
+      data: action.payload,
+    },
+  }),
+
+  [DELETE_FLOATING_IP_FAILURE]: (state, action) => ({
+    ...state,
+    list: {
+      ...state.list,
+      isFetching: false,
+      error: action.payload,
+    },
   }),
 }, INITIAL_STATE);

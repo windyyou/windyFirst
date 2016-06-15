@@ -16,7 +16,7 @@ export default class TaskDropdown extends React.Component {
                 <p>
                   <strong>Task {i}</strong>
                 </p>
-                <Progress.Line percent={percent} />
+                <Progress percent={percent} />
               </a>
             </li>
           )}

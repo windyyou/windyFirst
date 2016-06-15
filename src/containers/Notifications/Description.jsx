@@ -1,45 +1,38 @@
 import React from 'react';
+import Spin from 'antd/lib/spin';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import NotificationInfo from '../../components/Notifications/NotificationInfo';
-import { fetchNotification, putNotification } from '../../actions/notification';
-
-const propTypes = {
-  notification: React.PropTypes.shape({
-    isFetching: React.PropTypes.bool.isRequired,
-    error: React.PropTypes.object,
-    currentEntity: React.PropTypes.shape({
-      createdAt: React.PropTypes.string.isRequired,
-      type: React.PropTypes.string.isRequired,
-      status: React.PropTypes.string.isRequired,
-      id: React.PropTypes.string.isRequired,
-      name: React.PropTypes.string.isRequired,
-      text: React.PropTypes.string.isRequired,
-    }),
-  }).isRequired,
-  fetchNotification: React.PropTypes.func.isRequired,
-  putNotification: React.PropTypes.func.isRequired,
-};
+import NotificationInfo from '../../components/Notifications/BasicInfo';
+import { fetchNotification } from '../../actions/notification';
 
 function loadData(props) {
   props.fetchNotification(props.params.key);
-  props.putNotification({ ...props.notification.currentEntity, id: props.params.key, status: '已读' });
 }
 
 class Description extends React.Component {
+  static propTypes = {
+    current: React.PropTypes.shape({
+      isFetching: React.PropTypes.bool.isRequired,
+      error: React.PropTypes.object,
+      data: React.PropTypes.shape({
+        createdAt: React.PropTypes.string.isRequired,
+        type: React.PropTypes.string.isRequired,
+        read: React.PropTypes.bool.isRequired,
+        id: React.PropTypes.string.isRequired,
+        name: React.PropTypes.string.isRequired,
+        text: React.PropTypes.string.isRequired,
+      }),
+    }).isRequired,
+    fetchNotification: React.PropTypes.func.isRequired,
+  };
+
   componentDidMount() {
     loadData(this.props);
   }
 
-  renderNotification() {
-    return (
-      <NotificationInfo {...this.props} />
-    );
-  }
-
   renderFetching() {
     return (
-      <span>loading...</span>
+      <Spin size="default" />
     );
   }
 
@@ -49,31 +42,34 @@ class Description extends React.Component {
     );
   }
 
+  renderNotification() {
+    return (
+      <NotificationInfo {...this.props} />
+    );
+  }
+
   render() {
-    const notificationInfo = this.props.notification.error ?
-      this.renderError(this.props.notification.error) :
+    const notificationInfo = this.props.current.error ?
+      this.renderError(this.props.current.error) :
       this.renderNotification();
 
     return (
       <div>
-        {this.props.notification.isFetching ? this.renderFetching() : notificationInfo}
+        {this.props.current.isFetching ? this.renderFetching() : notificationInfo}
       </div>
     );
   }
 }
 
-Description.propTypes = propTypes;
-
 function mapStateToProps() {
   return createStructuredSelector({
-    notification: state => state.notification,
+    current: state => state.notification.current,
   });
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchNotification: (key) => dispatch(fetchNotification(key)),
-    putNotification: (params) => dispatch(putNotification(params)),
+    fetchNotification: (id) => dispatch(fetchNotification(id)),
   };
 }
 

@@ -7,20 +7,29 @@ const MenuItem = Menu.Item;
 const MenuDivider = Menu.Divider;
 
 export default class ProfileDropdown extends React.Component {
+  static propTypes = {
+    auth: React.PropTypes.shape({
+      user: React.PropTypes.shape({
+        name: React.PropTypes.string.isRequired,
+      }).isRequired,
+    }),
+    handleLogout: React.PropTypes.func.isRequired,
+  };
+
   getContent() {
     return (
       <div className="dropdown-profile open">
         <div className="dropdown-menu">
           <Menu>
             <MenuItem>
-              <a href="#"><Icon type="setting" /> 选项1</a>
+              <a><Icon type="setting" /> 选项1</a>
             </MenuItem>
             <MenuItem>
-              <a href="#"><Icon type="setting" /> 选项2</a>
+              <a><Icon type="setting" /> 选项2</a>
             </MenuItem>
             <MenuDivider />
             <MenuItem>
-              <a href="#"><Icon type="logout" /> 退出</a>
+              <a onClick={this.props.handleLogout}><Icon type="logout" /> 退出</a>
             </MenuItem>
           </Menu>
         </div>
@@ -35,7 +44,7 @@ export default class ProfileDropdown extends React.Component {
           overlay={ this.getContent() }
           trigger={ ['click'] }
         >
-          <a href="#"><Icon type="user" /> Admin</a>
+          <a ><Icon type="user" />{this.props.auth.user.name}</a>
         </Dropdown>
       </li>
     );

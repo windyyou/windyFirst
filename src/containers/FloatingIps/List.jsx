@@ -5,6 +5,7 @@ import Icon from 'antd/lib/icon';
 import Dropdown from 'antd/lib/dropdown';
 import Input from 'antd/lib/input';
 import Menu from 'antd/lib/menu';
+import Popconfirm from 'antd/lib/popconfirm';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -13,13 +14,13 @@ import classNames from 'classnames';
 import includes from '../../../node_modules/lodash/includes';
 import uniq from '../../../node_modules/lodash/uniq';
 
-import { fetchFloatingIps, filterFloatingIps } from '../../actions/floatingIp';
+import { fetchFloatingIps, filterFloatingIps, deleteFloatingIp } from '../../actions/floatingIp';
 
 const InputGroup = Input.Group;
 const MenuItem = Menu.Item;
 
 function renderLink(text, row) {
-  return <Link to={`/floating-ips/${row.id}`}>{text}</Link>;
+  return <Link to={`/app/floating-ips/${row.id}`}>{text}</Link>;
 }
 
 function renderBandwidth(text) {
@@ -40,7 +41,7 @@ function renderRsource(text, row) {
 function getColumns(data) {
   const statusFilter = uniq(data.map(record => record.status))
     .map(st => ({ text: st, value: st }));
-  const lineFilter = uniq(data.map(record => record.line))
+  const typeFilter = uniq(data.map(record => record.type))
     .map(st => ({ text: st, value: st }));
   return [
     { title: '名称', dataIndex: 'name', render: renderLink },
@@ -49,12 +50,12 @@ function getColumns(data) {
         return record.status === value;
       },
     },
-    { title: 'IP地址', dataIndex: 'ip' },
+    { title: 'IP地址', dataIndex: 'floatingIpAddress' },
     { title: '资源', dataIndex: 'resource', render: renderRsource },
     { title: '带宽', dataIndex: 'bandwidth', render: renderBandwidth },
-    { title: 'IP线路', dataIndex: 'line', filters: lineFilter,
+    { title: 'IP线路', dataIndex: 'type', filters: typeFilter,
       onFilter(value, record) {
-        return record.line === value;
+        return record.type === value;
       },
     },
     { title: '创建时间', dataIndex: 'createdAt' },
@@ -68,22 +69,25 @@ function loadData(props) {
 class List extends React.Component {
   static propTypes = {
     floatingIp: React.PropTypes.shape({
-      isFetching: React.PropTypes.bool.isRequired,
-      error: React.PropTypes.object,
       filter: React.PropTypes.string,
-      entities: React.PropTypes.arrayOf(React.PropTypes.shape({
-        id: React.PropTypes.string.isRequired,
-        name: React.PropTypes.string.isRequired,
-        status: React.PropTypes.string.isRequired,
-        ip: React.PropTypes.string.isRequired,
-        bandwidth: React.PropTypes.number.isRequired,
-        line: React.PropTypes.string.isRequired,
-        createdAt: React.PropTypes.string.isRequired,
-        resource: React.PropTypes.object,
-      })),
-    }),
+      list: React.PropTypes.shape({
+        isFetching: React.PropTypes.bool.isRequired,
+        error: React.PropTypes.object,
+        data: React.PropTypes.arrayOf(React.PropTypes.shape({
+          id: React.PropTypes.string.isRequired,
+          name: React.PropTypes.string.isRequired,
+          status: React.PropTypes.string.isRequired,
+          floatingIpAddress: React.PropTypes.string.isRequired,
+          bandwidth: React.PropTypes.number.isRequired,
+          type: React.PropTypes.string.isRequired,
+          createdAt: React.PropTypes.string.isRequired,
+          resource: React.PropTypes.object,
+        })).isRequired,
+      }).isRequired,
+    }).isRequired,
     fetchFloatingIps: React.PropTypes.func.isRequired,
     filterFloatingIps: React.PropTypes.func.isRequired,
+    deleteFloatingIp: React.PropTypes.func.isRequired,
   };
 
   static contextTypes = {
@@ -116,11 +120,19 @@ class List extends React.Component {
           <a href="#">解除绑定</a>
         </MenuItem>
         <MenuItem key="3" disabled={!hasSelected}>
-          <a href="#">删除</a>
+          <Popconfirm title="确定要删除这个ip吗？" onConfirm={this.handleDelete}>
+            <a href="">删除</a>
+          </Popconfirm>
         </MenuItem>
       </Menu>
     );
   }
+
+  handleDelete = () => {
+    this.props.deleteFloatingIp(this.state.selectedRows[0].id);
+    this.setState({ ...this.state, selectedRows: [] });
+    this.context.router.push('/app/floating-ips/');
+  };
 
   handleChange = (selectedRowKeys, selectedRows) => {
     this.setState({ selectedRows });
@@ -128,20 +140,25 @@ class List extends React.Component {
 
   handleCreateClick = (event) => {
     event.preventDefault();
-    this.context.router.push('/floating-ips/new/step-1');
+    this.context.router.push('/app/floating-ips/new/step-1');
+  };
+
+  handleReload = (e) => {
+    e.preventDefault();
+    loadData(this.props);
   };
 
   handleInputChange = (e) => {
     this.props.filterFloatingIps(e.target.value);
   };
 
-  renderFloatingIp(rowSelection, columns, showData) {
+  renderFloatingIp(rowSelection, columns, floatingIp) {
     return (<Table
       rowKey={this.getRowKey}
       rowSelection={rowSelection}
       columns={columns}
-      dataSource={showData}
-      loading={this.props.floatingIp.isFetching}
+      dataSource={floatingIp.data}
+      loading={floatingIp.isFetching}
     />);
   }
 
@@ -154,7 +171,7 @@ class List extends React.Component {
   render() {
     const { floatingIp } = this.props;
     const { selectedRows } = this.state;
-    const columns = getColumns(floatingIp.entities);
+    const columns = getColumns(floatingIp.list.data);
     const rowSelection = {
       onChange: this.handleChange,
     };
@@ -172,7 +189,7 @@ class List extends React.Component {
     });
     const floatingIps = floatingIp.error ?
       this.renderError(floatingIp.error) :
-      this.renderFloatingIp(rowSelection, columns, floatingIp.entities);
+      this.renderFloatingIp(rowSelection, columns, floatingIp.list);
 
     return (
       <div className="table-view">
@@ -183,7 +200,7 @@ class List extends React.Component {
           <Dropdown overlay={menu} trigger={['click']}>
             <Button type="ghost" size="large">更多<Icon type="down" /></Button>
           </Dropdown>
-          <Button type="ghost" size="large">
+          <Button type="ghost" size="large" onClick={this.handleReload}>
             <Icon type="reload" />
           </Button>
           <InputGroup className={searchCls}>
@@ -207,7 +224,7 @@ class List extends React.Component {
 }
 
 const getFilteredFloatingIps = createSelector(
-  state => state.floatingIp.entities,
+  state => state.floatingIp.list.data,
   state => state.floatingIp.filter,
   (entities, filter) => entities.filter(entity => includes(entity.name, filter))
 );
@@ -216,7 +233,7 @@ function mapStateToProps(state) {
   return {
     floatingIp: {
       ...state.floatingIp,
-      entities: getFilteredFloatingIps(state),
+      list: { ...state.floatingIp.list, data: getFilteredFloatingIps(state) },
     },
   };
 }
@@ -225,6 +242,7 @@ function mapDispatchToProps(dispatch) {
   return {
     fetchFloatingIps: () => dispatch(fetchFloatingIps()),
     filterFloatingIps: (filter) => dispatch(filterFloatingIps(filter)),
+    deleteFloatingIp: (id) => dispatch(deleteFloatingIp(id)),
   };
 }
 

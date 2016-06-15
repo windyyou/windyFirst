@@ -21,11 +21,13 @@ export default handleActions({
     ...state,
     isFetching: false,
     entities: action.payload,
+    error: null,
   }),
 
   [FETCH_BILLINGS_FAILURE]: (state, action) => ({
     ...state,
     isFetching: false,
     error: action.payload,
+    data: [],
   }),
 }, INITIAL_STATE);

@@ -6,11 +6,13 @@ import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 
 import Preview from '../../components/Instances/New/Preview';
-import { fetchConfig } from '../../actions/config';
 import { fetchImages } from '../../actions/image';
 import { fetchKeypairs } from '../../actions/keypair';
 import { fetchNetworks } from '../../actions/network';
+import { fetchSubnets } from '../../actions/subnet';
 import { fetchSnapshots } from '../../actions/snapshot';
+import { createInstance, fetchInstanceConfig } from '../../actions/instance';
+import { dict } from '../../utils/data';
 
 const Step = Steps.Step;
 const steps = [
@@ -20,11 +22,12 @@ const steps = [
 ];
 
 function loadData(props) {
-  props.fetchConfig();
+  props.fetchInstanceConfig();
   props.fetchImages();
   props.fetchKeypairs();
   props.fetchNetworks();
   props.fetchSnapshots();
+  props.fetchSubnets();
 }
 
 class New extends React.Component {
@@ -35,42 +38,54 @@ class New extends React.Component {
   static propTypes = {
     children: React.PropTypes.object.isRequired,
     image: React.PropTypes.shape({
-      isFetching: React.PropTypes.bool.isRequired,
-      error: React.PropTypes.object,
-      entities: React.PropTypes.arrayOf(React.PropTypes.shape({
-        name: React.PropTypes.string.isRequired,
-      })),
+      list: React.PropTypes.shape({
+        isFetching: React.PropTypes.bool.isRequired,
+        error: React.PropTypes.object,
+        data: React.PropTypes.arrayOf(React.PropTypes.shape({
+          name: React.PropTypes.string.isRequired,
+        })),
+      }),
     }),
     snapshot: React.PropTypes.shape({
-      isFetching: React.PropTypes.bool.isRequired,
-      error: React.PropTypes.object,
-      entities: React.PropTypes.arrayOf(React.PropTypes.shape({
-        name: React.PropTypes.string.isRequired,
-      })),
-    }),
-    config: React.PropTypes.shape({
-      isFetching: React.PropTypes.bool.isRequired,
-      error: React.PropTypes.object,
-      instance: React.PropTypes.shape({
-        cpu: React.PropTypes.array.isRequired,
-        memory: React.PropTypes.array.isRequired,
-      }).isRequired,
+      list: React.PropTypes.shape({
+        isFetching: React.PropTypes.bool.isRequired,
+        error: React.PropTypes.object,
+        data: React.PropTypes.arrayOf(React.PropTypes.shape({
+          name: React.PropTypes.string.isRequired,
+        })),
+      }),
     }),
     network: React.PropTypes.shape({
-      isFetching: React.PropTypes.bool.isRequired,
-      error: React.PropTypes.object,
-      entities: React.PropTypes.arrayOf(React.PropTypes.shape({
-        name: React.PropTypes.string.isRequired,
-        subnets: React.PropTypes.array.isRequired,
-      })),
+      list: React.PropTypes.shape({
+        isFetching: React.PropTypes.bool.isRequired,
+        error: React.PropTypes.object,
+        data: React.PropTypes.arrayOf(React.PropTypes.shape({
+          name: React.PropTypes.string.isRequired,
+          subnets: React.PropTypes.array.isRequired,
+        })),
+      }),
+    }),
+    subnet: React.PropTypes.shape({
+      list: React.PropTypes.shape({
+        isFetching: React.PropTypes.bool.isRequired,
+        error: React.PropTypes.object,
+        data: React.PropTypes.arrayOf(React.PropTypes.shape({
+          name: React.PropTypes.string.isRequired,
+          id: React.PropTypes.string.isRequired,
+        })),
+      }),
     }),
     keypair: React.PropTypes.shape({
-      isFetching: React.PropTypes.bool.isRequired,
-      error: React.PropTypes.object,
-      entities: React.PropTypes.arrayOf(React.PropTypes.shape({
-        name: React.PropTypes.string.isRequired,
-      })),
+      list: React.PropTypes.shape({
+        isFetching: React.PropTypes.bool.isRequired,
+        error: React.PropTypes.object,
+        data: React.PropTypes.arrayOf(React.PropTypes.shape({
+          name: React.PropTypes.string.isRequired,
+        })),
+      }),
     }),
+    instance: React.PropTypes.object.isRequired,
+    createInstance: React.PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -79,17 +94,19 @@ class New extends React.Component {
     this.state = {
       current: 1,
       spec: {
-        name: 'instance',
-        imageType: 'image',
-        image: 'CentOS 6.4 64bit',
-        cpu: 1,
-        memory: 1,
+        name: '',
+        sourceType: 'image',
+        source: '',
+        core: 1,
+        ram: 1,
+        volumeType: '',
+        volumeSize: 0,
         networkType: 'basic',
-        subnet: 'sub1',
+        subnet: '',
         username: 'root',
         credentialType: 'password',
         password: '',
-        keypair: 'secret1',
+        keypair: '',
         quantity: 1,
       },
     };
@@ -118,7 +135,7 @@ class New extends React.Component {
       current: step,
     });
 
-    this.context.router.push(`/instances/new/step-${step}`);
+    this.context.router.push(`/app/instances/new/step-${step}`);
   };
 
   handlePreviousClick = (e) => {
@@ -131,13 +148,22 @@ class New extends React.Component {
       current: step,
     });
 
-    this.context.router.push(`/instances/new/step-${step}`);
+    this.context.router.push(`/app/instances/new/step-${step}`);
   };
 
   handleSubmit = (e) => {
     e.preventDefault();
+    const source = this.state.spec.sourceType === 'image' ? this.props.image : this.props.snapshot;
+    const sourceName = dict(this.state.spec.source, source.list.data, 'id', 'name');
+    const sourceId = this.state.spec.source;
+    const keypairId = this.state.spec.keypair;
+    const keypairName = dict(this.state.spec.keypair, this.props.keypair.list.data, 'id', 'name');
 
-    this.context.router.push('/instances');
+    const newSpec = { ...this.state.spec, sourceName, sourceId, keypairId, keypairName };
+    delete newSpec.source;
+    delete newSpec.keypair;
+    this.props.createInstance(newSpec);
+    this.context.router.push('/app/instances/');
   };
 
   render() {
@@ -161,7 +187,7 @@ class New extends React.Component {
                 handlePreviousClick: this.handlePreviousClick,
                 handleSubmit: this.handleSubmit,
                 handleSpecChange: this.handleSpecChange,
-                config: this.props.config,
+                instance: this.props.instance,
                 image: this.props.image,
                 keypair: this.props.keypair,
                 network: this.props.network,
@@ -169,7 +195,7 @@ class New extends React.Component {
               })}
           </Col>
           <Col span="8" offset="2">
-            <Preview spec={this.state.spec} />
+            <Preview {...this.props} spec={this.state.spec} />
           </Col>
         </Row>
       </div>
@@ -179,21 +205,24 @@ class New extends React.Component {
 
 function mapStateToProps() {
   return createStructuredSelector({
-    config: state => state.config,
+    instance: state => state.instance,
     image: state => state.image,
     snapshot: state => state.snapshot,
     keypair: state => state.keypair,
     network: state => state.network,
+    subnet: state => state.subnet,
   });
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchConfig: () => dispatch(fetchConfig()),
+    fetchInstanceConfig: () => dispatch(fetchInstanceConfig()),
     fetchImages: () => dispatch(fetchImages()),
     fetchKeypairs: () => dispatch(fetchKeypairs()),
     fetchNetworks: () => dispatch(fetchNetworks()),
     fetchSnapshots: () => dispatch(fetchSnapshots()),
+    fetchSubnets: () => dispatch(fetchSubnets()),
+    createInstance: (params) => dispatch(createInstance(params)),
   };
 }
 

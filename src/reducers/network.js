@@ -3,38 +3,85 @@ import {
   FETCH_NETWORKS_REQUEST,
   FETCH_NETWORKS_SUCCESS,
   FETCH_NETWORKS_FAILURE,
+
   FILTER_NETWORKS,
+
   FETCH_NETWORKS_COUNT_REQUEST,
   FETCH_NETWORKS_COUNT_SUCCESS,
   FETCH_NETWORKS_COUNT_FAILURE,
+
+  FETCH_NETWORK_REQUEST,
+  FETCH_NETWORK_SUCCESS,
+  FETCH_NETWORK_FAILURE,
+
+  DELETE_NETWORK_REQUEST,
+  DELETE_NETWORK_SUCCESS,
+  DELETE_NETWORK_FAILURE,
+
+  UPDATE_NETWORK_REQUEST,
+  UPDATE_NETWORK_SUCCESS,
+  UPDATE_NETWORK_FAILURE,
+
+  CREATE_NETWORK_REQUEST,
+  CREATE_NETWORK_SUCCESS,
+  CREATE_NETWORK_FAILURE,
 } from '../constants/networks';
 
 const INITIAL_STATE = {
-  isFetching: false,
-  entities: [],
-  error: null,
+  list: {
+    isFetching: false,
+    error: null,
+    data: [],
+  },
+  current: {
+    isFetching: false,
+    error: null,
+    data: {
+      id: '',
+      name: '',
+      status: '',
+      managed: false,
+      createdAt: '',
+      subnets: [],
+    },
+  },
 
   // 搜索内容
   filter: '',
-  count: { count: 0 },
+  count: {
+    isFetching: false,
+    error: null,
+    data: 0,
+  },
 };
 
 export default handleActions({
   [FETCH_NETWORKS_REQUEST]: (state) => ({
     ...state,
-    isFetching: true,
+    list: {
+      ...state.list,
+      isFetching: true,
+    },
   }),
 
   [FETCH_NETWORKS_SUCCESS]: (state, action) => ({
     ...state,
-    isFetching: false,
-    entities: action.payload,
+    list: {
+      ...state.list,
+      isFetching: false,
+      data: action.payload,
+      error: null,
+    },
   }),
 
   [FETCH_NETWORKS_FAILURE]: (state, action) => ({
     ...state,
-    isFetching: false,
-    error: action.payload,
+    list: {
+      ...state.list,
+      isFetching: false,
+      error: action.payload,
+      data: [],
+    },
   }),
 
   [FILTER_NETWORKS]: (state, action) => ({
@@ -44,19 +91,137 @@ export default handleActions({
 
   [FETCH_NETWORKS_COUNT_REQUEST]: (state) => ({
     ...state,
-    isFetching: true,
+    count: {
+      ...state.count,
+      isFetching: true,
+    },
   }),
 
   [FETCH_NETWORKS_COUNT_SUCCESS]: (state, action) => ({
     ...state,
-    isFetching: false,
-    count: action.payload,
+    count: {
+      ...state.count,
+      isFetching: false,
+      data: action.payload,
+      error: null,
+    },
   }),
 
   [FETCH_NETWORKS_COUNT_FAILURE]: (state, action) => ({
     ...state,
-    isFetching: false,
-    error: action.payload,
+    count: {
+      ...state.count,
+      isFetching: false,
+      error: action.payload,
+      data: 0,
+    },
   }),
 
+  [FETCH_NETWORK_REQUEST]: (state) => ({
+    ...state,
+    current: {
+      ...state.current,
+      isFetching: true,
+    },
+  }),
+
+  [FETCH_NETWORK_SUCCESS]: (state, action) => ({
+    ...state,
+    current: {
+      ...state.current,
+      isFetching: false,
+      data: action.payload,
+      error: null,
+    },
+  }),
+
+  [FETCH_NETWORK_FAILURE]: (state, action) => ({
+    ...state,
+    current: {
+      isFetching: false,
+      error: action.payload,
+      data: INITIAL_STATE.current.data,
+    },
+  }),
+
+  [DELETE_NETWORK_REQUEST]: (state) => ({
+    ...state,
+    list: {
+      ...state.list,
+      isFetching: true,
+    },
+  }),
+
+  [DELETE_NETWORK_SUCCESS]: (state, action) => ({
+    ...state,
+    list: {
+      ...state.list,
+      isFetching: false,
+      data: action.payload,
+    },
+  }),
+
+  [DELETE_NETWORK_FAILURE]: (state, action) => ({
+    ...state,
+    list: {
+      ...state.list,
+      isFetching: false,
+      error: action.payload,
+    },
+  }),
+
+  [UPDATE_NETWORK_REQUEST]: (state) => ({
+    ...state,
+    current: {
+      ...state.current,
+      isFetching: true,
+    },
+  }),
+
+  [UPDATE_NETWORK_SUCCESS]: (state, action) => ({
+    ...state,
+    current: {
+      ...state.current,
+      isFetching: false,
+      data: action.payload,
+      error: null,
+    },
+  }),
+
+  [UPDATE_NETWORK_FAILURE]: (state, action) => ({
+    ...state,
+    current: {
+      ...state.current,
+      isFetching: false,
+      error: action.payload,
+    },
+  }),
+
+  [CREATE_NETWORK_REQUEST]: (state) => ({
+    ...state,
+    current: {
+      ...state.current,
+      isFetching: true,
+    },
+  }),
+
+  [CREATE_NETWORK_SUCCESS]: (state, action) => ({
+    ...state,
+    current: {
+      ...state.current,
+      isFetching: false,
+      data: action.payload,
+      error: null,
+    },
+  }),
+
+  [CREATE_NETWORK_FAILURE]: (state, action) => ({
+    ...state,
+    current: {
+      ...state.current,
+      isFetching: false,
+      error: action.payload,
+      data: {},
+    },
+  }),
 }, INITIAL_STATE);

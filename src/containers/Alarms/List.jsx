@@ -3,6 +3,7 @@ import Button from 'antd/lib/button';
 import Table from 'antd/lib/table';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
+import Popconfirm from 'antd/lib/popconfirm';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -10,16 +11,26 @@ import { createSelector } from 'reselect';
 import classNames from 'classnames';
 import includes from '../../../node_modules/lodash/includes';
 import uniq from '../../../node_modules/lodash/uniq';
-import { fetchAlarms, filterAlarms } from '../../actions/alarm';
+import { fetchAlarms, filterAlarms, deleteAlarm } from '../../actions/alarm';
 
 const InputGroup = Input.Group;
 
 function nameLink(text, row) {
-  return <Link to={`/alarms/${row.id}`}>{text}</Link>;
+  return <Link to={`/app/alarms/${row.id}`}>{text}</Link>;
 }
 
-function resourceLink(row) {
-  return <Link to={`/${row.type}s/${row.id}`}>{row.name}</Link>;
+function renderResource(resources, record) {
+  const prop = resources.filter(resource => resource);
+
+  return prop.reduce((prev, curr, index) => {
+    prev.push(<Link key={curr.id} to={`/${record.type}/${curr.id}`}>{curr.name}</Link>);
+
+    if (index !== prop.length - 1) {
+      prev.push(', ');
+    }
+
+    return prev;
+  }, []);
 }
 
 function getColumns(data) {
@@ -40,7 +51,7 @@ function getColumns(data) {
         return record.status === value;
       },
     },
-    { title: '资源', dataIndex: 'resource', render: resourceLink },
+    { title: '对象', dataIndex: 'resources', render: renderResource },
     { title: '创建时间', dataIndex: 'createdAt' },
   ];
 }
@@ -51,24 +62,10 @@ function loadData(props) {
 
 class List extends React.Component {
   static propTypes = {
-    alarm: React.PropTypes.shape({
-      isFetching: React.PropTypes.bool.isRequired,
-      error: React.PropTypes.object,
-      filter: React.PropTypes.string,
-      entities: React.PropTypes.arrayOf(React.PropTypes.shape({
-        id: React.PropTypes.string.isRequired,
-        name: React.PropTypes.string.isRequired,
-        status: React.PropTypes.string.isRequired,
-        enable: React.PropTypes.string.isRequired,
-        resource: React.PropTypes.shape({
-          id: React.PropTypes.string.isRequired,
-          type: React.PropTypes.string.isRequired,
-        }),
-        createdAt: React.PropTypes.string.isRequired,
-      })),
-    }),
+    alarm: React.PropTypes.object.isRequired,
     fetchAlarms: React.PropTypes.func.isRequired,
     filterAlarms: React.PropTypes.func.isRequired,
+    deleteAlarm: React.PropTypes.func.isRequired,
   };
 
   static contextTypes = {
@@ -97,20 +94,31 @@ class List extends React.Component {
 
   handleCreateClick = (event) => {
     event.preventDefault();
-    this.context.router.push('/alarms/new/step-1');
+    this.context.router.push('/app/alarms/new/step-1');
+  };
+
+  handleReload = (e) => {
+    e.preventDefault();
+    loadData(this.props);
   };
 
   handleInputChange = (e) => {
     this.props.filterAlarms(e.target.value);
   };
 
-  renderAlarm(rowSelection, columns, showData) {
+  handleDelete = () => {
+    this.props.deleteAlarm(this.state.selectedRows[0].id);
+    this.setState({ ...this.state, selectedRows: [] });
+    this.context.router.push('/app/alarms/');
+  };
+
+  renderAlarm(rowSelection, columns, alarm) {
     return (<Table
       rowKey={this.getRowKey}
       rowSelection={rowSelection}
       columns={columns}
-      dataSource={showData}
-      loading={this.props.alarm.isFetching}
+      dataSource={alarm.data}
+      loading={alarm.isFetching}
     />);
   }
 
@@ -123,7 +131,7 @@ class List extends React.Component {
   render() {
     const { alarm } = this.props;
     const { selectedRows } = this.state;
-    const columns = getColumns(alarm.entities);
+    const columns = getColumns(alarm.list.data);
     const hasSelected = this.state.selectedRows.length === 1;
     const enabled = hasSelected && selectedRows[0].enable === '启用';
     const unEnabled = hasSelected && selectedRows[0].enable === '未启用';
@@ -138,9 +146,9 @@ class List extends React.Component {
       'ant-search-input': true,
       'pull-right': true,
     });
-    const alarms = alarm.error ?
-      this.renderError(alarm.error) :
-      this.renderAlarm(rowSelection, columns, alarm.entities);
+    const alarms = alarm.list.error ?
+      this.renderError(alarm.list.error) :
+      this.renderAlarm(rowSelection, columns, alarm.list);
 
     return (
       <div className="table-view">
@@ -154,8 +162,10 @@ class List extends React.Component {
           </Button>
           <Button type="ghost" size="large" disabled={!hasSelected || enabled}>启用</Button>
           <Button type="ghost" size="large" disabled={!hasSelected || unEnabled}>禁用</Button>
-          <Button type="dashed" size="large" disabled={!hasSelected}>删除</Button>
-          <Button type="ghost" size="large">
+          <Popconfirm title="确定要删除这个监控吗？" onConfirm={this.handleDelete}>
+            <Button type="dashed" size="large" disabled={!hasSelected}>删除</Button>
+          </Popconfirm>
+          <Button type="ghost" size="large" onClick={this.handleReload}>
             <Icon type="reload" />
           </Button>
           <InputGroup className={searchCls}>
@@ -179,16 +189,16 @@ class List extends React.Component {
 }
 
 const getFilteredAlarms = createSelector(
-  state => state.alarm.entities,
+  state => state.alarm.list.data,
   state => state.alarm.filter,
-  (entities, filter) => entities.filter(alarm => includes(alarm.name, filter))
+  (listData, filter) => listData.filter(alarm => includes(alarm.name, filter))
 );
 
 function mapStateToProps(state) {
   return {
     alarm: {
       ...state.alarm,
-      entities: getFilteredAlarms(state),
+      list: { ...state.alarm.list, data: getFilteredAlarms(state) },
     },
   };
 }
@@ -197,6 +207,7 @@ function mapDispatchToProps(dispatch) {
   return {
     fetchAlarms: () => dispatch(fetchAlarms()),
     filterAlarms: (filter) => dispatch(filterAlarms(filter)),
+    deleteAlarm: (id) => dispatch(deleteAlarm(id)),
   };
 }
 

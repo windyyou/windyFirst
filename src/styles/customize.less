@@ -14,11 +14,32 @@
 @import "components/Instance/new";
 @import "components/Instance/index";
 @import "components/Instance/basic-info";
+@import "components/Alarm/new";
 @import "components/Notification/notification-info";
 
-html, body {
+@import "components/NotificationList/basic-info";
+@import "components/NotificationList/terminal-list";
+@import "components/NotificationList/new";
+
+@import "components/Network/new";
+
+@import "components/Volume/new";
+
+@import "components/Pool/usage";
+@import "components/Pool/new-template";
+@import "components/Pool/new-pool";
+@import "components/Pool/disabled";
+@import "components/Pool/template";
+
+@import "components/network-topology";
+
+@import "components/landing";
+@import "components/login";
+@import "components/sign-up";
+
+#root {
   height: 100%;
-  padding-top: 25px;
+  padding-top: 50px;
 }
 
 .main-content {
@@ -81,10 +102,90 @@ a.add:hover {
   color: tint(#60BE29, 20%);
 }
 
+a.cancel {
+  color: #E01515;
+}
+
+a.cancel:hover {
+  color: tint(#E01515, 20%);
+}
+
+a.save {
+  color: #60BE29;
+}
+
+a.save:hover {
+  color: tint(#60BE29, 20%);
+}
+
 .ant-dropdown-menu-item-disabled > a, .ant-dropdown-menu-submenu-title-disabled > a {
   cursor: not-allowed;
   pointer-events: none;
   color: #ccc;
   background-color: #f4f4f4;
   border-color: #d9d9d9;
+}
+
+.portalicon {
+  display: inline-block;
+  font-style: normal;
+  vertical-align: baseline;
+  text-align: center;
+  text-transform: none;
+  text-rendering: auto;
+  line-height: 1;
+}
+
+.portalicon::before {
+  display: block;
+  font-family: "anticon" !important;
+}
+
+.portalicon-delete::before {
+  content: "\E63A";
+}
+
+.portalicon-delete:hover::before {
+  content: "\E639";
+}
+
+.portalicon-add::before {
+  content: "\E63C";
+}
+
+.portalicon-add:hover::before {
+  content: "\E63D";
+}
+
+.portalicon-save::before {
+  content: "\E630";
+}
+
+.portalicon-save:hover::before {
+  content: "\E62F";
+}
+
+.portalicon-cancel::before {
+  content: "\E632";
+}
+
+.portalicon-cancel:hover::before {
+  content: "\E631";
+}
+
+.basic-info .portalicon, .basic-info .anticon {
+  font-size: 15px;
+  margin-left: 10px;
+}
+
+.basic-info .verticalCenter {
+  line-height: 30px;
+}
+
+.basic-info .marginLeft10px {
+  margin-left: 10px;
+}
+
+.basic-info .rowHeight {
+  min-height: 35px;
 }

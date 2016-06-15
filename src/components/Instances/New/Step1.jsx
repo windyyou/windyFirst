@@ -2,8 +2,9 @@ import React from 'react';
 import Form from 'antd/lib/form';
 import Input from 'antd/lib/input';
 import Radio from 'antd/lib/radio';
+import Spin from 'antd/lib/spin';
 
-import FormButtonArea from './FormButtonArea';
+import FormButtonArea from '../../common/FormButtonArea';
 
 import startsWith from 'lodash/startsWith';
 import isEqual from 'lodash/isEqual';
@@ -17,21 +18,25 @@ class Step1 extends React.Component {
   static propTypes = {
     form: React.PropTypes.object.isRequired,
     spec: React.PropTypes.shape({
-      imageType: React.PropTypes.string.isRequired,
+      sourceType: React.PropTypes.string.isRequired,
     }),
     image: React.PropTypes.shape({
-      isFetching: React.PropTypes.bool.isRequired,
-      error: React.PropTypes.object,
-      entities: React.PropTypes.arrayOf(React.PropTypes.shape({
-        name: React.PropTypes.string.isRequired,
-      })),
+      list: React.PropTypes.shape({
+        isFetching: React.PropTypes.bool.isRequired,
+        error: React.PropTypes.object,
+        data: React.PropTypes.arrayOf(React.PropTypes.shape({
+          name: React.PropTypes.string.isRequired,
+        })),
+      }),
     }),
     snapshot: React.PropTypes.shape({
-      isFetching: React.PropTypes.bool.isRequired,
-      error: React.PropTypes.object,
-      entities: React.PropTypes.arrayOf(React.PropTypes.shape({
-        name: React.PropTypes.string.isRequired,
-      })),
+      list: React.PropTypes.shape({
+        isFetching: React.PropTypes.bool.isRequired,
+        error: React.PropTypes.object,
+        entities: React.PropTypes.arrayOf(React.PropTypes.shape({
+          name: React.PropTypes.string.isRequired,
+        })),
+      }),
     }),
     handleNextClick: React.PropTypes.func.isRequired,
     handleSpecChange: React.PropTypes.func.isRequired,
@@ -45,17 +50,17 @@ class Step1 extends React.Component {
   }
 
   getSystems(images) {
-    const systems = images.map((image) => /^(\w+)\s+\w+/ig.exec(image.name)[1]);
+    const systems = images.map((image) => image.name.split(/[\-_\s]+/)[0]);
 
     return uniqWith(systems, isEqual);
   }
 
   getImages(image, systemType) {
     if (systemType) {
-      return image.entities.filter(img => startsWith(img.name, systemType));
+      return image.list.data.filter(img => startsWith(img.name, systemType));
     }
 
-    return image.entities;
+    return image.list.data;
   }
 
   handleSubmit = (e) => {
@@ -77,7 +82,7 @@ class Step1 extends React.Component {
 
   renderFetching() {
     return (
-      <span>loading...</span>
+      <Spin size="default" />
     );
   }
 
@@ -89,10 +94,26 @@ class Step1 extends React.Component {
 
   renderImages() {
     const { spec, image, snapshot, handleSpecChange } = this.props;
+    const { getFieldProps } = this.props.form;
     const systemType = this.state.systemType;
-    const isImage = spec.imageType === 'image';
-    const isFetching = isImage ? image.isFetching : snapshot.isFetching;
-    const error = isImage ? image.error : snapshot.error;
+    const isImage = spec.sourceType === 'image';
+    const isFetching = isImage ? image.list.isFetching : snapshot.list.isFetching;
+    const error = isImage ? image.list.error : snapshot.list.error;
+    const source = isImage ? '镜像' : '快照';
+
+    const formItemLayout = {
+      labelCol: { span: 5 },
+      wrapperCol: { span: 18, offset: 1 },
+    };
+
+    const radioProps = getFieldProps('source', {
+      rules: [
+        { required: true, message: `请选择${source}` },
+      ],
+      onChange: handleSpecChange,
+      initialValue: spec.source,
+    });
+
     let contents = '';
 
     if (isFetching) {
@@ -103,31 +124,29 @@ class Step1 extends React.Component {
       const images = isImage ? this.getImages(image, systemType) : this.getImages(snapshot);
       contents = (
         <RadioGroup
-          name="image"
-          value={spec.image}
-          onChange={handleSpecChange}
+          {...radioProps}
         >
           {images.map((img) =>
-            <Radio key={img.name} value={img.name} name="image">
-              <div className="image-option">{img.name}</div>
+            <Radio key={img.id} value={img.id} name="source">
+              <div className="image-option"> {img.name}</div>
             </Radio>)}
         </RadioGroup>
       );
     }
 
     return (
-      <FormItem wrapperCol={{ span: 21, offset: 6 }}>
-        <div className="images">
-          {contents}
-        </div>
+      <div className="images">
+      <FormItem {...formItemLayout} label={`${source}:`}>
+        {contents}
       </FormItem>
+      </div>
     );
   }
 
   renderSystemTypes(formItemLayout) {
     const { spec, image } = this.props;
     const images = this.getImages(image);
-    if (spec.imageType !== 'image') return null;
+    if (spec.sourceType !== 'image') return null;
 
     const systemOptions = this.getSystems(images)
       .map(name => ({ name, value: name }));
@@ -185,15 +204,15 @@ class Step1 extends React.Component {
             />
           </FormItem>
 
-          <FormItem {...formItemLayout} label="镜像:">
+          <FormItem {...formItemLayout} label="类型:">
             <RadioGroup
-              name="imageType"
-              value={spec.imageType}
+              name="sourceType"
+              value={spec.sourceType}
               size="large"
               onChange={this.props.handleSpecChange}
             >
-              <RadioButton value="image" name="imageType">系统镜像</RadioButton>
-              <RadioButton value="snapshot" name="imageType">主机快照</RadioButton>
+              <RadioButton value="image" name="sourceType">系统镜像</RadioButton>
+              <RadioButton value="snapshot" name="sourceType">主机快照</RadioButton>
             </RadioGroup>
           </FormItem>
 

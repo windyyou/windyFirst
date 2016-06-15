@@ -4,8 +4,9 @@ import Input from 'antd/lib/input';
 import Select from 'antd/lib/select';
 import Radio from 'antd/lib/radio';
 import InputNumber from 'antd/lib/input-number';
+import Spin from 'antd/lib/spin';
 
-import FormButtonArea from './FormButtonArea';
+import FormButtonArea from '../../common/FormButtonArea';
 
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
@@ -23,11 +24,13 @@ class Step3 extends React.Component {
       quantity: React.PropTypes.number.isRequired,
     }),
     keypair: React.PropTypes.shape({
-      isFetching: React.PropTypes.bool.isRequired,
-      error: React.PropTypes.object,
-      entities: React.PropTypes.arrayOf(React.PropTypes.shape({
-        name: React.PropTypes.string.isRequired,
-      })),
+      list: React.PropTypes.shape({
+        isFetching: React.PropTypes.bool.isRequired,
+        error: React.PropTypes.object,
+        entities: React.PropTypes.arrayOf(React.PropTypes.shape({
+          name: React.PropTypes.string.isRequired,
+        })),
+      }),
     }),
     handleSubmit: React.PropTypes.func.isRequired,
     handleSpecChange: React.PropTypes.func.isRequired,
@@ -92,7 +95,7 @@ class Step3 extends React.Component {
 
   renderFetching() {
     return (
-      <span>loading...</span>
+      <Spin size="default" />
     );
   }
 
@@ -104,8 +107,18 @@ class Step3 extends React.Component {
 
   renderKeypair(formItemLayout) {
     const { spec, keypair } = this.props;
-    const isFetching = keypair.isFetching;
-    const error = keypair.error;
+    const { getFieldProps } = this.props.form;
+    const isFetching = keypair.list.isFetching;
+    const error = keypair.list.error;
+
+    const keypairProps = getFieldProps('keypair', {
+      rules: [
+        { required: true, message: '请选择密钥' },
+      ],
+      onChange: this.handleKeypairChange,
+      initialValue: spec.keypair,
+    });
+
     let contents = '';
     if (isFetching) {
       contents = this.renderFetching();
@@ -113,12 +126,12 @@ class Step3 extends React.Component {
       contents = this.renderError(error);
     } else {
       contents = (
-        <Select value={spec.keypair}
+        <Select
+          {...keypairProps}
           style={{ width: 200 }}
           showSearch={false}
-          onChange={this.handleKeypairChange}
         >
-        {keypair.entities.map((key, i) => <Option key={i} value={key.name}>{key.name}</Option>)}
+        {keypair.list.data.map((key) => <Option key={key.id} value={key.id}>{key.name}</Option>)}
       </Select>);
     }
 

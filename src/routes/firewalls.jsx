@@ -5,7 +5,7 @@ import Firewalls from '../components/Firewalls';
 import List from '../containers/Firewalls/List.jsx';
 
 export default(
-  <Route path="/firewalls" component={Firewalls}>
+  <Route path="firewalls" component={Firewalls}>
     <IndexRoute component={List} />
   </Route>
 );

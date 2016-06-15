@@ -3,6 +3,7 @@ import Button from 'antd/lib/button';
 import Table from 'antd/lib/table';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
+import Popconfirm from 'antd/lib/popconfirm';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -10,19 +11,23 @@ import { createSelector } from 'reselect';
 import classNames from 'classnames';
 import includes from '../../../node_modules/lodash/includes';
 
-import { fetchSecurityGroups, filterSecurityGroups } from '../../actions/securityGroup';
+import {
+  fetchSecurityGroups,
+  filterSecurityGroups,
+  deleteSecurityGroup,
+} from '../../actions/securityGroup';
 
 const InputGroup = Input.Group;
 
 function renderLink(text, row) {
-  return <Link to={`/security-groups/${row.id}`}>{text}</Link>;
+  return <Link to={`/app/security-groups/${row.id}`}>{text}</Link>;
 }
 
 function getColumns() {
   return [
     { title: '名称', dataIndex: 'name', render: renderLink },
     { title: '描述', dataIndex: 'description' },
-    { title: '创建时间', dataIndex: 'ago' },
+    { title: '创建时间', dataIndex: 'createdAt' },
   ];
 }
 
@@ -33,18 +38,21 @@ function loadData(props) {
 class List extends React.Component {
   static propTypes = {
     securityGroup: React.PropTypes.shape({
-      isFetching: React.PropTypes.bool.isRequired,
-      error: React.PropTypes.object,
       filter: React.PropTypes.string,
-      securityGroupList: React.PropTypes.arrayOf(React.PropTypes.shape({
-        id: React.PropTypes.string.isRequired,
-        name: React.PropTypes.string.isRequired,
-        description: React.PropTypes.string.isRequired,
-        ago: React.PropTypes.string.isRequired,
-      })),
+      list: React.PropTypes.shape({
+        isFetching: React.PropTypes.bool.isRequired,
+        error: React.PropTypes.object,
+        data: React.PropTypes.arrayOf(React.PropTypes.shape({
+          id: React.PropTypes.string.isRequired,
+          name: React.PropTypes.string.isRequired,
+          description: React.PropTypes.string.isRequired,
+          createdAt: React.PropTypes.string.isRequired,
+        })),
+      }),
     }),
     fetchSecurityGroups: React.PropTypes.func.isRequired,
     filterSecurityGroups: React.PropTypes.func.isRequired,
+    deleteSecurityGroup: React.PropTypes.func.isRequired,
   };
 
   static contextTypes = {
@@ -67,13 +75,24 @@ class List extends React.Component {
     return securityGroup.id;
   }
 
+  handleDelete = () => {
+    this.props.deleteSecurityGroup(this.state.selectedRowKeys[0]);
+    this.setState({ ...this.state, selectedRowKeys: [] });
+    this.context.router.push('/app/security-groups/');
+  };
+
   handleChange = (selectedRowKeys) => {
     this.setState({ selectedRowKeys });
   };
 
   handleCreateClick = (event) => {
     event.preventDefault();
-    this.context.router.push('/instances/new/step-1');
+    this.context.router.push('/app/instances/new/step-1');
+  };
+
+  handleReload = (e) => {
+    e.preventDefault();
+    loadData(this.props);
   };
 
   handleInputChange = (e) => {
@@ -86,7 +105,7 @@ class List extends React.Component {
       rowSelection={rowSelection}
       columns={columns}
       dataSource={showData}
-      loading={this.props.securityGroup.isFetching}
+      loading={this.props.securityGroup.list.isFetching}
     />);
   }
 
@@ -117,9 +136,9 @@ class List extends React.Component {
       'ant-search-input': true,
       'pull-right': true,
     });
-    const securityGroups = securityGroup.error ?
-      this.renderError(securityGroup.error) :
-      this.renderSecurityGroup(rowSelection, columns, securityGroup.securityGroupList);
+    const securityGroups = securityGroup.list.error ?
+      this.renderError(securityGroup.list.error) :
+      this.renderSecurityGroup(rowSelection, columns, securityGroup.list.data);
 
     return (
       <div className="table-view">
@@ -131,8 +150,10 @@ class List extends React.Component {
           >
             创建安全组
           </Button>
-          <Button type="dashed" size="large" disabled={!hasSelected}>删除</Button>
-          <Button type="ghost" size="large">
+          <Popconfirm title="确定要删除这个监控吗？" onConfirm={this.handleDelete}>
+            <Button type="dashed" size="large" disabled={!hasSelected}>删除</Button>
+          </Popconfirm>
+          <Button type="ghost" size="large" onClick={this.handleReload}>
             <Icon type="reload" />
           </Button>
           <InputGroup className={searchCls}>
@@ -156,16 +177,16 @@ class List extends React.Component {
 }
 
 const getFilteredSecurityGroups = createSelector(
-  state => state.securityGroup.entities,
+  state => state.securityGroup.list.data,
   state => state.securityGroup.filter,
-  (entities, filter) => entities.filter(securityGroup => includes(securityGroup.name, filter))
+  (listData, filter) => listData.filter(securityGroup => includes(securityGroup.name, filter))
 );
 
 function mapStateToProps(state) {
   return {
     securityGroup: {
       ...state.securityGroup,
-      securityGroupList: getFilteredSecurityGroups(state),
+      list: { ...state.securityGroup.list, data: getFilteredSecurityGroups(state) },
     },
   };
 }
@@ -174,6 +195,7 @@ function mapDispatchToProps(dispatch) {
   return {
     fetchSecurityGroups: () => dispatch(fetchSecurityGroups()),
     filterSecurityGroups: (filter) => dispatch(filterSecurityGroups(filter)),
+    deleteSecurityGroup: (id) => dispatch(deleteSecurityGroup(id)),
   };
 }
 

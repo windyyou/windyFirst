@@ -6,26 +6,46 @@ import {
 } from '../constants/images';
 
 const INITIAL_STATE = {
-  isFetching: false,
-  entities: [],
-  error: null,
+  list: {
+    isFetching: false,
+    error: null,
+    data: [],
+  },
+  current: {
+    isFetching: false,
+    error: null,
+    data: {
+      id: '',
+    },
+  },
 };
 
 export default handleActions({
   [FETCH_IMAGES_REQUEST]: (state) => ({
     ...state,
-    isFetching: true,
+    list: {
+      ...state.list,
+      isFetching: true,
+    },
   }),
 
   [FETCH_IMAGES_SUCCESS]: (state, action) => ({
     ...state,
-    isFetching: false,
-    entities: action.payload,
+    list: {
+      ...state.list,
+      isFetching: false,
+      data: action.payload,
+      error: null,
+    },
   }),
 
   [FETCH_IMAGES_FAILURE]: (state, action) => ({
     ...state,
-    isFetching: false,
-    error: action.payload,
+    list: {
+      ...state.list,
+      isFetching: false,
+      error: action.payload,
+      data: [],
+    },
   }),
 }, INITIAL_STATE);

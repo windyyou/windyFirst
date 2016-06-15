@@ -5,6 +5,7 @@ import Icon from 'antd/lib/icon';
 import Dropdown from 'antd/lib/dropdown';
 import Menu from 'antd/lib/menu';
 import Input from 'antd/lib/input';
+import Popconfirm from 'antd/lib/popconfirm';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -13,13 +14,17 @@ import classNames from 'classnames';
 import includes from '../../../node_modules/lodash/includes';
 import uniq from '../../../node_modules/lodash/uniq';
 
-import { fetchInstances, filterInstances } from '../../actions/instance';
+import { fetchInstances, filterInstances, deleteInstance } from '../../actions/instance';
 
 const InputGroup = Input.Group;
 const MenuItem = Menu.Item;
 
 function renderLink(text, row) {
-  return <Link to={`/instances/${row.id}`}>{text}</Link>;
+  return <Link to={`/app/instances/${row.id}`}>{text}</Link>;
+}
+
+function renderIp(text) {
+  return text.join(', ');
 }
 
 function getColumns(data) {
@@ -33,10 +38,10 @@ function getColumns(data) {
         return record.status === value;
       },
     },
-    { title: '内网IP', dataIndex: 'ip' },
-    { title: '公网IP', dataIndex: 'floatingIp' },
-    { title: '镜像', dataIndex: 'image' },
-    { title: '配置', dataIndex: 'type' },
+    { title: '内网IP', dataIndex: 'ips', render: renderIp },
+    { title: '公网IP', dataIndex: 'floatingIps', render: renderIp },
+    { title: '系统', dataIndex: 'systemName' },
+    { title: '类型', dataIndex: 'type' },
     { title: '创建时间', dataIndex: 'createdAt' },
   ];
 }
@@ -48,22 +53,28 @@ function loadData(props) {
 class List extends React.Component {
   static propTypes = {
     instance: React.PropTypes.shape({
-      isFetching: React.PropTypes.bool.isRequired,
-      error: React.PropTypes.object,
       filter: React.PropTypes.string,
-      instanceList: React.PropTypes.arrayOf(React.PropTypes.shape({
-        id: React.PropTypes.string.isRequired,
-        name: React.PropTypes.string.isRequired,
-        status: React.PropTypes.string.isRequired,
-        ip: React.PropTypes.string.isRequired,
-        floatingIp: React.PropTypes.string.isRequired,
-        image: React.PropTypes.string.isRequired,
-        type: React.PropTypes.string.isRequired,
-        createdAt: React.PropTypes.string.isRequired,
-      })).isRequired,
-    }),
+      list: React.PropTypes.shape({
+        isFetching: React.PropTypes.bool.isRequired,
+        error: React.PropTypes.object,
+        data: React.PropTypes.arrayOf(React.PropTypes.shape({
+          id: React.PropTypes.string.isRequired,
+          name: React.PropTypes.string.isRequired,
+          status: React.PropTypes.string.isRequired,
+          ips: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
+          floatingIps: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
+          image: React.PropTypes.shape({
+            id: React.PropTypes.string.isRequired,
+            name: React.PropTypes.string.isRequired,
+          }),
+          type: React.PropTypes.string.isRequired,
+          createdAt: React.PropTypes.string.isRequired,
+        })).isRequired,
+      }).isRequired,
+    }).isRequired,
     fetchInstances: React.PropTypes.func.isRequired,
     filterInstances: React.PropTypes.func.isRequired,
+    deleteInstance: React.PropTypes.func.isRequired,
   };
 
   static contextTypes = {
@@ -82,7 +93,7 @@ class List extends React.Component {
     loadData(this.props);
   }
 
-  getMenu() {
+  getMenu(hasSelected) {
     return (
       <Menu>
         <MenuItem key="1">
@@ -97,8 +108,10 @@ class List extends React.Component {
         <MenuItem key="4">
           <a href="#">功能</a>
         </MenuItem>
-        <MenuItem key="5">
-          <a href="#">功能</a>
+        <MenuItem key="5" disabled={!hasSelected}>
+          <Popconfirm title="确定要删除这个主机吗？" onConfirm={this.handleDelete}>
+            <a>删除</a>
+          </Popconfirm>
         </MenuItem>
       </Menu>
     );
@@ -108,13 +121,24 @@ class List extends React.Component {
     return instance.id;
   }
 
+  handleDelete = () => {
+    this.props.deleteInstance(this.state.selectedRowKeys[0]);
+    this.setState({ ...this.state, selectedRowKeys: [] });
+    this.context.router.push('/app/instances');
+  };
+
   handleChange = (selectedRowKeys) => {
     this.setState({ selectedRowKeys });
   };
 
   handleCreateClick = (event) => {
     event.preventDefault();
-    this.context.router.push('/instances/new/step-1');
+    this.context.router.push('/app/instances/new/step-1');
+  };
+
+  handleReload = (e) => {
+    e.preventDefault();
+    loadData(this.props);
   };
 
   handleInputChange = (e) => {
@@ -126,7 +150,7 @@ class List extends React.Component {
       rowKey={this.getRowKey}
       rowSelection={rowSelection}
       columns={columns}
-      dataSource={instance.instanceList}
+      dataSource={instance.data}
       loading={instance.isFetching}
     />);
   }
@@ -139,12 +163,13 @@ class List extends React.Component {
 
   render() {
     const { instance } = this.props;
-    const menu = this.getMenu();
-    const columns = getColumns(instance.instanceList);
+    const columns = getColumns(instance.list.data);
     const rowSelection = {
+      selectedRowKeys: this.state.selectedRowKeys,
       onChange: this.handleChange,
     };
     const hasSelected = this.state.selectedRowKeys.length === 1;
+    const menu = this.getMenu(hasSelected);
     const btnCls = classNames({
       'ant-search-btn': true,
       'ant-search-btn-noempty': !!instance.filter.trim(),
@@ -153,9 +178,9 @@ class List extends React.Component {
       'ant-search-input': true,
       'pull-right': true,
     });
-    const instances = instance.error ?
-      this.renderError(instance.error) :
-      this.renderInstance(rowSelection, columns, instance);
+    const instances = instance.list.error ?
+      this.renderError(instance.list.error) :
+      this.renderInstance(rowSelection, columns, instance.list);
 
     return (
       <div className="table-view">
@@ -167,7 +192,7 @@ class List extends React.Component {
           <Dropdown overlay={menu} trigger={['click']}>
             <Button type="ghost" size="large">更多<Icon type="down" /></Button>
           </Dropdown>
-          <Button type="ghost" size="large">
+          <Button type="ghost" size="large" onClick={this.handleReload}>
             <Icon type="reload" />
           </Button>
           <InputGroup className={searchCls}>
@@ -191,16 +216,16 @@ class List extends React.Component {
 }
 
 const getFilteredInstances = createSelector(
-  state => state.instance.instanceList,
+  state => state.instance.list.data,
   state => state.instance.filter,
-  (instanceList, filter) => instanceList.filter(instance => includes(instance.name, filter))
+  (listData, filter) => listData.filter(instance => includes(instance.name, filter))
 );
 
 function mapStateToProps(state) {
   return {
     instance: {
       ...state.instance,
-      instanceList: getFilteredInstances(state),
+      list: { ...state.instance.list, data: getFilteredInstances(state) },
     },
   };
 }
@@ -209,6 +234,7 @@ function mapDispatchToProps(dispatch) {
   return {
     fetchInstances: () => dispatch(fetchInstances()),
     filterInstances: (filter) => dispatch(filterInstances(filter)),
+    deleteInstance: (id) => dispatch(deleteInstance(id)),
   };
 }
 

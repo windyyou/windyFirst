@@ -1,27 +1,29 @@
 import React from 'react';
 import Timeline from 'antd/lib/timeline';
 import Icon from 'antd/lib/icon';
+import Spin from 'antd/lib/spin';
+import { Link } from 'react-router';
 
 const TimelineItem = Timeline.Item;
 
 export default class OperationsPanel extends React.Component {
-  renderOperations(entities) {
-    if (entities.length) {
+  renderOperations(data) {
+    if (data.length) {
       return (
-        <Timeline pending={<a href="#">查看更多</a>}>
-          {entities.map((data, i) =>
-            <TimelineItem key={i} color={data.color}>
+        <Timeline pending={<Link to="/app/operations">查看更多</Link>}>
+          {data.map((operation, i) =>
+            <TimelineItem key={i} color={operation.color}>
               <div className="timeline-item-panel">
                 <div className="timeline-title">
-                  <h4>{data.title}</h4>
+                  <Link to={`/app/operations/${operation.id}`}><h4>{operation.title}</h4></Link>
                   <p>
                     <small className="text-muted">
-                      <Icon type="clock-circle-o" />{data.timestamp}
+                      <Icon type="clock-circle-o" />{operation.timestamp}
                     </small>
                   </p>
                 </div>
                 <div className="timeline-body">
-                  <p>{data.details}</p>
+                  <p>{operation.details}</p>
                 </div>
               </div>
             </TimelineItem>
@@ -35,7 +37,7 @@ export default class OperationsPanel extends React.Component {
 
   renderFetching() {
     return (
-      <span>loading...</span>
+      <Spin size="default" />
     );
   }
 
@@ -46,8 +48,8 @@ export default class OperationsPanel extends React.Component {
   }
 
   render() {
-    const { entities, isFetching, error } = this.props.operation;
-    const operations = error ? this.renderError(error) : this.renderOperations(entities);
+    const { isFetching, error, data } = this.props.operation.list;
+    const operations = error ? this.renderError(error) : this.renderOperations(data);
 
     return (
       <div className="panel timeline-panel panel-default">
@@ -64,13 +66,16 @@ export default class OperationsPanel extends React.Component {
 
 OperationsPanel.propTypes = {
   operation: React.PropTypes.shape({
-    isFetching: React.PropTypes.bool.isRequired,
-    error: React.PropTypes.object,
-    entities: React.PropTypes.arrayOf(React.PropTypes.shape({
-      title: React.PropTypes.string.isRequired,
-      timestamp: React.PropTypes.string.isRequired,
-      details: React.PropTypes.string.isRequired,
-      color: React.PropTypes.string.isRequired,
-    })),
+    list: React.PropTypes.shape({
+      isFetching: React.PropTypes.bool.isRequired,
+      error: React.PropTypes.object,
+      data: React.PropTypes.arrayOf(React.PropTypes.shape({
+        id: React.PropTypes.string.isRequired,
+        title: React.PropTypes.string.isRequired,
+        timestamp: React.PropTypes.string.isRequired,
+        details: React.PropTypes.string.isRequired,
+        color: React.PropTypes.string.isRequired,
+      })).isRequired,
+    }).isRequired,
   }).isRequired,
 };

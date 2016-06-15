@@ -5,6 +5,7 @@ import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
 import Dropdown from 'antd/lib/dropdown';
 import Menu from 'antd/lib/menu';
+import Popconfirm from 'antd/lib/popconfirm';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -13,13 +14,13 @@ import classNames from 'classnames';
 import includes from '../../../node_modules/lodash/includes';
 import uniq from '../../../node_modules/lodash/uniq';
 
-import { fetchBareMetals, filterBareMetals } from '../../actions/bareMetal';
+import { fetchBareMetals, filterBareMetals, deleteBareMetal } from '../../actions/bareMetal';
 
 const InputGroup = Input.Group;
 const MenuItem = Menu.Item;
 
 function renderLink(text, row) {
-  return <Link to={`/bare-metals/${row.id}`}>{text}</Link>;
+  return <Link to={`/app/bare-metals/${row.id}`}>{text}</Link>;
 }
 
 function getColumns(data) {
@@ -45,20 +46,23 @@ function loadData(props) {
 class List extends React.Component {
   static propTypes = {
     bareMetal: React.PropTypes.shape({
-      isFetching: React.PropTypes.bool.isRequired,
-      error: React.PropTypes.object,
       filter: React.PropTypes.string,
-      entities: React.PropTypes.arrayOf(React.PropTypes.shape({
-        id: React.PropTypes.string.isRequired,
-        name: React.PropTypes.string.isRequired,
-        status: React.PropTypes.string.isRequired,
-        ip: React.PropTypes.string.isRequired,
-        config: React.PropTypes.string.isRequired,
-        createdAt: React.PropTypes.string.isRequired,
-      })),
-    }),
+      list: React.PropTypes.shape({
+        isFetching: React.PropTypes.bool.isRequired,
+        error: React.PropTypes.object,
+        data: React.PropTypes.arrayOf(React.PropTypes.shape({
+          id: React.PropTypes.string.isRequired,
+          name: React.PropTypes.string.isRequired,
+          status: React.PropTypes.string.isRequired,
+          ip: React.PropTypes.string.isRequired,
+          config: React.PropTypes.string.isRequired,
+          createdAt: React.PropTypes.string.isRequired,
+        })).isRequired,
+      }),
+    }).isRequired,
     fetchBareMetals: React.PropTypes.func.isRequired,
     filterBareMetals: React.PropTypes.func.isRequired,
+    deleteBareMetal: React.PropTypes.func.isRequired,
   };
 
   static contextTypes = {
@@ -88,11 +92,19 @@ class List extends React.Component {
           <a href="#">重启</a>
         </MenuItem>
         <MenuItem key="2" disabled={!hasSelected}>
-          <a href="#">删除</a>
+          <Popconfirm title="确定要删除这个主机吗？" onConfirm={this.handleDelete}>
+            <a href="">删除</a>
+          </Popconfirm>
         </MenuItem>
       </Menu>
     );
   }
+
+  handleDelete = () => {
+    this.props.deleteBareMetal(this.state.selectedRows[0].id);
+    this.setState({ ...this.state, selectedRows: [] });
+    this.context.router.push('/app/bare-metals/');
+  };
 
   handleChange = (selectedRowKeys, selectedRows) => {
     this.setState({ selectedRows });
@@ -100,20 +112,25 @@ class List extends React.Component {
 
   handleCreateClick = (event) => {
     event.preventDefault();
-    this.context.router.push('/bare-metals/new/step-1');
+    this.context.router.push('/app/bare-metals/new/step-1');
+  };
+
+  handleReload = (e) => {
+    e.preventDefault();
+    loadData(this.props);
   };
 
   handleInputChange = (e) => {
     this.props.filterBareMetals(e.target.value);
   };
 
-  renderBareMetal(rowSelection, columns, showData) {
+  renderBareMetal(rowSelection, columns, bareMetal) {
     return (<Table
       rowKey={this.getRowKey}
       rowSelection={rowSelection}
       columns={columns}
-      dataSource={showData}
-      loading={this.props.bareMetal.isFetching}
+      dataSource={bareMetal.data}
+      loading={bareMetal.isFetching}
     />);
   }
 
@@ -126,7 +143,7 @@ class List extends React.Component {
   render() {
     const { bareMetal } = this.props;
     const { selectedRows } = this.state;
-    const columns = getColumns(bareMetal.entities);
+    const columns = getColumns(bareMetal.list.data);
     const rowSelection = {
       onChange: this.handleChange,
     };
@@ -147,7 +164,7 @@ class List extends React.Component {
     });
     const bareMetals = bareMetal.error ?
       this.renderError(bareMetal.error) :
-      this.renderBareMetal(rowSelection, columns, bareMetal.entities);
+      this.renderBareMetal(rowSelection, columns, bareMetal.list);
 
     return (
       <div className="table-view">
@@ -162,7 +179,7 @@ class List extends React.Component {
           <Dropdown overlay={menu} trigger={['click']}>
             <Button type="ghost" size="large">更多<Icon type="down" /></Button>
           </Dropdown>
-          <Button type="ghost" size="large">
+          <Button type="ghost" size="large" onClick={this.handleReload}>
             <Icon type="reload" />
           </Button>
           <InputGroup className={searchCls}>
@@ -186,16 +203,16 @@ class List extends React.Component {
 }
 
 const getFilteredBareMetals = createSelector(
-  state => state.bareMetal.entities,
+  state => state.bareMetal.list.data,
   state => state.bareMetal.filter,
-  (entities, filter) => entities.filter(entity => includes(entity.name, filter))
+  (listData, filter) => listData.filter(bareMetal => includes(bareMetal.name, filter))
 );
 
 function mapStateToProps(state) {
   return {
     bareMetal: {
       ...state.bareMetal,
-      entities: getFilteredBareMetals(state),
+      list: { ...state.bareMetal.list, data: getFilteredBareMetals(state) },
     },
   };
 }
@@ -204,6 +221,7 @@ function mapDispatchToProps(dispatch) {
   return {
     fetchBareMetals: () => dispatch(fetchBareMetals()),
     filterBareMetals: (filter) => dispatch(filterBareMetals(filter)),
+    deleteBareMetal: (id) => dispatch(deleteBareMetal(id)),
   };
 }
 

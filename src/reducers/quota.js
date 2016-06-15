@@ -21,11 +21,13 @@ export default handleActions({
     ...state,
     isFetching: false,
     entities: action.payload,
+    error: null,
   }),
 
   [FETCH_QUOTAS_FAILURE]: (state, action) => ({
     ...state,
     isFetching: false,
     error: action.payload,
+    entities: [],
   }),
 }, INITIAL_STATE);
