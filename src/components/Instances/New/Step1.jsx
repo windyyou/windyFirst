@@ -50,7 +50,7 @@ class Step1 extends React.Component {
   }
 
   getSystems(images) {
-    const systems = images.map((image) => image.name.split(/[\-_\s]+/)[0]);
+    const systems = images.map(image => image.name.split(/[\-_\s]+/)[0]);
 
     return uniqWith(systems, isEqual);
   }
@@ -63,8 +63,8 @@ class Step1 extends React.Component {
     return image.list.data;
   }
 
-  handleSubmit = (e) => {
-    this.props.form.validateFields((errors) => {
+  handleSubmit = e => {
+    this.props.form.validateFields(errors => {
       if (!!errors) {
         return;
       }
@@ -73,7 +73,7 @@ class Step1 extends React.Component {
     });
   };
 
-  handleSystemChange = (e) => {
+  handleSystemChange = e => {
     this.setState({
       ...this.state,
       [e.target.name]: e.target.value,
@@ -126,7 +126,7 @@ class Step1 extends React.Component {
         <RadioGroup
           {...radioProps}
         >
-          {images.map((img) =>
+          {images.map(img =>
             <Radio key={img.id} value={img.id} name="source">
               <div className="image-option"> {img.name}</div>
             </Radio>)}
@@ -136,9 +136,9 @@ class Step1 extends React.Component {
 
     return (
       <div className="images">
-      <FormItem {...formItemLayout} label={`${source}:`}>
-        {contents}
-      </FormItem>
+        <FormItem {...formItemLayout} label={`${source}:`}>
+          {contents}
+        </FormItem>
       </div>
     );
   }
@@ -160,7 +160,7 @@ class Step1 extends React.Component {
           size=""
           onChange={this.handleSystemChange}
         >
-          {systemOptions.map((system) =>
+          {systemOptions.map(system =>
             <RadioButton
               key={system.name}
               value={system.value}

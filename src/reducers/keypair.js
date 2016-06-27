@@ -6,6 +6,10 @@ import {
 
   FILTER_KEYPAIRS,
 
+  CREATE_KEYPAIR_REQUEST,
+  CREATE_KEYPAIR_SUCCESS,
+  CREATE_KEYPAIR_FAILURE,
+
   DELETE_KEYPAIR_REQUEST,
   DELETE_KEYPAIR_SUCCESS,
   DELETE_KEYPAIR_FAILURE,
@@ -22,6 +26,7 @@ const INITIAL_STATE = {
     error: null,
     data: {
       id: '',
+      name: '',
     },
   },
 
@@ -30,11 +35,11 @@ const INITIAL_STATE = {
 };
 
 export default handleActions({
-  [FETCH_KEYPAIRS_REQUEST]: (state) => ({
+  [FETCH_KEYPAIRS_REQUEST]: (state, action) => ({
     ...state,
     list: {
       ...state.list,
-      isFetching: true,
+      isFetching: !(action.meta && action.meta.refresh),
     },
   }),
 
@@ -63,7 +68,35 @@ export default handleActions({
     filter: action.payload,
   }),
 
-  [DELETE_KEYPAIR_REQUEST]: (state) => ({
+  [CREATE_KEYPAIR_REQUEST]: state => ({
+    ...state,
+    current: {
+      ...state.current,
+      isFetching: true,
+    },
+  }),
+
+  [CREATE_KEYPAIR_SUCCESS]: (state, action) => ({
+    ...state,
+    current: {
+      ...state.current,
+      isFetching: false,
+      data: action.payload,
+      error: null,
+    },
+  }),
+
+  [CREATE_KEYPAIR_FAILURE]: (state, action) => ({
+    ...state,
+    current: {
+      ...state.current,
+      isFetching: false,
+      error: action.payload,
+      data: INITIAL_STATE.data,
+    },
+  }),
+
+  [DELETE_KEYPAIR_REQUEST]: state => ({
     ...state,
     list: {
       ...state.list,

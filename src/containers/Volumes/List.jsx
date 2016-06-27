@@ -9,7 +9,7 @@ import Popconfirm from 'antd/lib/popconfirm';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-
+import AbstractList from '../AbstractList';
 import classNames from 'classnames';
 import includes from '../../../node_modules/lodash/includes';
 import uniq from '../../../node_modules/lodash/uniq';
@@ -55,11 +55,7 @@ function getColumns(data) {
   ];
 }
 
-function loadData(props) {
-  props.fetchVolumes();
-}
-
-class List extends React.Component {
+class List extends AbstractList {
   static propTypes = {
     volume: React.PropTypes.shape({
       filter: React.PropTypes.string,
@@ -97,8 +93,8 @@ class List extends React.Component {
     };
   }
 
-  componentDidMount() {
-    loadData(this.props);
+  loadData(props) {
+    props.fetchVolumes();
   }
 
   getMenu(mounted, hasSelected) {
@@ -126,24 +122,24 @@ class List extends React.Component {
   handleDelete = () => {
     this.props.deleteVolume(this.state.selectedRows[0].id);
     this.setState({ ...this.state, selectedRows: [] });
-    this.context.router.push('/app/volumes/');
+    this.context.router.push('/app/volumes');
   };
 
   handleChange = (selectedRowKeys, selectedRows) => {
     this.setState({ selectedRows });
   };
 
-  handleCreateClick = (event) => {
+  handleCreateClick = event => {
     event.preventDefault();
     this.context.router.push('/app/volumes/new');
   };
 
-  handleReload = (e) => {
+  handleReload = e => {
     e.preventDefault();
-    loadData(this.props);
+    this.loadData(this.props);
   };
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.props.filterVolumes(e.target.value);
   };
 
@@ -246,8 +242,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchVolumes: () => dispatch(fetchVolumes()),
-    filterVolumes: (filter) => dispatch(filterVolumes(filter)),
-    deleteVolume: (id) => dispatch(deleteVolume(id)),
+    filterVolumes: filter => dispatch(filterVolumes(filter)),
+    deleteVolume: id => dispatch(deleteVolume(id)),
+    refresh: () => dispatch(fetchVolumes(undefined, true)),
   };
 }
 

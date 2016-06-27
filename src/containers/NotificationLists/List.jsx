@@ -7,7 +7,7 @@ import Popconfirm from 'antd/lib/popconfirm';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-
+import AbstractList from '../AbstractList';
 import classNames from 'classnames';
 import includes from '../../../node_modules/lodash/includes';
 import { fetchNotificationLists, filterNotificationLists,
@@ -21,7 +21,7 @@ function renderLink(text, row) {
 
 function renderVerifiedTerminals(text, record) {
   let count = 0;
-  record.terminals.forEach((terminal) => {
+  record.terminals.forEach(terminal => {
     count += terminal.verified ? 1 : 0;
   });
   return count;
@@ -36,11 +36,7 @@ function getColumns() {
   ];
 }
 
-function loadData(props) {
-  props.fetchNotificationLists();
-}
-
-class List extends React.Component {
+class List extends AbstractList {
   static propTypes = {
     notificationList: React.PropTypes.shape({
       list: React.PropTypes.shape({
@@ -72,30 +68,30 @@ class List extends React.Component {
     };
   }
 
-  componentDidMount() {
-    loadData(this.props);
+  loadData(props) {
+    props.fetchNotificationLists();
   }
 
   getRowKey(notificationList) {
     return notificationList.id;
   }
 
-  handleChange = (selectedRowKeys) => {
+  handleChange = selectedRowKeys => {
     this.setState({ selectedRowKeys });
   };
 
-  handleCreateClick = (event) => {
+  handleCreateClick = event => {
     event.preventDefault();
     this.context.router.push('/app/notification-lists/new');
   };
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.props.filterNotificationLists(e.target.value);
   };
 
-  handleReload = (e) => {
+  handleReload = e => {
     e.preventDefault();
-    loadData(this.props);
+    this.loadData(this.props);
   };
 
   handleDelete = () => {
@@ -210,8 +206,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchNotificationLists: () => dispatch(fetchNotificationLists()),
-    filterNotificationLists: (filter) => dispatch(filterNotificationLists(filter)),
-    deleteNotificationList: (id) => dispatch(deleteNotificationList(id)),
+    filterNotificationLists: filter => dispatch(filterNotificationLists(filter)),
+    deleteNotificationList: id => dispatch(deleteNotificationList(id)),
+    refresh: () => dispatch(fetchNotificationLists(undefined, true)),
   };
 }
 

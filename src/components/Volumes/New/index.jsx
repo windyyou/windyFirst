@@ -56,13 +56,13 @@ class VolumeForm extends React.Component {
     this.setState({ unitPrice });
   }
 
-  handleNameChange = (e) => {
+  handleNameChange = e => {
     this.setState({
       name: e.target.value,
     });
   };
 
-  handleDescriptionChange = (e) => {
+  handleDescriptionChange = e => {
     this.setState({
       description: e.target.value,
     });
@@ -75,34 +75,35 @@ class VolumeForm extends React.Component {
     //
     // const initialSize = this.state.inputValue === '' ? 20 : this.state.inputValue;
 
-    this.props.form.validateFields((errors) => {
+    this.props.form.validateFields(errors => {
       if (!!errors) {
         return;
       }
+
+      this.props.createVolume({
+        name: this.state.name,
+        description: this.state.description,
+        type: this.state.volumeType,
+        share: this.state.share,
+        size: this.state.inputValue,
+      }).then(() => this.context.router.push('/app/volumes'));
     });
-    this.props.createVolume({
-      name: this.state.name,
-      description: this.state.description,
-      type: this.state.volumeType,
-      share: this.state.share,
-      size: this.state.inputValue,
-    }).then(() => this.context.router.push('/app/volumes'));
   };
 
-  handleSliderChange = (value) => {
+  handleSliderChange = value => {
     this.setState({
       inputValue: value,
     });
   };
 
-  handleTypeSelect = (e) => {
+  handleTypeSelect = e => {
     this.setState({
       volumeType: e.target.value,
       unitPrice: e.target.unitPrice,
     });
   };
 
-  handleSelectShare = (e) => {
+  handleSelectShare = e => {
     this.setState({
       share: e.target.value,
     });

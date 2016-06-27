@@ -38,8 +38,8 @@ class Step1 extends React.Component {
     form: React.PropTypes.object.isRequired,
   };
 
-  handleSubmit = (e) => {
-    this.props.form.validateFields((errors) => {
+  handleSubmit = e => {
+    this.props.form.validateFields(errors => {
       if (!!errors) {
         return;
       }
@@ -48,7 +48,7 @@ class Step1 extends React.Component {
     });
   };
 
-  handleInputNumberChange = (ename) => (value) => {
+  handleInputNumberChange = ename => value => {
     const event = {
       target: {
         name: ename,
@@ -59,29 +59,29 @@ class Step1 extends React.Component {
     this.props.handleSpecChange(event);
   };
 
-  handleSpecPerformanceChange = (value) => {
+  handleSpecPerformanceChange = value => {
     this.props.handleSpecVolumesPerformanceChange(value);
   };
 
-  handleSpecCapacityChange = (value) => {
+  handleSpecCapacityChange = value => {
     this.props.handleSpecVolumesCapacityChange(value);
   };
 
-  handleBGPChange = (value) => {
+  handleBGPChange = value => {
     this.props.handleSpecBGPChange(value);
   };
 
-  handleCMCCChange = (value) => {
+  handleCMCCChange = value => {
     this.props.handleSpecCMCCChange(value);
   };
 
-  handleCUCCChange = (value) => {
+  handleCUCCChange = value => {
     this.props.handleSpecCUCCChange(value);
   };
 
-  handleCTCCChange = (value) => {
+  handleCTCCChange = value => {
     this.props.handleSpecCTCCChange(value);
-  }
+  };
 
   renderFetching() {
     return (

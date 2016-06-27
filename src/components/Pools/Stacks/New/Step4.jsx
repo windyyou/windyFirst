@@ -29,7 +29,7 @@ class Step4 extends React.Component {
     });
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     this.props.handleSubmit(e);
   };
 

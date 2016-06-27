@@ -114,7 +114,7 @@ function mapStateToProps() {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchMonitors: (params) => dispatch(fetchMonitors(params)),
+    fetchMonitors: params => dispatch(fetchMonitors(params)),
   };
 }
 

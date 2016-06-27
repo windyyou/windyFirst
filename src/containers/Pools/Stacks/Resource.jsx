@@ -125,7 +125,7 @@ function mapStateToProps() {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchStack: (key) => dispatch(fetchStack(key)),
+    fetchStack: key => dispatch(fetchStack(key)),
   };
 }
 

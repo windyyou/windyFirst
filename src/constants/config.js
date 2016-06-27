@@ -1,3 +1,2 @@
-export const FETCH_CONFIG_REQUEST = 'FETCH_CONFIG_REQUEST';
-export const FETCH_CONFIG_SUCCESS = 'FETCH_CONFIG_SUCCESS';
-export const FETCH_CONFIG_FAILURE = 'FETCH_CONFIG_FAILURE';
+// refresh interval, set 0 to stop refreshing
+export const REFRESH_INTERVAL = 10000;

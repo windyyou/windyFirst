@@ -18,12 +18,13 @@ const propTypes = {
         description: React.PropTypes.string.isRequired,
         status: React.PropTypes.string.isRequired,
         createdAt: React.PropTypes.string.isRequired,
-        updatedAt: React.PropTypes.string.isRequired,
+        updatedAt: React.PropTypes.string,
       }).isRequired,
     }).isRequired,
   }).isRequired,
   updateStack: React.PropTypes.func.isRequired,
 };
+
 function loadData(props) {
   props.fetchStack(props.params.key);
 }
@@ -78,8 +79,8 @@ function mapStateToProps() {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchStack: (key) => dispatch(fetchStack(key)),
-    updateStack: (param) => dispatch(updateStack(param)),
+    fetchStack: key => dispatch(fetchStack(key)),
+    updateStack: param => dispatch(updateStack(param)),
   };
 }
 

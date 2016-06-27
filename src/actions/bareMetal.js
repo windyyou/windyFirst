@@ -11,13 +11,16 @@ import {
 } from '../constants/bareMetal';
 import * as bareMetalApi from '../api/bareMetal';
 
-export function fetchBareMetals(params) {
-  return (dispatch) => dispatch({
+export function fetchBareMetals(params, refresh = false) {
+  return dispatch => dispatch({
     types: [
       FETCH_BARE_METALS_REQUEST,
       FETCH_BARE_METALS_SUCCESS,
       FETCH_BARE_METALS_FAILURE,
     ],
+    meta: {
+      refresh,
+    },
     payload: {
       promise: bareMetalApi.fetchBareMetals(params),
     },
@@ -32,7 +35,7 @@ export function filterBareMetals(filter) {
 }
 
 export function deleteBareMetal(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       DELETE_BARE_METAL_REQUEST,
       DELETE_BARE_METAL_SUCCESS,

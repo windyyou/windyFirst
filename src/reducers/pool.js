@@ -93,11 +93,11 @@ const INITIAL_STATE = {
 };
 
 export default handleActions({
-  [FETCH_POOLS_REQUEST]: (state) => ({
+  [FETCH_POOLS_REQUEST]: (state, action) => ({
     ...state,
     list: {
       ...state.list,
-      isFetching: true,
+      isFetching: !(action.meta && action.meta.refresh),
     },
   }),
 
@@ -121,7 +121,7 @@ export default handleActions({
     },
   }),
 
-  [FETCH_POOL_CONFIG_REQUEST]: (state) => ({
+  [FETCH_POOL_CONFIG_REQUEST]: state => ({
     ...state,
     config: {
       ...state.config,
@@ -149,7 +149,7 @@ export default handleActions({
     },
   }),
 
-  [CREATE_POOL_REQUEST]: (state) => ({
+  [CREATE_POOL_REQUEST]: state => ({
     ...state,
     list: {
       ...state.list,
@@ -157,7 +157,7 @@ export default handleActions({
     },
   }),
 
-  [CREATE_POOL_SUCCESS]: (state) => ({
+  [CREATE_POOL_SUCCESS]: state => ({
     ...state,
     list: {
       ...state.list,
@@ -165,7 +165,7 @@ export default handleActions({
     },
   }),
 
-  [CREATE_POOL_FAILURE]: (state) => ({
+  [CREATE_POOL_FAILURE]: state => ({
     ...state,
     list: {
       ...state.list,
@@ -173,7 +173,7 @@ export default handleActions({
     },
   }),
 
-  [UPDATE_POOL_STACK_REQUEST]: (state) => ({
+  [UPDATE_POOL_STACK_REQUEST]: state => ({
     ...state,
     list: {
       ...state.list,
@@ -181,7 +181,7 @@ export default handleActions({
     },
   }),
 
-  [UPDATE_POOL_STACK_SUCCESS]: (state) => ({
+  [UPDATE_POOL_STACK_SUCCESS]: state => ({
     ...state,
     list: {
       ...state.list,
@@ -198,7 +198,7 @@ export default handleActions({
     },
   }),
 
-  [CREATE_POOL_STACK_REQUEST]: (state) => ({
+  [CREATE_POOL_STACK_REQUEST]: state => ({
     ...state,
     list: {
       ...state.list,
@@ -206,7 +206,7 @@ export default handleActions({
     },
   }),
 
-  [CREATE_POOL_STACK_SUCCESS]: (state) => ({
+  [CREATE_POOL_STACK_SUCCESS]: state => ({
     ...state,
     list: {
       ...state.list,

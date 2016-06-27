@@ -48,11 +48,11 @@ const INITIAL_STATE = {
 };
 
 export default handleActions({
-  [FETCH_OPERATIONS_REQUEST]: (state) => ({
+  [FETCH_OPERATIONS_REQUEST]: (state, action) => ({
     ...state,
     list: {
       ...state.list,
-      isFetching: true,
+      isFetching: !(action.meta && action.meta.refresh),
     },
   }),
 
@@ -81,7 +81,7 @@ export default handleActions({
     filter: action.payload,
   }),
 
-  [FETCH_OPERATION_REQUEST]: (state) => ({
+  [FETCH_OPERATION_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -109,7 +109,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_OPERATION_REQUEST]: (state) => ({
+  [DELETE_OPERATION_REQUEST]: state => ({
     ...state,
     list: {
       ...state.list,

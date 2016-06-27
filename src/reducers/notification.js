@@ -47,11 +47,11 @@ const INITIAL_STATE = {
 };
 
 export default handleActions({
-  [FETCH_NOTIFICATIONS_REQUEST]: (state) => ({
+  [FETCH_NOTIFICATIONS_REQUEST]: (state, action) => ({
     ...state,
     list: {
       ...state.list,
-      isFetching: true,
+      isFetching: !(action.meta && action.meta.refresh),
     },
   }),
 
@@ -83,7 +83,7 @@ export default handleActions({
     },
   }),
 
-  [FETCH_NOTIFICATION_REQUEST]: (state) => ({
+  [FETCH_NOTIFICATION_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -120,7 +120,7 @@ export default handleActions({
     },
   }),
 
-  // [PUT_NOTIFICATION_REQUEST]: (state) => ({
+  // [PUT_NOTIFICATION_REQUEST]: state => ({
   //   ...state,
   //   isFetching: true,
   // }),
@@ -137,7 +137,7 @@ export default handleActions({
   //   error: action.payload,
   // }),
   //
-  // [POST_NOTIFICATION_REQUEST]: (state) => ({
+  // [POST_NOTIFICATION_REQUEST]: state => ({
   //   ...state,
   //   isFetching: true,
   // }),
@@ -154,7 +154,7 @@ export default handleActions({
   //   error: action.payload,
   // }),
   //
-  // [DELETE_NOTIFICATION_REQUEST]: (state) => ({
+  // [DELETE_NOTIFICATION_REQUEST]: state => ({
   //   ...state,
   //   isFetching: true,
   // }),

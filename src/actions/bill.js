@@ -11,13 +11,16 @@ import {
 } from '../constants/bill';
 import * as billAPI from '../api/bill';
 
-export function fetchBills(params) {
-  return (dispatch) => dispatch({
+export function fetchBills(params, refresh = false) {
+  return dispatch => dispatch({
     types: [
       FETCH_BILLS_REQUEST,
       FETCH_BILLS_SUCCESS,
       FETCH_BILLS_FAILURE,
     ],
+    meta: {
+      refresh,
+    },
     payload: {
       promise: billAPI.fetchBills(params),
     },
@@ -32,7 +35,7 @@ export function filterBills(filter) {
 }
 
 export function fetchBill(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       FETCH_BILL_REQUEST,
       FETCH_BILL_SUCCESS,

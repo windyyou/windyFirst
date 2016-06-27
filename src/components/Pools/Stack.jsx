@@ -50,42 +50,42 @@ export default class Stack extends React.Component {
   }
 
   getColumns(data) {
-    const statusFilter = uniq(data.map(record => record.status))
-      .map(st => ({ text: st, value: st }));
+    const statusFilter = uniq(data.map(record => record.status))
+      .map(st => ({ text: st, value: st }));
 
-    return [
-      { title: '名称', dataIndex: 'name', render: this.renderLink },
-      { title: '状态', dataIndex: 'status', filters: statusFilter,
-        onFilter(value, record) {
-          return record.status === value;
+    return [
+      { title: '名称', dataIndex: 'name', render: this.renderLink },
+      { title: '状态', dataIndex: 'status', filters: statusFilter,
+        onFilter(value, record) {
+          return record.status === value;
         },
       },
-      { title: '创建时间', dataIndex: 'createdAt' },
-      { title: '更新时间', dataIndex: 'updatedAt' },
+      { title: '创建时间', dataIndex: 'createdAt' },
+      { title: '更新时间', dataIndex: 'updatedAt' },
     ];
   }
 
   handleDelete = () => {
     this.props.deleteStack(this.state.selectedRowKeys[0]);
     this.setState({ ...this.state, selectedRowKeys: [] });
-    this.context.router.push('/app/stacks/');
+    this.context.router.push('/app/stacks');
   };
 
-  handleChange = (selectedRowKeys) => {
+  handleChange = selectedRowKeys => {
     this.setState({ selectedRowKeys });
   };
 
-  handleCreateClick = (event) => {
+  handleCreateClick = event => {
     event.preventDefault();
     const poolId = !this.props.pool.list.isFetching ? this.props.pool.list.data[0].id : '';
     this.context.router.push(`/app/pools/${poolId}/stacks/new/step-1`);
   };
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.props.filterStacks(e.target.value);
   };
 
-  renderLink = (text, stack) => {
+  renderLink = (text, stack) => {
     const poolId = this.props.pool.list.data[0].id;
     return <Link to={`/app/pools/${poolId}/stacks/${stack.id}`}>{text}</Link>;
   };

@@ -23,13 +23,16 @@ import {
 } from '../constants/user';
 import * as userApi from '../api/user';
 
-export function fetchUsers(params) {
-  return (dispatch) => dispatch({
+export function fetchUsers(params, refresh = false) {
+  return dispatch => dispatch({
     types: [
       FETCH_USERS_REQUEST,
       FETCH_USERS_SUCCESS,
       FETCH_USERS_FAILURE,
     ],
+    meta: {
+      refresh,
+    },
     payload: {
       promise: userApi.fetchUsers(params),
     },
@@ -37,7 +40,7 @@ export function fetchUsers(params) {
 }
 
 export function fetchUser(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       FETCH_USER_REQUEST,
       FETCH_USER_SUCCESS,
@@ -57,7 +60,7 @@ export function filterUsers(filter) {
 }
 
 export function enableUser(params) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       ENABLE_USER_REQUEST,
       ENABLE_USER_SUCCESS,
@@ -65,7 +68,7 @@ export function enableUser(params) {
     ],
     payload: {
       promise: userApi.enableUser(params)
-        .then((data) => {
+        .then(data => {
           dispatch(fetchUsers());
           return data;
         }),
@@ -74,7 +77,7 @@ export function enableUser(params) {
 }
 
 export function disableUser(params) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       DISABLE_USER_REQUEST,
       DISABLE_USER_SUCCESS,
@@ -82,7 +85,7 @@ export function disableUser(params) {
     ],
     payload: {
       promise: userApi.disableUser(params)
-        .then((data) => {
+        .then(data => {
           dispatch(fetchUsers());
           return data;
         }),
@@ -91,7 +94,7 @@ export function disableUser(params) {
 }
 
 export function resetUserPassword(param) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       RESET_USER_PASSWORD_REQUEST,
       RESET_USER_PASSWORD_SUCCESS,
@@ -99,7 +102,7 @@ export function resetUserPassword(param) {
     ],
     payload: {
       promise: userApi.resetUserPassword(param)
-        .then((data) => {
+        .then(data => {
           dispatch(fetchUsers());
           return data;
         }),

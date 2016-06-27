@@ -59,13 +59,16 @@ import {
 } from '../constants/instance';
 import * as instanceAPI from '../api/instance';
 
-export function fetchInstances(params) {
-  return (dispatch) => dispatch({
+export function fetchInstances(params, refresh = false) {
+  return dispatch => dispatch({
     types: [
       FETCH_INSTANCES_REQUEST,
       FETCH_INSTANCES_SUCCESS,
       FETCH_INSTANCES_FAILURE,
     ],
+    meta: {
+      refresh,
+    },
     payload: {
       promise: instanceAPI.fetchInstances(params),
     },
@@ -73,7 +76,7 @@ export function fetchInstances(params) {
 }
 
 export function fetchInstanceConfig() {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       FETCH_INSTANCE_CONFIG_REQUEST,
       FETCH_INSTANCE_CONFIG_SUCCESS,
@@ -93,7 +96,7 @@ export function filterInstances(filter) {
 }
 
 export function fetchInstance(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       FETCH_INSTANCE_REQUEST,
       FETCH_INSTANCE_SUCCESS,
@@ -106,7 +109,7 @@ export function fetchInstance(id) {
 }
 
 export function createInstance(params) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       CREATE_INSTANCE_REQUEST,
       CREATE_INSTANCE_SUCCESS,
@@ -119,7 +122,7 @@ export function createInstance(params) {
 }
 
 export function deleteInstance(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       DELETE_INSTANCE_REQUEST,
       DELETE_INSTANCE_SUCCESS,
@@ -127,7 +130,7 @@ export function deleteInstance(id) {
     ],
     payload: {
       promise: instanceAPI.deleteInstance(id)
-        .then((data) => {
+        .then(data => {
           dispatch(fetchInstances());
           return data;
         }),
@@ -137,7 +140,7 @@ export function deleteInstance(id) {
 
 export function deleteSnapshot(param) {
   const { pid } = param;
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       DELETE_SNAPSHOT_REQUEST,
       DELETE_SNAPSHOT_SUCCESS,
@@ -145,7 +148,7 @@ export function deleteSnapshot(param) {
     ],
     payload: {
       promise: instanceAPI.deleteSnapshot(param)
-        .then((data) => {
+        .then(data => {
           dispatch(fetchInstance(pid));
           return data;
         }),
@@ -155,7 +158,7 @@ export function deleteSnapshot(param) {
 
 export function deleteNetwork(param) {
   const { pid } = param;
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       DELETE_NETWORK_REQUEST,
       DELETE_NETWORK_FAILURE,
@@ -163,7 +166,7 @@ export function deleteNetwork(param) {
     ],
     payload: {
       promise: instanceAPI.deleteNetwork(param)
-        .then((data) => {
+        .then(data => {
           dispatch(fetchInstance(pid));
           return data;
         }),
@@ -173,7 +176,7 @@ export function deleteNetwork(param) {
 
 export function deleteKeypair(param) {
   const { pid } = param;
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       DELETE_KEYPAIR_REQUEST,
       DELETE_KEYPAIR_SUCCESS,
@@ -181,7 +184,7 @@ export function deleteKeypair(param) {
     ],
     payload: {
       promise: instanceAPI.deleteKeypair(param)
-        .then((data) => {
+        .then(data => {
           dispatch(fetchInstance(pid));
           return data;
         }),
@@ -191,7 +194,7 @@ export function deleteKeypair(param) {
 
 export function deleteVolume(param) {
   const { pid } = param;
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       DELETE_VOLUME_REQUEST,
       DELETE_VOLUME_SUCCESS,
@@ -199,7 +202,7 @@ export function deleteVolume(param) {
     ],
     payload: {
       promise: instanceAPI.deleteVolume(param)
-        .then((data) => {
+        .then(data => {
           dispatch(fetchInstance(pid));
           return data;
         }),
@@ -208,7 +211,7 @@ export function deleteVolume(param) {
 }
 
 export function updateInstance(param) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       UPDATE_INSTANCE_REQUEST,
       UPDATE_INSTANCE_SUCCESS,
@@ -221,7 +224,7 @@ export function updateInstance(param) {
 }
 
 export function addSnapshot(param) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       ADD_SNAPSHOT_REQUEST,
       ADD_SNAPSHOT_SUCCESS,
@@ -234,7 +237,7 @@ export function addSnapshot(param) {
 }
 
 export function addKeypair(param) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       ADD_KEYPAIR_REQUEST,
       ADD_KEYPAIR_SUCCESS,
@@ -247,7 +250,7 @@ export function addKeypair(param) {
 }
 
 export function addVolume(param) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       ADD_VOLUME_REQUEST,
       ADD_VOLUME_SUCCESS,
@@ -260,7 +263,7 @@ export function addVolume(param) {
 }
 
 export function addNetwork(param) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       ADD_NETWORK_REQUEST,
       ADD_NETWORK_SUCCESS,

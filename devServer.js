@@ -11,6 +11,8 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 const compiler = webpack(config);
 
+const proxyServer = 'http://193.160.31.31:8080';
+
 app.use(proxy('/api', {
   logLevel: 'debug',
   target: 'http://localhost:3000', // target host
@@ -33,29 +35,29 @@ app.use(proxy('/api', {
     //'^/api/notification-lists': '/api/notification-lists',
     //'^/api/pools': '/api/pools',
     //'^/api/stacks': '/api/stacks',
-    //'^/api/users': '/api/users',
+    //'^/api/operations': '/api/operations',
 
     // proxy to fake api by default
     '^/api': '/fake-api',
   },
   //proxyTable: {
-  //  '/api/instances': 'http://193.160.31.31:8080',
-  //  '/api/snapshots': 'http://193.160.31.31:8080',
-  //  '/api/images': 'http://193.160.31.31:8080',
-  //  '/api/networks': 'http://193.160.31.31:8080',
-  //  '/api/subnets': 'http://193.160.31.31:8080',
-  //  '/api/ports': 'http://193.160.31.31:8080',
-  //  '/api/security-groups': 'http://193.160.31.31:8080',
-  //  '/api/keypairs': 'http://193.160.31.31:8080',
-  //  '/api/volumes': 'http://193.160.31.31:8080',
-  //  '/api/routers': 'http://193.160.31.31:8080',
-  //  '/api/floating-ips': 'http://193.160.31.31:8080',
-  //  '/api/backups': 'http://193.160.31.31:8080',
-  //  '/api/notifications': 'http://193.160.31.31:8080',
-  //  '/api/notification-lists': 'http://193.160.31.31:8080',
-  //  '/api/pools': 'http://193.160.31.31:8080',
-  //  '/api/stacks': 'http://193.160.31.31:8080',
-  //  '/api/users': 'http://193.160.31.31:8080',
+  //  '/api/instances': proxyServer,
+  //  '/api/snapshots': proxyServer,
+  //  '/api/images': proxyServer,
+  //  '/api/networks': proxyServer,
+  //  '/api/subnets': proxyServer,
+  //  '/api/ports': proxyServer,
+  //  '/api/security-groups': proxyServer,
+  //  '/api/keypairs': proxyServer,
+  //  '/api/volumes': proxyServer,
+  //  '/api/routers': proxyServer,
+  //  '/api/floating-ips': proxyServer,
+  //  '/api/backups': proxyServer,
+  //  '/api/notifications': proxyServer,
+  //  '/api/notification-lists': proxyServer,
+  //  '/api/pools': proxyServer,
+  //  '/api/stacks': proxyServer,
+  //  '/api/operations': proxyServer,
   //},
 }));
 
@@ -69,7 +71,6 @@ app.use(jsonServer.rewriter({
   '/fake-api/monitors/instance/:id/network-out': '/fake-api/instanceNetworkOutMonitor',
   '/fake-api/floating-ips': '/fake-api/floatingIps',
   '/fake-api/virtual-nics': '/fake-api/virtualNics',
-  '/fake-api/subnets/count': '/fake-api/subnetsCount',
   '/fake-api/bare-metals': '/fake-api/bareMetals',
   '/fake-api/security-groups': '/fake-api/securityGroups',
   '/fake-api/notification-lists': '/fake-api/notificationLists',
@@ -79,6 +80,7 @@ app.use(jsonServer.rewriter({
   '/fake-api/pools/config': '/fake-api/poolConfig',
   '/fake-api/stacks/config': '/fake-api/stackConfig',
   '/fake-api/auth/tokens': '/fake-api/tokens',
+  '/fake-api/auth/sign-up': '/fake-api/signup',
 }));
 app.use('/fake-api', router);
 

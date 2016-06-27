@@ -22,7 +22,7 @@ function receiveLogout() {
 }
 
 export function login(credentials) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       LOGIN_REQUEST,
       LOGIN_SUCCESS,
@@ -35,7 +35,7 @@ export function login(credentials) {
 }
 
 export function logout() {
-  return (dispatch) => {
+  return dispatch => {
     dispatch(requestLogout());
     removeToken();
     dispatch(receiveLogout());
@@ -43,7 +43,7 @@ export function logout() {
 }
 
 export function signUp(data) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       SIGN_UP_REQUEST,
       SIGN_UP_SUCCESS,

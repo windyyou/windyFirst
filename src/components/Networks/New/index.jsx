@@ -19,6 +19,15 @@ class NetworkForm extends React.Component {
 
   static propTypes = {
     form: React.PropTypes.object.isRequired,
+    network: React.PropTypes.shape({
+      current: React.PropTypes.shape({
+        error: React.PropTypes.object,
+        data: React.PropTypes.shape({
+          id: React.PropTypes.string.isRequired,
+          name: React.PropTypes.string.isRequired,
+        }).isRequired,
+      }).isRequired,
+    }).isRequired,
     createNetwork: React.PropTypes.func.isRequired,
   };
 
@@ -26,19 +35,12 @@ class NetworkForm extends React.Component {
     super(props);
 
     this.state = {
-      name: '',
       subnets: [],
     };
   }
 
-  handleSubnetsChange = (subnets) => {
+  handleSubnetsChange = subnets => {
     this.setState({ subnets });
-  };
-
-  handleNameChange = (e) => {
-    this.setState({
-      name: e.target.value,
-    });
   };
 
   handleSubmit = () => {
@@ -50,8 +52,12 @@ class NetworkForm extends React.Component {
       this.props.createNetwork({
         ...values,
         subnets: this.state.subnets,
-      });
-      this.context.router.push('/app/networks');
+      }).then(() => {
+        if (!this.props.network.current.error) {
+          this.context.router.push('/app/networks');
+        }
+      }
+      );
     });
   };
 
@@ -65,9 +71,6 @@ class NetworkForm extends React.Component {
       rules: [
         { required: true, message: '名称必填' },
       ],
-      trigger: ['onBlur'],
-      validateTrigger: ['onBlur'],
-      initialValue: this.state.name,
     });
 
     return (
@@ -77,16 +80,12 @@ class NetworkForm extends React.Component {
             <FormItem {...formInputItemLayout} label="名称:">
               <Input
                 {...nameProps}
-                onChange={this.handleNameChange}
                 placeholder="请输入名称"
-                name="name"
-                value={this.state.name}
               />
             </FormItem>
             <FormItem {...formInputItemLayout} label="受管网络:">
               <RadioGroup
                 {...getFieldProps('managed', { initialValue: true })}
-                onChange={this.handleSelectShare}
               >
                 <Radio key="true" value>是</Radio>
                 <Radio key="false">否</Radio>

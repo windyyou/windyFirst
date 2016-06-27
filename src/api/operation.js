@@ -22,14 +22,3 @@ export function fetchOperation(id) {
     .then(parseJSON)
     .then(json => json);
 }
-
-export function deleteOperation(id) {
-  const url = `${API}/${id}`;
-
-  return fetch(url, {
-    ...fetchOptions(),
-    method: 'DELETE',
-  }).then(checkStatus)
-    .then(parseJSON)
-    .then(json => json);
-}

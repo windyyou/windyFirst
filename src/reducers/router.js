@@ -41,11 +41,11 @@ const INITIAL_STATE = {
 };
 
 export default handleActions({
-  [FETCH_ROUTERS_REQUEST]: (state) => ({
+  [FETCH_ROUTERS_REQUEST]: (state, action) => ({
     ...state,
     list: {
       ...state.list,
-      isFetching: true,
+      isFetching: !(action.meta && action.meta.refresh),
     },
   }),
 
@@ -72,7 +72,7 @@ export default handleActions({
     filter: action.payload,
   }),
 
-  [FETCH_ROUTER_REQUEST]: (state) => ({
+  [FETCH_ROUTER_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -99,7 +99,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_ROUTER_REQUEST]: (state) => ({
+  [DELETE_ROUTER_REQUEST]: state => ({
     ...state,
     list: {
       ...state.list,
@@ -125,7 +125,7 @@ export default handleActions({
     },
   }),
 
-  [UPDATE_ROUTER_REQUEST]: (state) => ({
+  [UPDATE_ROUTER_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,

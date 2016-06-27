@@ -42,8 +42,8 @@ class Step1 extends React.Component {
     });
   };
 
-  handleSaveClick = (e) => {
-    this.props.form.validateFields((errors) => {
+  handleSaveClick = e => {
+    this.props.form.validateFields(errors => {
       e.preventDefault();
       if (!!errors) {
         return;
@@ -100,7 +100,7 @@ class Step1 extends React.Component {
     this.props.form.resetFields();
   };
 
-  handleCancelClick = (e) => {
+  handleCancelClick = e => {
     e.preventDefault();
 
     this.setState({
@@ -109,7 +109,7 @@ class Step1 extends React.Component {
     });
   };
 
-  handleDeleteClick = (index) => () => {
+  handleDeleteClick = index => () => {
     const net = this.props.spec.network.slice(0);
     net.splice(index, 1);
 
@@ -122,7 +122,7 @@ class Step1 extends React.Component {
     this.props.handleSpecChange(event);
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     e.preventDefault();
     if (this.props.spec.network.length === 0) {
       this.setState({
@@ -134,31 +134,31 @@ class Step1 extends React.Component {
     this.props.handleNextClick(e);
   };
 
-  handleNameChange = (e) => {
+  handleNameChange = e => {
     this.setState({
       name: e.target.value,
     });
   };
 
-  handleCIDRChange = (e) => {
+  handleCIDRChange = e => {
     this.setState({
       CIDR: e.target.value,
     });
   };
 
-  handleIpVersionChange = (value) => {
+  handleIpVersionChange = value => {
     this.setState({
       ipVersion: value,
     });
   };
 
-  handleGatewayChange = (e) => {
+  handleGatewayChange = e => {
     this.setState({
       gateway: e.target.value,
     });
   };
 
-  handleDHCPChange = (e) => {
+  handleDHCPChange = e => {
     this.setState({
       DHCP: e.target.checked,
     });
@@ -193,7 +193,7 @@ class Step1 extends React.Component {
         value={this.state.ipVersion}
         placeholder="网络版本"
       >
-        {stack.config.data.ipVersion.map((data) =>
+        {stack.config.data.ipVersion.map(data =>
           <Option key={data}>{data}</Option>
         )}
       </Select>
@@ -294,16 +294,16 @@ class Step1 extends React.Component {
           </FormItem>
           <FormItem>
             <a
-              className={ classNames('save') }
+              className={classNames('save')}
               onClick={this.handleSaveClick}
             >
-              <i className={ classNames('portalicon', 'portalicon-save', 'save') }></i>
+              <i className={classNames('portalicon', 'portalicon-save', 'save')}></i>
             </a>
             <a
-              className={ classNames('cancel') }
+              className={classNames('cancel')}
               onClick={this.handleCancelClick}
             >
-              <i className={ classNames('portalicon', 'portalicon-cancel', 'cancel') }></i>
+              <i className={classNames('portalicon', 'portalicon-cancel', 'cancel')}></i>
             </a>
           </FormItem>
         </Row>
@@ -318,30 +318,30 @@ class Step1 extends React.Component {
       <div>
         {networks.map((network, i) =>
           <Row key={i} type="flex" justify="center" className="list-data">
-          <Col span="4">
-            <span>{network.name}</span>
-          </Col>
-          <Col span="4">
-            <span>{network.CIDR}</span>
-          </Col>
-          <Col span="4">
-            <span>{network.ipVersion}</span>
-          </Col>
-          <Col span="4">
-            <span>{network.gateway}</span>
-          </Col>
-          <Col span="4">
-            <span>{network.DHCP ? '启用' : '未启用'}</span>
-          </Col>
-          <Col span="4">
-            <a
-              className="delete"
-              onClick={this.handleDeleteClick(i)}
-            >
-              <i className={ classNames('portalicon', 'portalicon-delete', 'delete') }></i>
-            </a>
-          </Col>
-        </Row>)}
+            <Col span="4">
+              <span>{network.name}</span>
+            </Col>
+            <Col span="4">
+              <span>{network.CIDR}</span>
+            </Col>
+            <Col span="4">
+              <span>{network.ipVersion}</span>
+            </Col>
+            <Col span="4">
+              <span>{network.gateway}</span>
+            </Col>
+            <Col span="4">
+              <span>{network.DHCP ? '启用' : '未启用'}</span>
+            </Col>
+            <Col span="4">
+              <a
+                className="delete"
+                onClick={this.handleDeleteClick(i)}
+              >
+                <i className={classNames('portalicon', 'portalicon-delete', 'delete')}></i>
+              </a>
+            </Col>
+          </Row>)}
       </div>
     );
   }

@@ -24,7 +24,7 @@ const INITIAL_STATE = {
 };
 
 export default handleActions({
-  [LOGIN_REQUEST]: (state) => ({
+  [LOGIN_REQUEST]: state => ({
     ...state,
     isFetching: true,
   }),
@@ -48,7 +48,7 @@ export default handleActions({
     user: INITIAL_STATE.user,
   }),
 
-  [LOGOUT_REQUEST]: (state) => ({
+  [LOGOUT_REQUEST]: state => ({
     ...state,
     isFetching: true,
   }),
@@ -59,7 +59,7 @@ export default handleActions({
     return INITIAL_STATE;
   },
 
-  [SIGN_UP_REQUEST]: (state) => ({
+  [SIGN_UP_REQUEST]: state => ({
     ...state,
     isFetching: true,
   }),

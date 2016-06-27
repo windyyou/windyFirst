@@ -70,7 +70,7 @@ function mapStateToProps() {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchPort: (key) => dispatch(fetchPort(key)),
+    fetchPort: key => dispatch(fetchPort(key)),
     updatePort: params => dispatch(updatePort(params)),
   };
 }

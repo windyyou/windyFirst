@@ -7,11 +7,11 @@ import Popconfirm from 'antd/lib/popconfirm';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-
+import AbstractList from '../AbstractList';
 import classNames from 'classnames';
 import includes from '../../../node_modules/lodash/includes';
 import uniq from '../../../node_modules/lodash/uniq';
-import { fetchNetworksCount } from '../../actions/network';
+import { fetchNetworks } from '../../actions/network';
 import { fetchSubnets, filterSubnets, deleteSubnet } from '../../actions/subnet';
 
 const InputGroup = Input.Group;
@@ -23,8 +23,7 @@ function renderLink(text, subnet) {
 function renderNetWork(net) {
   let link = '';
   if (net) {
-    const { id, name } = net;
-    link = (<Link to={`/app/networks/${id}`}>{name}</Link>);
+    link = (<Link to={`/app/networks/${net.id}`}>{net.name}</Link>);
   }
 
   return link;
@@ -55,12 +54,7 @@ function getColumns(data) {
   ];
 }
 
-function loadData(props) {
-  props.fetchSubnets();
-  props.fetchNetworksCount();
-}
-
-class List extends React.Component {
+class List extends AbstractList {
   static propTypes = {
     subnet: React.PropTypes.shape({
       filter: React.PropTypes.string,
@@ -83,7 +77,7 @@ class List extends React.Component {
     }),
     fetchSubnets: React.PropTypes.func.isRequired,
     filterSubnets: React.PropTypes.func.isRequired,
-    fetchNetworksCount: React.PropTypes.func.isRequired,
+    fetchNetworks: React.PropTypes.func.isRequired,
     network: React.PropTypes.object.isRequired,
     deleteSubnet: React.PropTypes.func.isRequired,
   };
@@ -100,8 +94,9 @@ class List extends React.Component {
     };
   }
 
-  componentDidMount() {
-    loadData(this.props);
+  loadData(props) {
+    props.fetchSubnets();
+    props.fetchNetworks();
   }
 
   getRowKey(record) {
@@ -111,29 +106,32 @@ class List extends React.Component {
   handleDelete = () => {
     this.props.deleteSubnet(this.state.selectedRowKeys[0]);
     this.setState({ ...this.state, selectedRowKeys: [] });
-    this.context.router.push('/app/subnets/');
+    this.context.router.push('/app/subnets');
   };
 
-  handleChange = (selectedRowKeys) => {
+  handleChange = selectedRowKeys => {
     this.setState({ selectedRowKeys });
   };
 
-  handleCreateClick = (event) => {
-    event.preventDefault();
-    this.context.router.push('/app/subnets/new/step-1');
-  };
-
-  handleReload = (e) => {
+  handleCreateClick = e => {
     e.preventDefault();
-    loadData(this.props);
+    this.context.router.push('/app/subnets/new');
   };
 
-  handleCreateChildClick = (event) => {
-    event.preventDefault();
-    this.context.router.push('/app/subnets/child/step-1');
+  handleReload = e => {
+    e.preventDefault();
+    this.loadData(this.props);
   };
 
-  handleInputChange = (e) => {
+  handleConnectToRouterClick = e => {
+    e.preventDefault();
+  };
+
+  handleDisconnectToRouterClick = e => {
+    e.preventDefault();
+  };
+
+  handleInputChange = e => {
     this.props.filterSubnets(e.target.value);
   };
 
@@ -160,7 +158,7 @@ class List extends React.Component {
       onChange: this.handleChange,
     };
     const hasSelected = this.state.selectedRowKeys.length === 1;
-    const hasNetworks = network.count.data.count > 0;
+    const hasNetworks = network.list.data.length > 0;
     const btnCls = classNames({
       'ant-search-btn': true,
       'ant-search-btn-noempty': !!subnet.filter.trim(),
@@ -187,13 +185,13 @@ class List extends React.Component {
             type="ghost"
             size="large"
             disabled={!hasSelected}
-            onClick={this.handleCreateChildClick}
+            onClick={this.handleConnectToRouterClick}
           >关联路由</Button>
           <Button
             type="ghost"
             size="large"
             disabled={!hasSelected}
-            onClick={this.handleCreateChildClick}
+            onClick={this.handleDisconnectToRouterClick}
           >断开路由</Button>
           <Popconfirm title="确定要删除这个子网吗？" onConfirm={this.handleDelete}>
             <Button type="dashed" size="large" disabled={!hasSelected}>删除</Button>
@@ -240,9 +238,10 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchSubnets: () => dispatch(fetchSubnets()),
-    filterSubnets: (filter) => dispatch(filterSubnets(filter)),
-    fetchNetworksCount: () => dispatch(fetchNetworksCount()),
-    deleteSubnet: (id) => dispatch(deleteSubnet(id)),
+    filterSubnets: filter => dispatch(filterSubnets(filter)),
+    fetchNetworks: () => dispatch(fetchNetworks()),
+    deleteSubnet: id => dispatch(deleteSubnet(id)),
+    refresh: () => dispatch(fetchSubnets(undefined, true)),
   };
 }
 

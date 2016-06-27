@@ -2,19 +2,8 @@ import 'whatwg-fetch';
 import { paramToQuery, checkStatus, parseJSON, fetchOptions } from '../utils/fetch';
 
 const API = '/api/networks';
-const countAPI = '/api/netWorksCount';
 export function fetchNetworks(params = {}) {
   const url = paramToQuery(API, params);
-
-  return fetch(url, {
-    ...fetchOptions(),
-  }).then(checkStatus)
-    .then(parseJSON)
-    .then(json => json);
-}
-
-export function fetchNetworksCount(params = {}) {
-  const url = paramToQuery(countAPI, params);
 
   return fetch(url, {
     ...fetchOptions(),
@@ -45,8 +34,7 @@ export function deleteNetwork(id) {
 }
 
 export function updateNetwork(params) {
-  const { id } = params;
-  const url = `${API}/${id}`;
+  const url = `${API}/${params.id}`;
 
   return fetch(url, {
     ...fetchOptions(),

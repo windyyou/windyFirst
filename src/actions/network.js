@@ -5,10 +5,6 @@ import {
 
   FILTER_NETWORKS,
 
-  FETCH_NETWORKS_COUNT_REQUEST,
-  FETCH_NETWORKS_COUNT_SUCCESS,
-  FETCH_NETWORKS_COUNT_FAILURE,
-
   FETCH_NETWORK_REQUEST,
   FETCH_NETWORK_SUCCESS,
   FETCH_NETWORK_FAILURE,
@@ -27,28 +23,18 @@ import {
 } from '../constants/networks';
 import * as networkAPI from '../api/network';
 
-export function fetchNetworks(params) {
-  return (dispatch) => dispatch({
+export function fetchNetworks(params, refresh = false) {
+  return dispatch => dispatch({
     types: [
       FETCH_NETWORKS_REQUEST,
       FETCH_NETWORKS_SUCCESS,
       FETCH_NETWORKS_FAILURE,
     ],
+    meta: {
+      refresh,
+    },
     payload: {
       promise: networkAPI.fetchNetworks(params),
-    },
-  });
-}
-
-export function fetchNetworksCount(params) {
-  return (dispatch) => dispatch({
-    types: [
-      FETCH_NETWORKS_COUNT_REQUEST,
-      FETCH_NETWORKS_COUNT_SUCCESS,
-      FETCH_NETWORKS_COUNT_FAILURE,
-    ],
-    payload: {
-      promise: networkAPI.fetchNetworksCount(params),
     },
   });
 }
@@ -61,7 +47,7 @@ export function filterNetworks(filter) {
 }
 
 export function fetchNetwork(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       FETCH_NETWORK_REQUEST,
       FETCH_NETWORK_SUCCESS,
@@ -74,7 +60,7 @@ export function fetchNetwork(id) {
 }
 
 export function deleteNetwork(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       DELETE_NETWORK_REQUEST,
       DELETE_NETWORK_SUCCESS,
@@ -100,7 +86,7 @@ export function updateNetwork(params) {
 }
 
 export function createNetwork(params) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       CREATE_NETWORK_REQUEST,
       CREATE_NETWORK_SUCCESS,

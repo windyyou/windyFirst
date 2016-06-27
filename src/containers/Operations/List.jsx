@@ -6,7 +6,7 @@ import Input from 'antd/lib/input';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-
+import AbstractList from '../AbstractList';
 import classNames from 'classnames';
 import includes from '../../../node_modules/lodash/includes';
 import uniq from '../../../node_modules/lodash/uniq';
@@ -15,9 +15,13 @@ import { fetchOperations, filterOperations } from '../../actions/operation';
 
 const InputGroup = Input.Group;
 
-function renderResource(resources) {
+function renderResources(resources) {
   return resources.reduce((prev, curr, index) => {
-    prev.push(<Link key={curr.id} to={`/${curr.type}/${curr.id}`}>{curr.name}</Link>);
+    if (curr.type === 'keypair') {
+      prev.push(curr.name);
+    } else {
+      prev.push(<Link key={curr.id} to={`/${curr.type}s/${curr.id}`}>{curr.name}</Link>);
+    }
 
     if (index !== resources.length - 1) {
       prev.push(', ');
@@ -37,7 +41,7 @@ function getColumns(data) {
 
   return [
     { title: '操作', dataIndex: 'title', render: renderLink },
-    { title: '资源', dataIndex: 'resource', render: renderResource },
+    { title: '资源', dataIndex: 'resources', render: renderResources },
     { title: '操作者', dataIndex: 'user' },
     { title: '状态', dataIndex: 'status', filters: statusFilter,
       onFilter(value, record) {
@@ -48,11 +52,7 @@ function getColumns(data) {
   ];
 }
 
-function loadData(props) {
-  props.fetchOperations();
-}
-
-class List extends React.Component {
+class List extends AbstractList {
   static propTypes = {
     operation: React.PropTypes.shape({
       filter: React.PropTypes.string,
@@ -65,7 +65,7 @@ class List extends React.Component {
           status: React.PropTypes.string.isRequired,
           user: React.PropTypes.string.isRequired,
           timestamp: React.PropTypes.string.isRequired,
-          resource: React.PropTypes.arrayOf(React.PropTypes.shape({
+          resources: React.PropTypes.arrayOf(React.PropTypes.shape({
             id: React.PropTypes.string.isRequired,
             type: React.PropTypes.string.isRequired,
             name: React.PropTypes.string.isRequired,
@@ -89,29 +89,25 @@ class List extends React.Component {
     };
   }
 
-  componentDidMount() {
-    loadData(this.props);
+  loadData(props) {
+    props.fetchOperations();
   }
+
 
   getRowKey(operation) {
     return operation.id;
   }
 
-  handleChange = (selectedRowKeys) => {
+  handleChange = selectedRowKeys => {
     this.setState({ selectedRowKeys });
   };
 
-  handleCreateClick = (event) => {
-    event.preventDefault();
-    this.context.router.push('/app/operations/new/step-1');
-  };
-
-  handleReload = (e) => {
+  handleReload = e => {
     e.preventDefault();
-    loadData(this.props);
+    this.loadData(this.props);
   };
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.props.filterOperations(e.target.value);
   };
 
@@ -193,7 +189,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchOperations: () => dispatch(fetchOperations()),
-    filterOperations: (filter) => dispatch(filterOperations(filter)),
+    filterOperations: filter => dispatch(filterOperations(filter)),
+    refresh: () => dispatch(fetchOperations(undefined, true)),
   };
 }
 

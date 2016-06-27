@@ -22,14 +22,11 @@ export default class ProfileDropdown extends React.Component {
         <div className="dropdown-menu">
           <Menu>
             <MenuItem>
-              <a><Icon type="setting" /> 选项1</a>
-            </MenuItem>
-            <MenuItem>
-              <a><Icon type="setting" /> 选项2</a>
+              <a><Icon type="setting" /> 个人设置</a>
             </MenuItem>
             <MenuDivider />
             <MenuItem>
-              <a onClick={this.props.handleLogout}><Icon type="logout" /> 退出</a>
+              <a onClick={this.props.handleLogout}><Icon type="logout" /> 注销</a>
             </MenuItem>
           </Menu>
         </div>
@@ -41,8 +38,8 @@ export default class ProfileDropdown extends React.Component {
     return (
       <li>
         <Dropdown
-          overlay={ this.getContent() }
-          trigger={ ['click'] }
+          overlay={this.getContent()}
+          trigger={['click']}
         >
           <a ><Icon type="user" />{this.props.auth.user.name}</a>
         </Dropdown>

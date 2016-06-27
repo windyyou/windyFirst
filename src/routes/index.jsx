@@ -1,7 +1,6 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
 
-import { scrollToLeftTop } from '../utils/dom';
 import { redirectToApp, redirectToLogin } from '../utils/route';
 
 import InstanceRoutes from './instances';
@@ -28,12 +27,8 @@ import App from '../containers/App';
 import Dashboard from '../containers/Dashboard';
 import Login from '../containers/Login';
 import SignUp from '../containers/SignUp';
-import Landing from '../containers/Landing.jsx';
-import Templates from './templates';
 
 function redirectToLoginOnChange(prevState, nextState, replace) {
-  scrollToLeftTop();
-
   redirectToLogin(nextState, replace);
 }
 
@@ -68,7 +63,6 @@ export default (
       {BareMetalRoutes}
       {Users}
       {Pools}
-      {Templates}
     </Route>
   </Route>
 );

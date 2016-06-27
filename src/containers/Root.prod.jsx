@@ -4,10 +4,9 @@ import routes from '../routes';
 import { Router } from 'react-router';
 
 export default function Root(props) {
-  const { store, history } = props;
   return (
-    <Provider store={store}>
-      <Router history={history} routes={routes} />
+    <Provider store={props.store}>
+      <Router history={props.history} routes={routes} />
     </Provider>
   );
 }

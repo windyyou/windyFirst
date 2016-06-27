@@ -17,7 +17,7 @@ const propTypes = {
         user: React.PropTypes.string.isRequired,
         timestamp: React.PropTypes.string.isRequired,
         status: React.PropTypes.string.isRequired,
-        resource: React.PropTypes.arrayOf(React.PropTypes.shape({
+        resources: React.PropTypes.arrayOf(React.PropTypes.shape({
           id: React.PropTypes.string.isRequired,
           name: React.PropTypes.string.isRequired,
           type: React.PropTypes.string.isRequired,
@@ -65,7 +65,7 @@ function mapStateToProps() {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchOperation: (key) => dispatch(fetchOperation(key)),
+    fetchOperation: key => dispatch(fetchOperation(key)),
   };
 }
 

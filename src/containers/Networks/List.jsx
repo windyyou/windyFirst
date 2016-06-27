@@ -7,7 +7,7 @@ import Popconfirm from 'antd/lib/popconfirm';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-
+import AbstractList from '../AbstractList';
 import classNames from 'classnames';
 import includes from '../../../node_modules/lodash/includes';
 import uniq from '../../../node_modules/lodash/uniq';
@@ -49,11 +49,7 @@ function getColumns(data) {
   ];
 }
 
-function loadData(props) {
-  props.fetchNetworks();
-}
-
-class List extends React.Component {
+class List extends AbstractList {
   static propTypes = {
     network: React.PropTypes.shape({
       filter: React.PropTypes.string,
@@ -86,8 +82,8 @@ class List extends React.Component {
     };
   }
 
-  componentDidMount() {
-    loadData(this.props);
+  loadData(props) {
+    props.fetchNetworks();
   }
 
   getRowKey(record) {
@@ -100,26 +96,26 @@ class List extends React.Component {
     this.context.router.push('/app/networks');
   };
 
-  handleChange = (selectedRowKeys) => {
+  handleChange = selectedRowKeys => {
     this.setState({ selectedRowKeys });
   };
 
-  handleCreateClick = (event) => {
+  handleCreateClick = event => {
     event.preventDefault();
     this.context.router.push('/app/networks/new');
   };
 
-  handleCreateChildClick = (event) => {
+  handleCreateChildClick = event => {
     event.preventDefault();
     this.context.router.push(`/app/subnets/new?networkId=${this.state.selectedRowKeys[0]}`);
   };
 
-  handleReload = (e) => {
+  handleReload = e => {
     e.preventDefault();
-    loadData(this.props);
+    this.loadData(this.props);
   };
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.props.filterNetworks(e.target.value);
   };
 
@@ -212,8 +208,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchNetworks: () => dispatch(fetchNetworks()),
-    filterNetworks: (filter) => dispatch(filterNetworks(filter)),
-    deleteNetwork: (id) => dispatch(deleteNetwork(id)),
+    filterNetworks: filter => dispatch(filterNetworks(filter)),
+    deleteNetwork: id => dispatch(deleteNetwork(id)),
+    refresh: () => dispatch(fetchNetworks(undefined, true)),
   };
 }
 

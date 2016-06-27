@@ -35,11 +35,11 @@ const INITIAL_STATE = {
 };
 
 export default handleActions({
-  [FETCH_BILLS_REQUEST]: (state) => ({
+  [FETCH_BILLS_REQUEST]: (state, action) => ({
     ...state,
     list: {
       ...state.list,
-      isFetching: true,
+      isFetching: !(action.meta && action.meta.refresh),
     },
   }),
 
@@ -68,7 +68,7 @@ export default handleActions({
     filter: action.payload,
   }),
 
-  [FETCH_BILL_REQUEST]: (state) => ({
+  [FETCH_BILL_REQUEST]: state => ({
     ...state,
     current: {
       ...state.list,

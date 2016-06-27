@@ -50,7 +50,7 @@ class Step2 extends React.Component {
   getSliderTip = list => index => list[index];
 
   getSystems(images) {
-    const systems = images.map((image) => image.name.split(/[\-_\s]+/)[0]);
+    const systems = images.map(image => image.name.split(/[\-_\s]+/)[0]);
 
     return uniqWith(systems, isEqual);
   }
@@ -63,8 +63,8 @@ class Step2 extends React.Component {
     return image.list.data;
   }
 
-  handleSubmit = (e) => {
-    this.props.form.validateFields((errors) => {
+  handleSubmit = e => {
+    this.props.form.validateFields(errors => {
       if (!!errors) {
         return;
       }
@@ -73,7 +73,7 @@ class Step2 extends React.Component {
     });
   };
 
-  handleSystemChange = (e) => {
+  handleSystemChange = e => {
     this.setState({
       ...this.state,
       [e.target.name]: e.target.value,
@@ -91,7 +91,7 @@ class Step2 extends React.Component {
     this.props.handleSpecChange(event);
   };
 
-  handleVolumeSizeChange = (value) => {
+  handleVolumeSizeChange = value => {
     const event = {
       target: {
         name: 'volumeSize',
@@ -100,9 +100,9 @@ class Step2 extends React.Component {
     };
 
     this.props.handleSpecChange(event);
-  }
+  };
 
-  handleKeypairChange = (value) => {
+  handleKeypairChange = value => {
     const event = {
       target: {
         name: 'keypair',
@@ -113,7 +113,7 @@ class Step2 extends React.Component {
     this.props.handleSpecChange(event);
   };
 
-  handleQuantityChange = (value) => {
+  handleQuantityChange = value => {
     const event = {
       target: {
         name: 'quantity',
@@ -191,7 +191,7 @@ class Step2 extends React.Component {
           style={{ width: 200 }}
           showSearch={false}
         >
-          {keypair.list.data.map((key) => <Option key={key.id} value={key.id}>{key.name}</Option>)}
+          {keypair.list.data.map(key => <Option key={key.id} value={key.id}>{key.name}</Option>)}
         </Select>);
     }
 
@@ -264,7 +264,7 @@ class Step2 extends React.Component {
           size=""
           onChange={this.handleSystemChange}
         >
-          {systemOptions.map((system) =>
+          {systemOptions.map(system =>
             <RadioButton
               key={system.name}
               value={system.value}
@@ -308,14 +308,18 @@ class Step2 extends React.Component {
           size="large"
         >
           {stack.config.data.volume.type.map(type =>
-            <RadioButton key={type.name} value={type.name} name="volumeType">{type.name}</RadioButton>)}
+            <RadioButton
+              key={type.name}
+              value={type.name}
+              name="volumeType"
+            >{type.name}</RadioButton>)}
         </RadioGroup>
       );
 
       const list = {
         1: `1${unit}`,
-        [stack.config.data.volume.size]: `${stack.config.data.volume.size}${unit}`
-      }
+        [stack.config.data.volume.size]: `${stack.config.data.volume.size}${unit}`,
+      };
 
       slider = (
         <Row>
@@ -326,7 +330,8 @@ class Step2 extends React.Component {
               tipFormatter={formatter}
               max={stack.config.data.volume.size}
               onChange={this.handleVolumeSizeChange}
-              value={spec.volumeSize} />
+              value={spec.volumeSize}
+            />
           </Col>
           <Col span={5}>
             <InputNumber
@@ -335,13 +340,13 @@ class Step2 extends React.Component {
               style={{ marginLeft: '16px' }}
               value={spec.volumeSize}
               onChange={this.handleVolumeSizeChange}
-          />
+            />
           </Col>
           <Col span={1}>
             {unit}
           </Col>
         </Row>
-      )
+      );
     }
 
     return (
@@ -418,7 +423,7 @@ class Step2 extends React.Component {
         <RadioGroup
           {...radioProps}
         >
-          {images.map((img) =>
+          {images.map(img =>
             <Radio key={img.id} value={img.id} name="source">
               <div className="image-option"> {img.name}</div>
             </Radio>)}

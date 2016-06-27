@@ -9,6 +9,10 @@ import {
   FETCH_PORT_SUCCESS,
   FETCH_PORT_FAILURE,
 
+  CREATE_PORT_REQUEST,
+  CREATE_PORT_SUCCESS,
+  CREATE_PORT_FAILURE,
+
   DELETE_PORT_REQUEST,
   DELETE_PORT_SUCCESS,
   DELETE_PORT_FAILURE,
@@ -19,13 +23,16 @@ import {
 } from '../constants/port';
 import * as portAPI from '../api/port';
 
-export function fetchPorts(params) {
-  return (dispatch) => dispatch({
+export function fetchPorts(params, refresh = false) {
+  return dispatch => dispatch({
     types: [
       FETCH_PORTS_REQUEST,
       FETCH_PORTS_SUCCESS,
       FETCH_PORTS_FAILURE,
     ],
+    meta: {
+      refresh,
+    },
     payload: {
       promise: portAPI.fetchPorts(params),
     },
@@ -40,7 +47,7 @@ export function filterPorts(filter) {
 }
 
 export function fetchPort(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       FETCH_PORT_REQUEST,
       FETCH_PORT_SUCCESS,
@@ -52,16 +59,29 @@ export function fetchPort(id) {
   });
 }
 
+export function createPort(params) {
+  return dispatch => dispatch({
+    types: [
+      CREATE_PORT_REQUEST,
+      CREATE_PORT_SUCCESS,
+      CREATE_PORT_FAILURE,
+    ],
+    payload: {
+      promise: portAPI.createPort(params),
+    },
+  });
+}
+
 export function deletePort(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       DELETE_PORT_REQUEST,
       DELETE_PORT_SUCCESS,
       DELETE_PORT_FAILURE,
     ],
     payload: {
-      promise: portApi.deletePort(id)
-        .then((data) => {
+      promise: portAPI.deletePort(id)
+        .then(data => {
           dispatch(fetchPorts());
           return data;
         }),

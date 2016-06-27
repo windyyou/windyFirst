@@ -62,7 +62,7 @@ class SignUp extends React.Component {
     }
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((errors, values) => {
       if (!!errors) {
@@ -82,11 +82,6 @@ class SignUp extends React.Component {
         }
       });
     });
-  };
-
-  handleRedirectToLogin = (e) => {
-    e.preventDefault();
-    this.context.router.push('/');
   };
 
   renderForm() {
@@ -124,6 +119,7 @@ class SignUp extends React.Component {
     });
     const companyProps = getFieldProps('company');
     const nameProps = getFieldProps('name');
+    const customerManagerProps = getFieldProps('customerManager');
 
     return (
       <Form horizontal form={this.props.form}>
@@ -172,6 +168,15 @@ class SignUp extends React.Component {
             {...phoneProps}
             size="large"
             placeholder="请输入手机号码"
+          />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+        >
+          <Input
+            {...customerManagerProps}
+            size="large"
+            placeholder="请输入客户经理"
           />
         </FormItem>
         <FormItem
@@ -229,24 +234,26 @@ class SignUp extends React.Component {
 
   render() {
     return (
-    <Row type="flex" justify="center" align="middle">
-      <Col className="sign-up" span="8">
-        <Row type="flex" className="header">
-          <Col span="12" className="logo" />
-        </Row>
-        <Row type="flex" className="box">
-          <Col span="16" className="form" >
-            {this.renderFetching()}
-            {this.renderError()}
-            {this.state.success ? this.renderRedirect() : this.renderForm()}
-          </Col>
-          <Col span="8" className="login-area">
-            <p>已经有账号？</p>
-            <a href="/">立即登录 <Icon type="arrow-right" /></a>
-          </Col>
-        </Row>
-      </Col>
-    </Row>
+      <Row type="flex" justify="center" align="middle">
+        <Col className="sign-up" span="9">
+          <Row type="flex" className="header">
+            <Col span="12" className="logo" />
+          </Row>
+          {this.state.success ? this.renderRedirect() : (
+            <Row type="flex" className="box">
+              <Col span="16" className="form" >
+                {this.renderFetching()}
+                {this.renderError()}
+                {this.renderForm()}
+              </Col>
+              <Col span="8" className="login-area">
+                <p>已经有账号？</p>
+                <a href="/">立即登录 <Icon type="arrow-right" /></a>
+              </Col>
+            </Row>
+          )}
+        </Col>
+      </Row>
     );
   }
 }
@@ -260,7 +267,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    signUp: (data) => dispatch(signUp(data)),
+    signUp: data => dispatch(signUp(data)),
   };
 }
 

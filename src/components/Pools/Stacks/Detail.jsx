@@ -3,7 +3,7 @@ import Tabs from 'antd/lib/tabs';
 
 import Description from '../../../containers/Pools/Stacks/Description';
 import Resource from '../../../containers/Pools/Stacks/Resource.jsx';
-import Topology from '../../../containers/Instances/Topology';
+import Topology from '../../../containers/Pools/Stacks/Topology';
 
 const TabPane = Tabs.TabPane;
 
@@ -13,7 +13,7 @@ export default function Detail(props) {
       <Tabs defaultActiveKey="1">
         <TabPane tab="详细信息" key="1"><Description {...props} /></TabPane>
         <TabPane tab="资源" key="2"><Resource {...props} /></TabPane>
-        <TabPane tab="拓扑" key="3"><Topology /></TabPane>
+        <TabPane tab="拓扑" key="3"><Topology {...props} /></TabPane>
       </Tabs>
     </div>
   );

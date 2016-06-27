@@ -40,7 +40,7 @@ export default class Resources extends React.Component {
 
   getData(mockData, resources) {
     const data = mockData.list.data.length > 0 ?
-      mockData.list.data.map((datum) =>
+      mockData.list.data.map(datum =>
         ({ ...datum, id: datum.id, name: datum.name })) : [];
 
     const t1 = [];
@@ -65,7 +65,7 @@ export default class Resources extends React.Component {
     });
   };
 
-  handleSaveClick = (e) => {
+  handleSaveClick = e => {
     e.preventDefault();
 
     const pid = this.props.alarm.current.data.id;
@@ -80,7 +80,7 @@ export default class Resources extends React.Component {
     });
   };
 
-  handleCancelClick = (e) => {
+  handleCancelClick = e => {
     e.preventDefault();
 
     this.setState({
@@ -89,12 +89,12 @@ export default class Resources extends React.Component {
     });
   };
 
-  handleDeleteClick = (id) => () => {
+  handleDeleteClick = id => () => {
     const pid = this.props.alarm.current.data.id;
     this.props.deleteAlarmResource({ pid, id });
   };
 
-  handleSelectChange = (value) => {
+  handleSelectChange = value => {
     this.setState({
       ...this.state,
       ids: value,
@@ -120,7 +120,7 @@ export default class Resources extends React.Component {
                 cancelText="取消"
                 onConfirm={this.handleDeleteClick(resource.id)}
               >
-                <i className={ classNames('portalicon', 'portalicon-delete', 'delete') }></i>
+                <i className={classNames('portalicon', 'portalicon-delete', 'delete')}></i>
               </Popconfirm>
             </a>
           </Col>
@@ -154,7 +154,7 @@ export default class Resources extends React.Component {
     ]);
     const data = type === '' ? [] : this.getData(resourceMap.get(type), resources);
     const message = type === '' ? 'loading...' : '请选择监控对象';
-    const object = type === '' ? null : data.map((status) =>
+    const object = type === '' ? null : data.map(status =>
       <Option key={status.id} value={status.id}>{status.name}</Option>
     );
 
@@ -171,7 +171,8 @@ export default class Resources extends React.Component {
         </Row>
         <Row className={classNames({ hide: !formEditing }, 'rowHeight')}>
           <Col span="6" className="marginRight10px">
-            <Select multiple
+            <Select
+              multiple
               style={{ width: '100%' }}
               onChange={this.handleSelectChange}
               placeholder={message}
@@ -181,16 +182,16 @@ export default class Resources extends React.Component {
           </Col>
           <Col span="2" className="verticalCenter">
             <a
-              className={ classNames('save') }
+              className={classNames('save')}
               onClick={this.handleSaveClick}
             >
-              <i className={ classNames('portalicon', 'portalicon-save', 'save') }></i>
+              <i className={classNames('portalicon', 'portalicon-save', 'save')}></i>
             </a>
             <a
-              className={ classNames('cancel') }
+              className={classNames('cancel')}
               onClick={this.handleCancelClick}
             >
-              <i className={ classNames('portalicon', 'portalicon-cancel', 'cancel') }></i>
+              <i className={classNames('portalicon', 'portalicon-cancel', 'cancel')}></i>
             </a>
           </Col>
         </Row>

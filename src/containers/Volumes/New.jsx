@@ -32,7 +32,7 @@ function mapStateToProps() {
 function mapDispatchToProps(dispatch) {
   return {
     fetchVolumeConfig: () => dispatch(fetchVolumeConfig()),
-    createVolume: (params) => dispatch(createVolume(params)),
+    createVolume: params => dispatch(createVolume(params)),
   };
 }
 

@@ -77,7 +77,7 @@ class Step2 extends React.Component {
     this.props.handleSpecChange(event);
   };
 
-  handleDeleteClick = (index) => () => {
+  handleDeleteClick = index => () => {
     const rule = this.props.spec.rules.slice(0);
     rule.splice(index, 1);
 
@@ -90,14 +90,14 @@ class Step2 extends React.Component {
     this.props.handleSpecChange(event);
   };
 
-  handlePeriodChange = (value) => {
+  handlePeriodChange = value => {
     this.setState({
       ...this.state,
       period: value,
     });
   };
 
-  handleItemChange = (value) => {
+  handleItemChange = value => {
     const unit = dict(value, this.props.alarm.config.data.item, 'value', 'unit');
 
     this.setState({
@@ -108,21 +108,21 @@ class Step2 extends React.Component {
     });
   };
 
-  handleConditionChange = (value) => {
+  handleConditionChange = value => {
     this.setState({
       ...this.state,
       condition: value,
     });
   };
 
-  handleThresholdChange = (value) => {
+  handleThresholdChange = value => {
     this.setState({
       ...this.state,
       threshold: value,
     });
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     this.props.handleNextClick(e);
   };
 
@@ -160,7 +160,7 @@ class Step2 extends React.Component {
         defaultValue={array[0].value}
         onChange={this.handleConditionChange}
       >
-        {array.map((data) =>
+        {array.map(data =>
           <Option key={data.value}>{data.name}</Option>
         )}
       </Select>
@@ -237,10 +237,10 @@ class Step2 extends React.Component {
         </FormItem>
         <FormItem>
           <a
-            className={ classNames('add') }
+            className={classNames('add')}
             onClick={this.handleSaveClick(isService, alarm)}
           >
-            <i className={ classNames('portalicon', 'portalicon-add', 'add') }></i>
+            <i className={classNames('portalicon', 'portalicon-add', 'add')}></i>
           </a>
         </FormItem>
       </Form>
@@ -274,7 +274,7 @@ class Step2 extends React.Component {
               className="delete"
               onClick={this.handleDeleteClick(i)}
             >
-              <i className={ classNames('portalicon', 'portalicon-delete', 'delete') }></i>
+              <i className={classNames('portalicon', 'portalicon-delete', 'delete')}></i>
             </a>
           </Col>
         </Row>)}

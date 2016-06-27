@@ -40,7 +40,7 @@ export default class BasicInfo extends React.Component {
     };
   }
 
-  handleNameEditClick = (e) => {
+  handleNameEditClick = e => {
     e.preventDefault();
 
     this.setState({
@@ -49,7 +49,7 @@ export default class BasicInfo extends React.Component {
     });
   };
 
-  handleNameSaveClick = (e) => {
+  handleNameSaveClick = e => {
     e.preventDefault();
 
     let current = this.props.volume.current.data;
@@ -66,7 +66,7 @@ export default class BasicInfo extends React.Component {
     });
   };
 
-  handleNameCancelClick = (e) => {
+  handleNameCancelClick = e => {
     e.preventDefault();
 
     this.setState({
@@ -75,7 +75,7 @@ export default class BasicInfo extends React.Component {
     });
   };
 
-  handleNameChange = (e) => {
+  handleNameChange = e => {
     this.setState({
       name: e.target.value,
     });
@@ -129,13 +129,13 @@ export default class BasicInfo extends React.Component {
               className="save"
               onClick={this.handleNameSaveClick}
             >
-              <i className={ classNames('portalicon', 'portalicon-save', 'save') }></i>
+              <i className={classNames('portalicon', 'portalicon-save', 'save')}></i>
             </a>
             <a
               className="cancel"
               onClick={this.handleNameCancelClick}
             >
-              <i className={ classNames('portalicon', 'portalicon-cancel', 'cancel') }></i>
+              <i className={classNames('portalicon', 'portalicon-cancel', 'cancel')}></i>
             </a>
           </Col>
         </Row>
@@ -144,9 +144,9 @@ export default class BasicInfo extends React.Component {
             <label>类型</label>
           </Col>
           <Col span="10">
-          <span className="content">
-            <span className="content">{data.type}</span>
-          </span>
+            <span className="content">
+              <span className="content">{data.type}</span>
+            </span>
           </Col>
         </Row>
         <Row>

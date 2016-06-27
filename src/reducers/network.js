@@ -6,10 +6,6 @@ import {
 
   FILTER_NETWORKS,
 
-  FETCH_NETWORKS_COUNT_REQUEST,
-  FETCH_NETWORKS_COUNT_SUCCESS,
-  FETCH_NETWORKS_COUNT_FAILURE,
-
   FETCH_NETWORK_REQUEST,
   FETCH_NETWORK_SUCCESS,
   FETCH_NETWORK_FAILURE,
@@ -48,19 +44,14 @@ const INITIAL_STATE = {
 
   // 搜索内容
   filter: '',
-  count: {
-    isFetching: false,
-    error: null,
-    data: 0,
-  },
 };
 
 export default handleActions({
-  [FETCH_NETWORKS_REQUEST]: (state) => ({
+  [FETCH_NETWORKS_REQUEST]: (state, action) => ({
     ...state,
     list: {
       ...state.list,
-      isFetching: true,
+      isFetching: !(action.meta && action.meta.refresh),
     },
   }),
 
@@ -89,35 +80,7 @@ export default handleActions({
     filter: action.payload,
   }),
 
-  [FETCH_NETWORKS_COUNT_REQUEST]: (state) => ({
-    ...state,
-    count: {
-      ...state.count,
-      isFetching: true,
-    },
-  }),
-
-  [FETCH_NETWORKS_COUNT_SUCCESS]: (state, action) => ({
-    ...state,
-    count: {
-      ...state.count,
-      isFetching: false,
-      data: action.payload,
-      error: null,
-    },
-  }),
-
-  [FETCH_NETWORKS_COUNT_FAILURE]: (state, action) => ({
-    ...state,
-    count: {
-      ...state.count,
-      isFetching: false,
-      error: action.payload,
-      data: 0,
-    },
-  }),
-
-  [FETCH_NETWORK_REQUEST]: (state) => ({
+  [FETCH_NETWORK_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -144,7 +107,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_NETWORK_REQUEST]: (state) => ({
+  [DELETE_NETWORK_REQUEST]: state => ({
     ...state,
     list: {
       ...state.list,
@@ -170,7 +133,7 @@ export default handleActions({
     },
   }),
 
-  [UPDATE_NETWORK_REQUEST]: (state) => ({
+  [UPDATE_NETWORK_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -197,7 +160,7 @@ export default handleActions({
     },
   }),
 
-  [CREATE_NETWORK_REQUEST]: (state) => ({
+  [CREATE_NETWORK_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,

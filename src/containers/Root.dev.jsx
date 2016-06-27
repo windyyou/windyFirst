@@ -1,15 +1,19 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router';
+import { Router, applyRouterMiddleware } from 'react-router';
+import useScroll from 'react-router-scroll';
 
 import routes from '../routes';
 
 export default function Root(props) {
-  const { store, history } = props;
   return (
-    <Provider store={store}>
+    <Provider store={props.store}>
       <div>
-        <Router history={history} routes={routes} />
+        <Router
+          history={props.history}
+          routes={routes}
+          render={applyRouterMiddleware(useScroll())}
+        />
       </div>
     </Provider>
   );

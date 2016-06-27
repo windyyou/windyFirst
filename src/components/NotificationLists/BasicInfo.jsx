@@ -33,7 +33,7 @@ export default class BasicInfo extends React.Component {
     };
   }
 
-  handleNameEditClick = (e) => {
+  handleNameEditClick = e => {
     e.preventDefault();
 
     this.setState({
@@ -43,7 +43,7 @@ export default class BasicInfo extends React.Component {
     });
   };
 
-  handleNameSaveClick = (e) => {
+  handleNameSaveClick = e => {
     e.preventDefault();
 
     let currentNotificationList = this.props.notificationList.current.data;
@@ -61,7 +61,7 @@ export default class BasicInfo extends React.Component {
     });
   };
 
-  handleNameCancelClick = (e) => {
+  handleNameCancelClick = e => {
     e.preventDefault();
 
     this.setState({
@@ -71,14 +71,14 @@ export default class BasicInfo extends React.Component {
     });
   };
 
-  handleNameChange = (e) => {
+  handleNameChange = e => {
     this.setState({
       ...this.state,
       name: e.target.value,
     });
   };
 
-  handleDescriptionEditClick = (e) => {
+  handleDescriptionEditClick = e => {
     e.preventDefault();
 
     this.setState({
@@ -88,7 +88,7 @@ export default class BasicInfo extends React.Component {
     });
   };
 
-  handleDescriptionSaveClick = (e) => {
+  handleDescriptionSaveClick = e => {
     e.preventDefault();
 
     let currentNotificationList = this.props.notificationList.current.data;
@@ -104,7 +104,7 @@ export default class BasicInfo extends React.Component {
     });
   };
 
-  handleDescriptionCancelClick = (e) => {
+  handleDescriptionCancelClick = e => {
     e.preventDefault();
 
     this.setState({
@@ -114,7 +114,7 @@ export default class BasicInfo extends React.Component {
     });
   };
 
-  handleDescriptionChange = (e) => {
+  handleDescriptionChange = e => {
     this.setState({
       ...this.state,
       description: e.target.value,
@@ -156,14 +156,14 @@ export default class BasicInfo extends React.Component {
               className="save"
               onClick={this.handleNameSaveClick}
             >
-              <i className={ classNames('portalicon', 'portalicon-save', 'save') }></i>
+              <i className={classNames('portalicon', 'portalicon-save', 'save')}></i>
             </a>
             <a
               href="#"
               className="cancel"
               onClick={this.handleNameCancelClick}
             >
-              <i className={ classNames('portalicon', 'portalicon-cancel', 'cancel') }></i>
+              <i className={classNames('portalicon', 'portalicon-cancel', 'cancel')}></i>
             </a>
           </Col>
         </Row>
@@ -184,7 +184,7 @@ export default class BasicInfo extends React.Component {
       <div>
         <Row className="rowHeight">
           <Col span="1"><label>描述：</label></Col>
-          <div className={ hideEditingClass } >
+          <div className={hideEditingClass} >
             <span>{currentNotificationList.description}</span>
             <a
               href="#"
@@ -193,7 +193,7 @@ export default class BasicInfo extends React.Component {
               <Icon type="edit" />
             </a>
           </div>
-          <div className={ showEditingClass } >
+          <div className={showEditingClass} >
             <Input
               style={{ width: '60%' }}
               onChange={this.handleDescriptionChange}
@@ -206,14 +206,14 @@ export default class BasicInfo extends React.Component {
               className="save"
               onClick={this.handleDescriptionSaveClick}
             >
-              <i className={ classNames('portalicon', 'portalicon-save', 'save') }></i>
+              <i className={classNames('portalicon', 'portalicon-save', 'save')}></i>
             </a>
             <a
               href="#"
               className="cancel"
               onClick={this.handleDescriptionCancelClick}
             >
-              <i className={ classNames('portalicon', 'portalicon-cancel', 'cancel') }></i>
+              <i className={classNames('portalicon', 'portalicon-cancel', 'cancel')}></i>
             </a>
           </div>
         </Row>
@@ -234,11 +234,11 @@ export default class BasicInfo extends React.Component {
   }
 
   renderContent = () => (
-      <div>
-        {this.renderNameContent()}
-        {this.renderDescriptionContent()}
-      </div>
-    );
+    <div>
+      {this.renderNameContent()}
+      {this.renderDescriptionContent()}
+    </div>
+  );
 
   render() {
     const current = this.props.notificationList;
@@ -248,7 +248,7 @@ export default class BasicInfo extends React.Component {
 
     return (
       <div className="notification-list-basic-info">
-        { current.isFetching ? this.renderFecthing() : renderContent }
+        {current.isFetching ? this.renderFecthing() : renderContent}
       </div>
     );
   }

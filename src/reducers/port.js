@@ -10,6 +10,10 @@ import {
   FETCH_PORT_SUCCESS,
   FETCH_PORT_FAILURE,
 
+  CREATE_PORT_REQUEST,
+  CREATE_PORT_SUCCESS,
+  CREATE_PORT_FAILURE,
+
   DELETE_PORT_REQUEST,
   DELETE_PORT_SUCCESS,
   DELETE_PORT_FAILURE,
@@ -46,11 +50,11 @@ const INITIAL_STATE = {
 };
 
 export default handleActions({
-  [FETCH_PORTS_REQUEST]: (state) => ({
+  [FETCH_PORTS_REQUEST]: (state, action) => ({
     ...state,
     list: {
       ...state.list,
-      isFetching: true,
+      isFetching: !(action.meta && action.meta.refresh),
     },
   }),
 
@@ -82,7 +86,7 @@ export default handleActions({
     filter: action.payload,
   }),
 
-  [FETCH_PORT_REQUEST]: (state) => ({
+  [FETCH_PORT_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -109,7 +113,33 @@ export default handleActions({
     },
   }),
 
-  [DELETE_PORT_REQUEST]: (state) => ({
+  [CREATE_PORT_REQUEST]: state => ({
+    ...state,
+    current: {
+      ...state.current,
+      isFetching: true,
+    },
+  }),
+
+  [CREATE_PORT_SUCCESS]: (state, action) => ({
+    ...state,
+    current: {
+      ...state.current,
+      isFetching: false,
+      data: action.payload,
+      error: null,
+    },
+  }),
+
+  [CREATE_PORT_FAILURE]: (state, action) => ({
+    ...state,
+    current: {
+      ...INITIAL_STATE.current,
+      error: action.payload,
+    },
+  }),
+
+  [DELETE_PORT_REQUEST]: state => ({
     ...state,
     list: {
       ...state.list,
@@ -135,7 +165,7 @@ export default handleActions({
     },
   }),
 
-  [UPDATE_PORT_REQUEST]: (state) => ({
+  [UPDATE_PORT_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,

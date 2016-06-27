@@ -20,7 +20,7 @@ export default class BasicInfo extends React.Component {
     }
 
     const prop = this.props.operation.current.data;
-    const resourcesLink = renderResource(prop.resource);
+    const resourcesLink = renderResource(prop.resources);
 
     return (
       <div className="basic-info">
@@ -37,9 +37,9 @@ export default class BasicInfo extends React.Component {
             <label>资源</label>
           </Col>
           <Col span="10">
-          <span className="content">
-            {resourcesLink}
-          </span>
+            <span className="content">
+              {resourcesLink}
+            </span>
           </Col>
         </Row>
         <Row>
@@ -107,7 +107,7 @@ BasicInfo.propTypes = {
         user: React.PropTypes.string.isRequired,
         timestamp: React.PropTypes.string.isRequired,
         status: React.PropTypes.string.isRequired,
-        resource: React.PropTypes.arrayOf(React.PropTypes.shape({
+        resources: React.PropTypes.arrayOf(React.PropTypes.shape({
           id: React.PropTypes.string.isRequired,
           name: React.PropTypes.string.isRequired,
           type: React.PropTypes.string.isRequired,

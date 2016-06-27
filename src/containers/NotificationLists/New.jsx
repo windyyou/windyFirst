@@ -20,7 +20,7 @@ function mapStateToProps() {
 
 function mapDispatchToProps(dispatch) {
   return {
-    createNotificationList: (params) => dispatch(createNotificationList(params)),
+    createNotificationList: params => dispatch(createNotificationList(params)),
   };
 }
 

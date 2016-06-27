@@ -61,7 +61,7 @@ class New extends React.Component {
     loadData(this.props);
   }
 
-  handleSpecChange = (e) => {
+  handleSpecChange = e => {
     this.setState({
       ...this.state,
       spec: {
@@ -71,7 +71,7 @@ class New extends React.Component {
     });
   };
 
-  handleSpecVolumesPerformanceChange = (value) => {
+  handleSpecVolumesPerformanceChange = value => {
     this.setState({
       ...this.state,
       spec: {
@@ -84,7 +84,7 @@ class New extends React.Component {
     });
   };
 
-  handleSpecVolumesCapacityChange = (value) => {
+  handleSpecVolumesCapacityChange = value => {
     this.setState({
       ...this.state,
       spec: {
@@ -97,7 +97,7 @@ class New extends React.Component {
     });
   };
 
-  handleSpecCTCCChange = (value) => {
+  handleSpecCTCCChange = value => {
     this.setState({
       ...this.state,
       spec: {
@@ -110,7 +110,7 @@ class New extends React.Component {
     });
   };
 
-  handleSpecCMCCChange = (value) => {
+  handleSpecCMCCChange = value => {
     this.setState({
       ...this.state,
       spec: {
@@ -123,7 +123,7 @@ class New extends React.Component {
     });
   };
 
-  handleSpecCUCCChange = (value) => {
+  handleSpecCUCCChange = value => {
     this.setState({
       ...this.state,
       spec: {
@@ -136,7 +136,7 @@ class New extends React.Component {
     });
   };
 
-  handleSpecBGPChange = (value) => {
+  handleSpecBGPChange = value => {
     this.setState({
       ...this.state,
       spec: {
@@ -149,7 +149,7 @@ class New extends React.Component {
     });
   };
 
-  handleNextClick = (e) => {
+  handleNextClick = e => {
     e.preventDefault();
     let step = this.state.current + 1;
     if (step > steps.length) step = steps.length;
@@ -161,7 +161,7 @@ class New extends React.Component {
     this.context.router.push(`/app/pools/new/step-${step}`);
   };
 
-  handlePreviousClick = (e) => {
+  handlePreviousClick = e => {
     e.preventDefault();
 
     let step = this.state.current - 1;
@@ -174,12 +174,12 @@ class New extends React.Component {
     this.context.router.push(`/app/pools/new/step-${step}`);
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     e.preventDefault();
     const newSpec = { ...this.state.spec, mems: this.state.spec.mems * 1024 };
 
     this.props.createPool(newSpec);
-    this.context.router.push('/app/pools/');
+    this.context.router.push('/app/pools');
   };
 
   render() {
@@ -229,7 +229,7 @@ function mapStateToProps() {
 function mapDispatchToProps(dispatch) {
   return {
     fetchPoolConfig: () => dispatch(fetchPoolConfig()),
-    createPool: (params) => dispatch(createPool(params)),
+    createPool: params => dispatch(createPool(params)),
   };
 }
 

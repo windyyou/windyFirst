@@ -12,9 +12,9 @@ const INITIAL_STATE = {
 };
 
 export default handleActions({
-  [FETCH_AGGREGATIONS_REQUEST]: (state) => ({
+  [FETCH_AGGREGATIONS_REQUEST]: (state, action) => ({
     ...state,
-    isFetching: true,
+    isFetching: !(action.meta && action.meta.refresh),
   }),
 
   [FETCH_AGGREGATIONS_SUCCESS]: (state, action) => ({

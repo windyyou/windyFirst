@@ -30,13 +30,12 @@ class Step1 extends React.Component {
   }
 
   getData(resourceData) {
-    const returnData = resourceData.list.data.length > 0 ?
-      resourceData.list.data.map((data) =>
+    return resourceData.list.data.length > 0 ?
+      resourceData.list.data.map(data =>
         ({ ...data, key: data.id, title: data.name, description: data.name })) : [];
-    return returnData;
   }
 
-  handleResourceChange = (targetKeys) => {
+  handleResourceChange = targetKeys => {
     if (targetKeys.length > 0) {
       this.setState({
         resourceValidate: '',
@@ -46,8 +45,8 @@ class Step1 extends React.Component {
     this.props.handleObjectChange(targetKeys);
   };
 
-  handleSubmit = (e) => {
-    this.props.form.validateFieldsAndScroll((errors) => {
+  handleSubmit = e => {
+    this.props.form.validateFieldsAndScroll(errors => {
       if (!!errors || this.props.spec.resources.length === 0) {
         if (this.props.spec.resources.length === 0) {
           this.setState({
@@ -74,16 +73,17 @@ class Step1 extends React.Component {
     );
   }
 
-  renderTransfer = (item) => item.title;
+  renderTransfer = item => item.title;
 
   renderResourceType(alarm, typeProps) {
     return (
-        <Select {...typeProps}
-          placeholder="请选择资源类型"
-        >
-          {alarm.config.data.resource.map(type =>
-            <Option value={type.value} key={type.value}>{type.name}</Option>)}
-        </Select>
+      <Select
+        {...typeProps}
+        placeholder="请选择资源类型"
+      >
+        {alarm.config.data.resource.map(type =>
+          <Option value={type.value} key={type.value}>{type.name}</Option>)}
+      </Select>
     );
   }
 
@@ -179,7 +179,7 @@ class Step1 extends React.Component {
 
           <FormItem {...formItemLayout} label="描述:">
             <Input
-              type ="textarea"
+              type="textarea"
               placeholder="描述"
               onChange={this.props.handleSpecChange}
               name="description"
@@ -191,7 +191,11 @@ class Step1 extends React.Component {
             {alarm.config.isFetching ? this.renderFetching() : resourceTypes}
           </FormItem>
 
-          <FormItem {...formTransferLayout} validateStatus={error} className="required" label="对象:">
+          <FormItem
+            {...formTransferLayout}
+            validateStatus={error}
+            label={<label className="ant-form-item-required">对象</label>}
+          >
             {this.renderResource()}
           </FormItem>
 

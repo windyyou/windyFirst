@@ -69,7 +69,7 @@ class Step2 extends React.Component {
     this.props.handleSpecChange(event);
   };
 
-  handleNetworkChange = (value) => {
+  handleNetworkChange = value => {
     const event = {
       target: {
         name: 'subnet',
@@ -80,8 +80,8 @@ class Step2 extends React.Component {
     this.props.handleSpecChange(event);
   };
 
-  handleSubmit = (e) => {
-    this.props.form.validateFields((errors) => {
+  handleSubmit = e => {
+    this.props.form.validateFields(errors => {
       if (!!errors) {
         return;
       }
@@ -264,7 +264,7 @@ class Step2 extends React.Component {
           showSearch={false}
         >
           {network.list.data.map((net, i) => <OptGroup key={i} label={net.name}>
-            {net.subnets.map((sub) => <Option key={sub.id} value={sub.id}>{sub.name}</Option>)}
+            {net.subnets.map(sub => <Option key={sub.id} value={sub.id}>{sub.name}</Option>)}
           </OptGroup>)}
         </Select>
       );

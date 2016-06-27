@@ -56,7 +56,7 @@ export default class Usage extends React.Component {
       0 : usage.u_volumes.performance / usage.t_volumes.performance;
     const capacityPercent = usage.u_volumes.capacity === 0 ?
       0 : usage.u_volumes.capacity / usage.t_volumes.capacity;
-    const fipsPercent = ufloatingIps === 0 ? 0 : ufloatingIps / tfloatingIps;
+    const fipsPercent = tfloatingIps === 0 ? 0 : ufloatingIps / tfloatingIps;
 
     const cpu = (<Col span="4" className="colCenter">
       <Progress
@@ -65,7 +65,7 @@ export default class Usage extends React.Component {
         percent={cpuPercent * 100}
         format={() => `${usage.u_cpus}`}
       />
-      <span className="spanCenter">CPU(核)</span>
+      <span className="spanCenter">CPU(总计:{usage.t_cpus || '-'} 核)</span>
     </Col>);
 
     const memory = (<Col offset="1" span="4" className="colCenter">
@@ -75,7 +75,7 @@ export default class Usage extends React.Component {
         percent={memsPercent * 100}
         format={() => `${umems}`}
       />
-      <span className="spanCenter">内存(GB)</span>
+      <span className="spanCenter">内存(总计:{usage.t_mems || '-'} GB)</span>
     </Col>);
 
     const performancVolumes = (<Col offset="1" span="4" className="colCenter">
@@ -85,7 +85,7 @@ export default class Usage extends React.Component {
         percent={performancePercent * 100}
         format={() => `${usage.u_volumes.performance}`}
       />
-      <span className="spanCenter">性能型硬盘(GB)</span>
+      <span className="spanCenter">性能型硬盘(总计:{usage.t_volumes.performance || '-'} GB)</span>
     </Col>);
 
     const capacityVolumes = (<Col offset="1" span="4" className="colCenter">
@@ -95,7 +95,7 @@ export default class Usage extends React.Component {
         percent={capacityPercent * 100}
         format={() => `${usage.u_volumes.capacity}`}
       />
-      <span className="spanCenter">容量型硬盘(GB)</span>
+      <span className="spanCenter">容量型硬盘(总计:{usage.u_volumes.capacity || '-'} GB)</span>
     </Col>);
 
     const fIps = (<Col offset="1" span="4" className="colCenter">
@@ -105,7 +105,7 @@ export default class Usage extends React.Component {
         percent={fipsPercent * 100}
         format={() => `${ufloatingIps}`}
       />
-      <span className="spanCenter">公网IP(个)</span>
+      <span className="spanCenter">公网IP(总计:{tfloatingIps || '-'} 个)</span>
     </Col>);
 
     return (

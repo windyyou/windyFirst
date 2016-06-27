@@ -90,11 +90,11 @@ const INITIAL_STATE = {
 };
 
 export default handleActions({
-  [FETCH_ALARMS_REQUEST]: (state) => ({
+  [FETCH_ALARMS_REQUEST]: (state, action) => ({
     ...state,
     list: {
       ...state.list,
-      isFetching: true,
+      isFetching: !(action.meta && action.meta.refresh),
     },
   }),
 
@@ -118,7 +118,7 @@ export default handleActions({
     },
   }),
 
-  [FETCH_ALARM_CONFIG_REQUEST]: (state) => ({
+  [FETCH_ALARM_CONFIG_REQUEST]: state => ({
     ...state,
     config: {
       ...state.config,
@@ -151,7 +151,7 @@ export default handleActions({
     filter: action.payload,
   }),
 
-  [FETCH_ALARM_REQUEST]: (state) => ({
+  [FETCH_ALARM_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -179,7 +179,7 @@ export default handleActions({
     },
   }),
 
-  [UPDATE_ALARM_REQUEST]: (state) => ({
+  [UPDATE_ALARM_REQUEST]: state => ({
     ...state,
     isFetching: true,
   }),
@@ -209,7 +209,7 @@ export default handleActions({
     resourceType: action.payload,
   }),
 
-  [CREATE_ALARM_REQUEST]: (state) => ({
+  [CREATE_ALARM_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -237,7 +237,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_ALARM_REQUEST]: (state) => ({
+  [DELETE_ALARM_REQUEST]: state => ({
     ...state,
     list: {
       ...state.list,
@@ -263,7 +263,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_ALARM_NOTIFICATION_REQUEST]: (state) => ({
+  [DELETE_ALARM_NOTIFICATION_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -271,7 +271,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_ALARM_NOTIFICATION_SUCCESS]: (state) => ({
+  [DELETE_ALARM_NOTIFICATION_SUCCESS]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -279,7 +279,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_ALARM_NOTIFICATION_FAILURE]: (state) => ({
+  [DELETE_ALARM_NOTIFICATION_FAILURE]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -287,7 +287,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_ALARM_RULE_REQUEST]: (state) => ({
+  [DELETE_ALARM_RULE_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -295,7 +295,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_ALARM_RULE_SUCCESS]: (state) => ({
+  [DELETE_ALARM_RULE_SUCCESS]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -303,7 +303,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_ALARM_RULE_FAILURE]: (state) => ({
+  [DELETE_ALARM_RULE_FAILURE]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -311,7 +311,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_ALARM_RESOURCE_REQUEST]: (state) => ({
+  [DELETE_ALARM_RESOURCE_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -319,7 +319,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_ALARM_RESOURCE_SUCCESS]: (state) => ({
+  [DELETE_ALARM_RESOURCE_SUCCESS]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -327,7 +327,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_ALARM_RESOURCE_FAILURE]: (state) => ({
+  [DELETE_ALARM_RESOURCE_FAILURE]: state => ({
     ...state,
     current: {
       ...state.current,

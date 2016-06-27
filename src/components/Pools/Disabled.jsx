@@ -6,7 +6,7 @@ export default class disabled extends React.Component {
     router: React.PropTypes.object,
   };
 
-  handleCreateClick = (event) => {
+  handleCreateClick = event => {
     event.preventDefault();
     this.context.router.push('/app/pools/new/step-1');
   };

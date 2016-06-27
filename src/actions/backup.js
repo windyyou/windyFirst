@@ -15,13 +15,16 @@ import {
 } from '../constants/backup';
 import * as backupAPI from '../api/backup';
 
-export function fetchBackups(params) {
-  return (dispatch) => dispatch({
+export function fetchBackups(params, refresh = false) {
+  return dispatch => dispatch({
     types: [
       FETCH_BACKUPS_REQUEST,
       FETCH_BACKUPS_SUCCESS,
       FETCH_BACKUPS_FAILURE,
     ],
+    meta: {
+      refresh,
+    },
     payload: {
       promise: backupAPI.fetchBackups(params),
     },
@@ -36,7 +39,7 @@ export function filterBackups(filter) {
 }
 
 export function deleteBackup(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       DELETE_BACKUP_REQUEST,
       DELETE_BACKUP_SUCCESS,
@@ -49,7 +52,7 @@ export function deleteBackup(id) {
 }
 
 export function fetchBackup(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       FETCH_BACKUP_REQUEST,
       FETCH_BACKUP_SUCCESS,

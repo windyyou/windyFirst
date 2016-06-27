@@ -42,14 +42,14 @@ class Step3 extends React.Component {
     });
   };
 
-  handleStatusChange = (value) => {
+  handleStatusChange = value => {
     this.setState({
       ...this.state,
       status: value,
     });
   };
 
-  handleToChange = (value) => {
+  handleToChange = value => {
     this.setState({
       ...this.state,
       to: value,
@@ -91,7 +91,7 @@ class Step3 extends React.Component {
     this.props.handleSpecChange(event);
   };
 
-  handleCancelClick = (e) => {
+  handleCancelClick = e => {
     e.preventDefault();
 
     this.setState({
@@ -100,7 +100,7 @@ class Step3 extends React.Component {
     });
   };
 
-  handleDeleteClick = (index) => () => {
+  handleDeleteClick = index => () => {
     const notifications = this.props.spec.notifications.slice(0);
     notifications.splice(index, 1);
 
@@ -113,8 +113,8 @@ class Step3 extends React.Component {
     this.props.handleSpecChange(event);
   };
 
-  handleSubmit = (e) => {
-    this.props.form.validateFields((errors) => {
+  handleSubmit = e => {
+    this.props.form.validateFields(errors => {
       if (!!errors) {
         return;
       }
@@ -144,7 +144,7 @@ class Step3 extends React.Component {
         defaultValue={defaultVal}
         onChange={this.handleStatusChange}
       >
-        {alarm.config.data.status.map((data) =>
+        {alarm.config.data.status.map(data =>
           <Option key={data.value}>{data.name}</Option>
         )}
       </Select>
@@ -160,7 +160,7 @@ class Step3 extends React.Component {
         defaultValue={defaultVal}
         onChange={this.handleToChange}
       >
-        {notificationList.list.data.map((data) =>
+        {notificationList.list.data.map(data =>
           <Option key={data.id}>{data.name}</Option>
         )}
       </Select>
@@ -215,16 +215,16 @@ class Step3 extends React.Component {
             </FormItem>
             <FormItem>
               <a
-                className={ classNames('save') }
+                className={classNames('save')}
                 onClick={this.handleSaveClick}
               >
-                <i className={ classNames('portalicon', 'portalicon-save', 'save') }></i>
+                <i className={classNames('portalicon', 'portalicon-save', 'save')}></i>
               </a>
               <a
-                className={ classNames('cancel') }
+                className={classNames('cancel')}
                 onClick={this.handleCancelClick}
               >
-                <i className={ classNames('portalicon', 'portalicon-cancel', 'cancel') }></i>
+                <i className={classNames('portalicon', 'portalicon-cancel', 'cancel')}></i>
               </a>
             </FormItem>
           </Row>
@@ -241,24 +241,24 @@ class Step3 extends React.Component {
         <div>
             {spec.notifications.map((data, i) =>
               <Row key={i} type="flex" justify="center" className="list-data">
-              <Col span="6">
-                <span>{dict(data.status, alarm.config.data.status, 'value', 'name')}</span>
-              </Col>
-              <Col span="4">发送通知</Col>
-              <Col span="6">
-                <span>{dict(data.to, notificationList.list.data, 'value', 'name')}</span>
-              </Col>
-              <Col span="4">{data.createAt}</Col>
-              <Col span="4">
-                <a
-                  className="delete"
-                  href="#"
-                  onClick={this.handleDeleteClick(i)}
-                >
-                  <i className={ classNames('portalicon', 'portalicon-delete', 'delete') }></i>
-                </a>
-              </Col>
-            </Row>)}
+                <Col span="6">
+                  <span>{dict(data.status, alarm.config.data.status, 'value', 'name')}</span>
+                </Col>
+                <Col span="4">发送通知</Col>
+                <Col span="6">
+                  <span>{dict(data.to, notificationList.list.data, 'value', 'name')}</span>
+                </Col>
+                <Col span="4">{data.createAt}</Col>
+                <Col span="4">
+                  <a
+                    className="delete"
+                    href="#"
+                    onClick={this.handleDeleteClick(i)}
+                  >
+                    <i className={classNames('portalicon', 'portalicon-delete', 'delete')}></i>
+                  </a>
+                </Col>
+              </Row>)}
         </div>
       </div>
     );

@@ -1,5 +1,2 @@
-if (process.env.NODE_ENV === 'production') {
-  module.exports = require('./Root.prod.jsx');
-} else {
-  module.exports = require('./Root.dev.jsx');
-}
+module.exports = process.env.NODE_ENV === 'production' ?
+  require('./Root.prod.jsx') : require('./Root.dev.jsx');

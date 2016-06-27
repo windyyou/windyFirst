@@ -40,7 +40,7 @@ export default class Snapshots extends React.Component {
     };
   }
 
-  handleNameChange = (e) => {
+  handleNameChange = e => {
     e.preventDefault();
     this.setState({ name: e.target.value });
   };
@@ -52,7 +52,7 @@ export default class Snapshots extends React.Component {
     });
   };
 
-  handleSaveClick = (e) => {
+  handleSaveClick = e => {
     e.preventDefault();
     const params = {
       instanceId: this.props.instance.current.data.id,
@@ -62,7 +62,7 @@ export default class Snapshots extends React.Component {
     this.setState({ formEditing: false });
   };
 
-  handleCancelClick = (e) => {
+  handleCancelClick = e => {
     e.preventDefault();
 
     this.setState({
@@ -71,7 +71,7 @@ export default class Snapshots extends React.Component {
     });
   };
 
-  handleDeleteSnapshot = (id) => () => {
+  handleDeleteSnapshot = id => () => {
     const instanceId = this.props.instance.current.data.id;
     this.props.deleteSnapshot({ instanceId, id });
   };
@@ -94,7 +94,7 @@ export default class Snapshots extends React.Component {
                 cancelText="取消"
                 onConfirm={this.handleDeleteSnapshot(snapshot.id)}
               >
-                <i className={ classNames('portalicon', 'portalicon-delete', 'delete') }></i>
+                <i className={classNames('portalicon', 'portalicon-delete', 'delete')}></i>
               </Popconfirm>
             </a>
           </Col>
@@ -135,16 +135,16 @@ export default class Snapshots extends React.Component {
           </Col>
           <Col span="2" className="verticalCenter">
             <a
-              className={ classNames('save') }
+              className={classNames('save')}
               onClick={this.handleSaveClick}
             >
-              <i className={ classNames('portalicon', 'portalicon-save', 'save') }></i>
+              <i className={classNames('portalicon', 'portalicon-save', 'save')}></i>
             </a>
             <a
-              className={ classNames('cancel') }
+              className={classNames('cancel')}
               onClick={this.handleCancelClick}
             >
-              <i className={ classNames('portalicon', 'portalicon-cancel', 'cancel') }></i>
+              <i className={classNames('portalicon', 'portalicon-cancel', 'cancel')}></i>
             </a>
           </Col>
         </Row>

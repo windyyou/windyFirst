@@ -15,6 +15,7 @@ import includes from '../../../node_modules/lodash/includes';
 import uniq from '../../../node_modules/lodash/uniq';
 
 import { fetchInstances, filterInstances, deleteInstance } from '../../actions/instance';
+import AbstractList from '../AbstractList';
 
 const InputGroup = Input.Group;
 const MenuItem = Menu.Item;
@@ -46,11 +47,7 @@ function getColumns(data) {
   ];
 }
 
-function loadData(props) {
-  props.fetchInstances();
-}
-
-class List extends React.Component {
+class List extends AbstractList {
   static propTypes = {
     instance: React.PropTypes.shape({
       filter: React.PropTypes.string,
@@ -89,26 +86,32 @@ class List extends React.Component {
     };
   }
 
-  componentDidMount() {
-    loadData(this.props);
+  loadData(props) {
+    props.fetchInstances();
   }
 
   getMenu(hasSelected) {
     return (
       <Menu>
-        <MenuItem key="1">
-          <a href="#">功能</a>
+        <MenuItem key="1" disabled={!hasSelected}>
+          <a>重启</a>
         </MenuItem>
-        <MenuItem key="2">
-          <a href="#">功能</a>
+        <MenuItem key="2" disabled={!hasSelected}>
+          <a>强制重启</a>
         </MenuItem>
-        <MenuItem key="3">
-          <a href="#">功能</a>
+        <MenuItem key="3" disabled={!hasSelected}>
+          <a>挂起</a>
         </MenuItem>
-        <MenuItem key="4">
-          <a href="#">功能</a>
+        <MenuItem key="4" disabled={!hasSelected}>
+          <a>暂停</a>
         </MenuItem>
         <MenuItem key="5" disabled={!hasSelected}>
+          <a>恢复</a>
+        </MenuItem>
+        <MenuItem key="6" disabled={!hasSelected}>
+          <a>强制关机</a>
+        </MenuItem>
+        <MenuItem key="7" disabled={!hasSelected}>
           <Popconfirm title="确定要删除这个主机吗？" onConfirm={this.handleDelete}>
             <a>删除</a>
           </Popconfirm>
@@ -127,21 +130,21 @@ class List extends React.Component {
     this.context.router.push('/app/instances');
   };
 
-  handleChange = (selectedRowKeys) => {
+  handleChange = selectedRowKeys => {
     this.setState({ selectedRowKeys });
   };
 
-  handleCreateClick = (event) => {
+  handleCreateClick = event => {
     event.preventDefault();
     this.context.router.push('/app/instances/new/step-1');
   };
 
-  handleReload = (e) => {
+  handleReload = e => {
     e.preventDefault();
-    loadData(this.props);
+    this.loadData(this.props);
   };
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.props.filterInstances(e.target.value);
   };
 
@@ -233,8 +236,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchInstances: () => dispatch(fetchInstances()),
-    filterInstances: (filter) => dispatch(filterInstances(filter)),
-    deleteInstance: (id) => dispatch(deleteInstance(id)),
+    filterInstances: filter => dispatch(filterInstances(filter)),
+    deleteInstance: id => dispatch(deleteInstance(id)),
+    refresh: () => dispatch(fetchInstances(undefined, true)),
   };
 }
 

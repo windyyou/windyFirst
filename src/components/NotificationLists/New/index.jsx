@@ -30,26 +30,26 @@ class NotificationListForm extends React.Component {
     };
   }
 
-  handleTerminalsChane = (value) => {
+  handleTerminalsChane = value => {
     this.setState({
       terminals: value,
     });
   };
 
-  handleNameChange = (e) => {
+  handleNameChange = e => {
     this.setState({
       name: e.target.value,
     });
   };
 
-  handleDescriptionChange = (e) => {
+  handleDescriptionChange = e => {
     this.setState({
       description: e.target.value,
     });
   };
 
   handleSubmit = () => {
-    this.props.form.validateFields((errors) => {
+    this.props.form.validateFields(errors => {
       if (!!errors) {
         return;
       }

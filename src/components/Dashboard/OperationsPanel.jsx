@@ -4,15 +4,30 @@ import Icon from 'antd/lib/icon';
 import Spin from 'antd/lib/spin';
 import { Link } from 'react-router';
 
+import AbstractList from '../../containers/AbstractList';
 const TimelineItem = Timeline.Item;
 
-export default class OperationsPanel extends React.Component {
+function getColor(status) {
+  // TODO: need some i18n work...
+  return {
+    成功: 'green',
+    失败: 'red',
+    运行中: 'blue',
+    等待中: 'blue',
+    success: 'green',
+    fail: 'red',
+    running: 'blue',
+    waiting: 'blue',
+  }[status];
+}
+
+export default class OperationsPanel extends AbstractList {
   renderOperations(data) {
     if (data.length) {
       return (
         <Timeline pending={<Link to="/app/operations">查看更多</Link>}>
           {data.map((operation, i) =>
-            <TimelineItem key={i} color={operation.color}>
+            <TimelineItem key={i} color={getColor(operation.status)}>
               <div className="timeline-item-panel">
                 <div className="timeline-title">
                   <Link to={`/app/operations/${operation.id}`}><h4>{operation.title}</h4></Link>
@@ -23,7 +38,10 @@ export default class OperationsPanel extends React.Component {
                   </p>
                 </div>
                 <div className="timeline-body">
-                  <p>{operation.details}</p>
+                  <p>
+                    {operation.details.includes('message') ?
+                    JSON.parse(operation.details).message : ''}
+                  </p>
                 </div>
               </div>
             </TimelineItem>
@@ -49,7 +67,8 @@ export default class OperationsPanel extends React.Component {
 
   render() {
     const { isFetching, error, data } = this.props.operation.list;
-    const operations = error ? this.renderError(error) : this.renderOperations(data);
+    // TODO: do limit at backend
+    const operations = error ? this.renderError(error) : this.renderOperations(data.slice(0, 5));
 
     return (
       <div className="panel timeline-panel panel-default">
@@ -74,7 +93,7 @@ OperationsPanel.propTypes = {
         title: React.PropTypes.string.isRequired,
         timestamp: React.PropTypes.string.isRequired,
         details: React.PropTypes.string.isRequired,
-        color: React.PropTypes.string.isRequired,
+        status: React.PropTypes.string.isRequired,
       })).isRequired,
     }).isRequired,
   }).isRequired,

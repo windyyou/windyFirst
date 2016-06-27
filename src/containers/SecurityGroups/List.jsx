@@ -7,7 +7,7 @@ import Popconfirm from 'antd/lib/popconfirm';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-
+import AbstractList from '../AbstractList';
 import classNames from 'classnames';
 import includes from '../../../node_modules/lodash/includes';
 
@@ -31,11 +31,7 @@ function getColumns() {
   ];
 }
 
-function loadData(props) {
-  props.fetchSecurityGroups();
-}
-
-class List extends React.Component {
+class List extends AbstractList {
   static propTypes = {
     securityGroup: React.PropTypes.shape({
       filter: React.PropTypes.string,
@@ -67,8 +63,9 @@ class List extends React.Component {
     };
   }
 
-  componentDidMount() {
-    loadData(this.props);
+
+  loadData(props) {
+    props.fetchSecurityGroups();
   }
 
   getRowKey(securityGroup) {
@@ -78,24 +75,24 @@ class List extends React.Component {
   handleDelete = () => {
     this.props.deleteSecurityGroup(this.state.selectedRowKeys[0]);
     this.setState({ ...this.state, selectedRowKeys: [] });
-    this.context.router.push('/app/security-groups/');
+    this.context.router.push('/app/security-groups');
   };
 
-  handleChange = (selectedRowKeys) => {
+  handleChange = selectedRowKeys => {
     this.setState({ selectedRowKeys });
   };
 
-  handleCreateClick = (event) => {
+  handleCreateClick = event => {
     event.preventDefault();
-    this.context.router.push('/app/instances/new/step-1');
+    this.context.router.push('/app/security-groups/new');
   };
 
-  handleReload = (e) => {
+  handleReload = e => {
     e.preventDefault();
-    loadData(this.props);
+    this.loadData(this.props);
   };
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.props.filterSecurityGroups(e.target.value);
   };
 
@@ -194,8 +191,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchSecurityGroups: () => dispatch(fetchSecurityGroups()),
-    filterSecurityGroups: (filter) => dispatch(filterSecurityGroups(filter)),
-    deleteSecurityGroup: (id) => dispatch(deleteSecurityGroup(id)),
+    filterSecurityGroups: filter => dispatch(filterSecurityGroups(filter)),
+    deleteSecurityGroup: id => dispatch(deleteSecurityGroup(id)),
+    refresh: () => dispatch(fetchSecurityGroups(undefined, true)),
   };
 }
 

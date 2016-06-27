@@ -10,15 +10,11 @@ import Stack from '../../components/Pools/Stack.jsx';
 import includes from '../../../node_modules/lodash/includes';
 import Unsage from '../../components/Pools/Disabled.jsx';
 import Spin from 'antd/lib/spin';
+import AbstractList from '../AbstractList';
 
 const Panel = Collapse.Panel;
 
-function loadData(props) {
-  props.fetchPools();
-  props.fetchStacks();
-}
-
-class List extends React.Component {
+class List extends AbstractList {
   static propTypes = {
     pool: React.PropTypes.shape({
       list: React.PropTypes.shape({
@@ -76,11 +72,13 @@ class List extends React.Component {
     router: React.PropTypes.object,
   };
 
-  componentDidMount() {
-    loadData(this.props);
+
+  loadData(props) {
+    props.fetchPools();
+    props.fetchStacks();
   }
 
-  handleCreateClick = (e) => {
+  handleCreateClick = e => {
     if (e.stopPropagation) {
       e.stopPropagation();
     } else {
@@ -184,10 +182,11 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchPools: (params) => dispatch(fetchPools(params)),
-    fetchStacks: (params) => dispatch(fetchStacks(params)),
-    filterStacks: (filter) => dispatch(filterStacks(filter)),
-    deleteStack: (id) => dispatch(deleteStack(id)),
+    fetchPools: params => dispatch(fetchPools(params)),
+    fetchStacks: params => dispatch(fetchStacks(params)),
+    filterStacks: filter => dispatch(filterStacks(filter)),
+    deleteStack: id => dispatch(deleteStack(id)),
+    refresh: () => dispatch(fetchPools(undefined, true)),
   };
 }
 

@@ -42,15 +42,15 @@ class TopNav extends React.Component {
           <div className="navbar-header">
             <a href="/" className="navbar-brand" />
           </div>
-        <span className="region">
-          <Select
-            defaultValue="区域-1"
-            style={{ width: 100 }}
-            showSearch={false}
-          >
-            <Option value={1}>区域-1</Option>
-          </Select>
-        </span>
+          <span className="region">
+            <Select
+              defaultValue="上海"
+              style={{ width: 100 }}
+              showSearch={false}
+            >
+              <Option value={1}>上海</Option>
+            </Select>
+          </span>
           <ul className="nav navbar-top-links navbar-right">
             <MessageDropdown {...this.props} />
             <TaskDropdown />
@@ -74,7 +74,7 @@ function mapStateToProps() {
 function mapDispatchToProps(dispatch) {
   return {
     fetchNotifications: () => dispatch(fetchNotifications()),
-    fetchNotification: (id) => dispatch(fetchNotification(id)),
+    fetchNotification: id => dispatch(fetchNotification(id)),
     logout: () => dispatch(logout()),
   };
 }

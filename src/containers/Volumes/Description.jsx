@@ -101,10 +101,10 @@ function mapStateToProps() {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchVolume: (id) => dispatch(fetchVolume(id)),
-    updateVolume: (param) => dispatch(updateVolume(param)),
-    deleteBackup: (param) => dispatch(deleteBackup(param)),
-    addBackup: (params) => dispatch(addBackup(params)),
+    fetchVolume: id => dispatch(fetchVolume(id)),
+    updateVolume: param => dispatch(updateVolume(param)),
+    deleteBackup: param => dispatch(deleteBackup(param)),
+    addBackup: params => dispatch(addBackup(params)),
   };
 }
 

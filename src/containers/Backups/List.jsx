@@ -14,6 +14,8 @@ import uniq from '../../../node_modules/lodash/uniq';
 
 import { fetchBackups, filterBackups, deleteBackup } from '../../actions/backup';
 
+import AbstractList from '../AbstractList';
+
 const InputGroup = Input.Group;
 
 function renderLink(text, row) {
@@ -41,11 +43,7 @@ function getColumns(data) {
   ];
 }
 
-function loadData(props) {
-  props.fetchBackups();
-}
-
-class List extends React.Component {
+class List extends AbstractList {
   static propTypes = {
     backup: React.PropTypes.shape({
       filter: React.PropTypes.string,
@@ -79,8 +77,8 @@ class List extends React.Component {
     };
   }
 
-  componentDidMount() {
-    loadData(this.props);
+  loadData(props) {
+    props.fetchBackups();
   }
 
   getRowKey(backup) {
@@ -90,24 +88,24 @@ class List extends React.Component {
   handleDelete = () => {
     this.props.deleteBackup(this.state.selectedRowKeys[0]);
     this.setState({ ...this.state, selectedRowKeys: [] });
-    this.context.router.push('/app/backups/');
+    this.context.router.push('/app/backups');
   };
 
-  handleChange = (selectedRowKeys) => {
+  handleChange = selectedRowKeys => {
     this.setState({ selectedRowKeys });
   };
 
-  handleCreateClick = (event) => {
+  handleCreateClick = event => {
     event.preventDefault();
     this.context.router.push('/app/instances/new/step-1');
   };
 
-  handleReload = (e) => {
+  handleReload = e => {
     e.preventDefault();
-    loadData(this.props);
+    this.loadData(this.props);
   };
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.props.filterBackups(e.target.value);
   };
 
@@ -201,8 +199,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchBackups: () => dispatch(fetchBackups()),
-    filterBackups: (filter) => dispatch(filterBackups(filter)),
-    deleteBackup: (id) => dispatch(deleteBackup(id)),
+    filterBackups: filter => dispatch(filterBackups(filter)),
+    deleteBackup: id => dispatch(deleteBackup(id)),
+    refresh: () => dispatch(fetchBackups(undefined, true)),
   };
 }
 

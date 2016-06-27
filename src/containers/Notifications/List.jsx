@@ -6,7 +6,7 @@ import Input from 'antd/lib/input';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-
+import AbstractList from '../AbstractList';
 import classNames from 'classnames';
 import includes from '../../../node_modules/lodash/includes';
 
@@ -18,11 +18,7 @@ import {
 
 const InputGroup = Input.Group;
 
-function loadData(props) {
-  props.fetchNotifications();
-}
-
-class List extends React.Component {
+class List extends AbstractList {
   static propTypes = {
     list: React.PropTypes.shape({
       isFetching: React.PropTypes.bool.isRequired,
@@ -53,8 +49,8 @@ class List extends React.Component {
     };
   }
 
-  componentDidMount() {
-    loadData(this.props);
+  loadData(props) {
+    props.fetchNotifications();
   }
 
   getRowKey(notification) {
@@ -68,17 +64,17 @@ class List extends React.Component {
     { title: '创建时间', dataIndex: 'createdAt', render: this.renderBold() },
   ];
 
-  handleChange = (selectedRowKeys) => {
+  handleChange = selectedRowKeys => {
     this.setState({ selectedRowKeys });
   };
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.props.filterNotifications(e.target.value);
   };
 
-  handleReload = (e) => {
+  handleReload = e => {
     e.preventDefault();
-    loadData(this.props);
+    this.loadData(this.props);
   };
 
   handlePageChange = () => {
@@ -91,7 +87,7 @@ class List extends React.Component {
   renderLink = (text, row) =>
     <Link to={`/app/notifications/${row.id}`}>{text}</Link>;
 
-  renderBold(func = (text) => text) {
+  renderBold(func = text => text) {
     return (text, row) => (row.read ? func(text, row) : <b>{func(text, row)}</b>);
   }
 
@@ -187,8 +183,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchNotifications: () => dispatch(fetchNotifications()),
-    filterNotifications: (filter) => dispatch(filterNotifications(filter)),
-    deleteNotification: (id) => dispatch(deleteNotification(id)),
+    filterNotifications: filter => dispatch(filterNotifications(filter)),
+    deleteNotification: id => dispatch(deleteNotification(id)),
+    refresh: () => dispatch(fetchNotifications(undefined, true)),
   };
 }
 

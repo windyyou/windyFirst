@@ -40,15 +40,15 @@ class NetWork extends React.Component {
   };
 
   handleSaveClick = () => {
-    this.props.form.validateFields((errors) => {
+    this.props.form.validateFields(errors => {
       if (!!errors) {
         return;
       }
 
-      if(this.state.number <= 0 || this.checkNumber()){
+      if (this.state.number <= 0 || this.checkNumber()) {
         this.setState({
           numberCheck: '数量不符合',
-        })
+        });
         return;
       }
 
@@ -59,7 +59,7 @@ class NetWork extends React.Component {
   checkNumber = () => {
     const num = this.props.spec.quantity - this.props.spec.sumNet;
     return this.state.number > num;
-  }
+  };
 
   saveNet = () => {
     const CIDR = dict(this.state.name, this.props.spec.network, 'name', 'CIDR');
@@ -83,7 +83,7 @@ class NetWork extends React.Component {
     this.props.form.resetFields();
   };
 
-  handleCancelClick = (e) => {
+  handleCancelClick = e => {
     e.preventDefault();
 
     this.setState({
@@ -92,26 +92,25 @@ class NetWork extends React.Component {
     });
   };
 
-  handleNumberChange = (value) => {
+  handleNumberChange = value => {
     this.setState({
       number: value,
       numberCheck: '',
     });
   };
 
-  handleNetWorkChange = (value) => {
+  handleNetWorkChange = value => {
     this.setState({
       name: value,
     });
   };
 
-  handleDeleteClick = (index) => () => {
+  handleDeleteClick = index => () => {
     const net = this.props.spec.netInstance.slice(0);
     const netNum = net[index].number;
     const num = this.props.spec.sumNet - netNum;
     net.splice(index, 1);
     this.props.handleNetInstance(net, num);
-
   };
 
   renderNetWorkSelect() {
@@ -133,7 +132,7 @@ class NetWork extends React.Component {
         value={this.state.name}
         placeholder="网络"
       >
-        {differenceData.map((data) =>
+        {differenceData.map(data =>
           <Option key={data.name}>{data.name}</Option>
         )}
       </Select>
@@ -170,7 +169,7 @@ class NetWork extends React.Component {
               min={1}
               max={this.props.spec.quantity - this.props.spec.sumNet}
               name="number"
-              value={this.state.number>max? max : this.state.number}
+              value={this.state.number > max ? max : this.state.number}
               onChange={this.handleNumberChange}
             />
           </FormItem>
@@ -179,16 +178,16 @@ class NetWork extends React.Component {
           </FormItem>
           <FormItem>
             <a
-              className={ classNames('save') }
+              className={classNames('save')}
               onClick={this.handleSaveClick}
             >
-              <i className={ classNames('portalicon', 'portalicon-save', 'save') }></i>
+              <i className={classNames('portalicon', 'portalicon-save', 'save')}></i>
             </a>
             <a
-              className={ classNames('cancel') }
+              className={classNames('cancel')}
               onClick={this.handleCancelClick}
             >
-              <i className={ classNames('portalicon', 'portalicon-cancel', 'cancel') }></i>
+              <i className={classNames('portalicon', 'portalicon-cancel', 'cancel')}></i>
             </a>
           </FormItem>
         </Row>
@@ -203,24 +202,24 @@ class NetWork extends React.Component {
       <div>
         {netInstance.map((net, i) =>
           <Row key={i} type="flex" justify="center" className="list-data">
-          <Col span="6">
-            <span>{net.name}</span>
-          </Col>
-          <Col span="6">
-            <span>{net.CIDR}</span>
-          </Col>
-          <Col span="6">
-            <span>{net.number}</span>
-          </Col>
-          <Col span="6">
-            <a
-              className="delete"
-              onClick={this.handleDeleteClick(i)}
-            >
-              <i className={ classNames('portalicon', 'portalicon-delete', 'delete') }></i>
-            </a>
-          </Col>
-        </Row>)}
+            <Col span="6">
+              <span>{net.name}</span>
+            </Col>
+            <Col span="6">
+              <span>{net.CIDR}</span>
+            </Col>
+            <Col span="6">
+              <span>{net.number}</span>
+            </Col>
+            <Col span="6">
+              <a
+                className="delete"
+                onClick={this.handleDeleteClick(i)}
+              >
+                <i className={classNames('portalicon', 'portalicon-delete', 'delete')}></i>
+              </a>
+            </Col>
+          </Row>)}
       </div>
     );
   }
@@ -228,23 +227,23 @@ class NetWork extends React.Component {
   render() {
     return (
       <Row type="flex" justify="center">
-      <Col span="22">
-        <div className="add-item">
-          {this.renderAddForm()}
-        </div>
-        <div className="has-error">{this.state.numberCheck}</div>
-        <div className="list-item">
-          <Row type="flex" justify="center" className="header">
-            <Col span="6">网络</Col>
-            <Col span="6">CIDR网段</Col>
-            <Col span="6">主机数量</Col>
-            <Col span="6">操作</Col>
-          </Row>
-        </div>
-        <div>
-          {this.renderNetInstance()}
-        </div>
-      </Col>
+        <Col span="22">
+          <div className="add-item">
+            {this.renderAddForm()}
+          </div>
+          <div className="has-error">{this.state.numberCheck}</div>
+          <div className="list-item">
+            <Row type="flex" justify="center" className="header">
+              <Col span="6">网络</Col>
+              <Col span="6">CIDR网段</Col>
+              <Col span="6">主机数量</Col>
+              <Col span="6">操作</Col>
+            </Row>
+          </div>
+          <div>
+            {this.renderNetInstance()}
+          </div>
+        </Col>
       </Row>
     );
   }

@@ -20,7 +20,7 @@ function mapStateToProps() {
 
 function mapDispatchToProps(dispatch) {
   return {
-    createNetwork: (params) => dispatch(createNetwork(params)),
+    createNetwork: params => dispatch(createNetwork(params)),
   };
 }
 

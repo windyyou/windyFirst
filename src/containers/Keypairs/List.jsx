@@ -9,7 +9,7 @@ import { createSelector } from 'reselect';
 
 import classNames from 'classnames';
 import includes from '../../../node_modules/lodash/includes';
-
+import AbstractList from '../AbstractList';
 import { fetchKeypairs, filterKeypairs, deleteKeypair } from '../../actions/keypair';
 
 const InputGroup = Input.Group;
@@ -22,11 +22,7 @@ function getColumns() {
   ];
 }
 
-function loadData(props) {
-  props.fetchKeypairs();
-}
-
-class List extends React.Component {
+class List extends AbstractList {
   static propTypes = {
     keypair: React.PropTypes.shape({
       filter: React.PropTypes.string,
@@ -58,8 +54,8 @@ class List extends React.Component {
     };
   }
 
-  componentDidMount() {
-    loadData(this.props);
+  loadData(props) {
+    props.fetchKeypairs();
   }
 
   getRowKey(keypair) {
@@ -69,23 +65,24 @@ class List extends React.Component {
   handleDelete = () => {
     this.props.deleteKeypair(this.state.selectedRowKeys[0]);
     this.setState({ ...this.state, selectedRowKeys: [] });
-    this.context.router.push('/app/keypairs/');
+    this.context.router.push('/app/keypairs');
   };
 
-  handleChange = (selectedRowKeys) => {
+  handleChange = selectedRowKeys => {
     this.setState({ selectedRowKeys });
   };
 
-  handleCreateClick = (event) => {
+  handleCreateClick = event => {
     event.preventDefault();
+    this.context.router.push('/app/keypairs/new');
   };
 
-  handleReload = (e) => {
+  handleReload = e => {
     e.preventDefault();
-    loadData(this.props);
+    this.loadData(this.props);
   };
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.props.filterKeypairs(e.target.value);
   };
 
@@ -183,8 +180,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchKeypairs: () => dispatch(fetchKeypairs()),
-    filterKeypairs: (filter) => dispatch(filterKeypairs(filter)),
-    deleteKeypair: (id) => dispatch(deleteKeypair(id)),
+    filterKeypairs: filter => dispatch(filterKeypairs(filter)),
+    deleteKeypair: id => dispatch(deleteKeypair(id)),
+    refresh: () => dispatch(fetchKeypairs(undefined, true)),
   };
 }
 

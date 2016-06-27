@@ -94,11 +94,11 @@ export default class BasicInfo extends React.Component {
             <label>名称</label>
           </Col>
           <Col span="10">
-          <span className="content">
             <span className="content">
-              {data.name || data.id}
+              <span className="content">
+                {data.name || data.id}
+              </span>
             </span>
-          </span>
           </Col>
         </Row>
         <Row>
@@ -106,11 +106,11 @@ export default class BasicInfo extends React.Component {
             <label>IP</label>
           </Col>
           <Col span="10">
-          <span className="content">
             <span className="content">
-              {data.ip}
+              <span className="content">
+                {data.ip}
+              </span>
             </span>
-          </span>
           </Col>
         </Row>
         <Row>
@@ -118,11 +118,11 @@ export default class BasicInfo extends React.Component {
             <label>MAC</label>
           </Col>
           <Col span="10">
-          <span className="content">
             <span className="content">
-              {data.mac}
+              <span className="content">
+                {data.mac}
+              </span>
             </span>
-          </span>
           </Col>
         </Row>
         <Row>
@@ -130,11 +130,11 @@ export default class BasicInfo extends React.Component {
             <label>主机</label>
           </Col>
           <Col span="10">
-          <span className="content">
             <span className="content">
-              {this.renderInstance(data)}
+              <span className="content">
+                {this.renderInstance(data)}
+              </span>
             </span>
-          </span>
           </Col>
         </Row>
         <Row>
@@ -142,11 +142,11 @@ export default class BasicInfo extends React.Component {
             <label>子网</label>
           </Col>
           <Col span="10">
-          <span className="content">
             <span className="content">
-              {this.renderSubnet(data)}
+              <span className="content">
+                {this.renderSubnet(data)}
+              </span>
             </span>
-          </span>
           </Col>
         </Row>
         <Row>
@@ -154,11 +154,11 @@ export default class BasicInfo extends React.Component {
             <label>公网IP</label>
           </Col>
           <Col span="10">
-          <span className="content">
             <span className="content">
-              {this.renderFloatingIp(data)}
+              <span className="content">
+                {this.renderFloatingIp(data)}
+              </span>
             </span>
-          </span>
           </Col>
         </Row>
         <Row>
@@ -166,11 +166,11 @@ export default class BasicInfo extends React.Component {
             <label>安全组</label>
           </Col>
           <Col span="10">
-          <span className="content">
             <span className="content">
-              {this.renderSecurityGroup(data)}
+              <span className="content">
+                {this.renderSecurityGroup(data)}
+              </span>
             </span>
-          </span>
           </Col>
         </Row>
         <Row>

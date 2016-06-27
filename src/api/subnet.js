@@ -13,9 +13,8 @@ export function fetchSubnets(params = {}) {
     .then(json => json);
 }
 
-export function fetchSubnetsCount(params = {}) {
-  const countUrl = '/count';
-  const url = paramToQuery(API + countUrl, params);
+export function fetchSubnet(id) {
+  const url = `${API}/${id}`;
 
   return fetch(url, {
     ...fetchOptions(),
@@ -24,11 +23,11 @@ export function fetchSubnetsCount(params = {}) {
     .then(json => json);
 }
 
-export function fetchSubnet(id) {
-  const url = `${API}/${id}`;
-
-  return fetch(url, {
+export function createSubnet(params) {
+  return fetch(API, {
     ...fetchOptions(),
+    method: 'POST',
+    body: JSON.stringify(params),
   }).then(checkStatus)
     .then(parseJSON)
     .then(json => json);
@@ -46,8 +45,7 @@ export function deleteSubnet(id) {
 }
 
 export function updateSubnet(params) {
-  const { id } = params;
-  const url = `${API}/${id}`;
+  const url = `${API}/${params.id}`;
 
   return fetch(url, {
     ...fetchOptions(),

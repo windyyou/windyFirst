@@ -11,6 +11,7 @@ import { fetchUsers, filterUsers, disableUser,
 import classNames from 'classnames';
 import includes from '../../../node_modules/lodash/includes';
 import uniq from '../../../node_modules/lodash/uniq';
+import AbstractList from '../AbstractList';
 
 const InputGroup = Input.Group;
 
@@ -19,8 +20,7 @@ function renderLink(text, user) {
 }
 
 function renderEnabled(text, user) {
-  const enable = user.enabled === true ? '启用' : '禁用';
-  return enable;
+  return user.enabled === true ? '启用' : '禁用';
 }
 
 function getColumns(data) {
@@ -46,11 +46,7 @@ function getColumns(data) {
   ];
 }
 
-function loadData(props) {
-  props.fetchUsers();
-}
-
-class List extends React.Component {
+class List extends AbstractList {
   static propTypes = {
     user: React.PropTypes.shape({
       filter: React.PropTypes.string,
@@ -88,8 +84,8 @@ class List extends React.Component {
     };
   }
 
-  componentDidMount() {
-    loadData(this.props);
+  loadData(props) {
+    props.fetchUsers();
   }
 
   getRowKey(record) {
@@ -100,12 +96,12 @@ class List extends React.Component {
     this.setState({ selectedRows });
   };
 
-  handleReload = (e) => {
+  handleReload = e => {
     e.preventDefault();
-    loadData(this.props);
+    this.loadData(this.props);
   };
 
-  enableUser = (e) => {
+  enableUser = e => {
     e.preventDefault();
 
     const userId = this.state.selectedRows[0].id;
@@ -116,7 +112,7 @@ class List extends React.Component {
     this.props.enableUser(params);
   };
 
-  disableUser = (e) => {
+  disableUser = e => {
     e.preventDefault();
 
     const userId = this.state.selectedRows[0].id;
@@ -127,7 +123,7 @@ class List extends React.Component {
     this.props.disableUser(params);
   };
 
-  resetPassword = (e) => {
+  resetPassword = e => {
     e.preventDefault();
 
     const userId = this.state.selectedRows[0].id;
@@ -137,7 +133,7 @@ class List extends React.Component {
     this.props.resetUserPassword(param);
   };
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.props.filterUsers(e.target.value);
   };
 
@@ -242,10 +238,11 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchUsers: () => dispatch(fetchUsers()),
-    filterUsers: (filter) => dispatch(filterUsers(filter)),
-    disableUser: (params) => dispatch(disableUser(params)),
-    enableUser: (params) => dispatch(enableUser(params)),
-    resetUserPassword: (param) => dispatch(resetUserPassword(param)),
+    filterUsers: filter => dispatch(filterUsers(filter)),
+    disableUser: params => dispatch(disableUser(params)),
+    enableUser: params => dispatch(enableUser(params)),
+    resetUserPassword: param => dispatch(resetUserPassword(param)),
+    refresh: () => dispatch(fetchUsers(undefined, true)),
   };
 }
 

@@ -14,6 +14,8 @@ import uniq from '../../../node_modules/lodash/uniq';
 
 import { fetchFirewalls, filterFirewalls, deleteFirewall } from '../../actions/firewall';
 
+import AbstractList from '../AbstractList';
+
 const InputGroup = Input.Group;
 
 function renderLink(text, row) {
@@ -36,11 +38,7 @@ function getColumns(data) {
   ];
 }
 
-function loadData(props) {
-  props.fetchFirewalls();
-}
-
-class List extends React.Component {
+class List extends AbstractList {
   static propTypes = {
     firewall: React.PropTypes.shape({
       filter: React.PropTypes.string,
@@ -73,8 +71,8 @@ class List extends React.Component {
     };
   }
 
-  componentDidMount() {
-    loadData(this.props);
+  loadData(props) {
+    props.fetchFirewalls();
   }
 
   getRowKey(firewall) {
@@ -84,24 +82,24 @@ class List extends React.Component {
   handleDelete = () => {
     this.props.deleteFirewall(this.state.selectedRowKeys[0]);
     this.setState({ ...this.state, selectedRowKeys: [] });
-    this.context.router.push('/app/firewalls/');
+    this.context.router.push('/app/firewalls');
   };
 
-  handleChange = (selectedRowKeys) => {
+  handleChange = selectedRowKeys => {
     this.setState({ selectedRowKeys });
   };
 
-  handleCreateClick = (event) => {
+  handleCreateClick = event => {
     event.preventDefault();
     this.context.router.push('/app/instances/new/step-1');
   };
 
-  handleReload = (e) => {
+  handleReload = e => {
     e.preventDefault();
-    loadData(this.props);
+    this.loadData(this.props);
   };
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.props.filterFirewalls(e.target.value);
   };
 
@@ -194,8 +192,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchFirewalls: () => dispatch(fetchFirewalls()),
-    filterFirewalls: (filter) => dispatch(filterFirewalls(filter)),
-    deleteFirewall: (id) => dispatch(deleteFirewall(id)),
+    filterFirewalls: filter => dispatch(filterFirewalls(filter)),
+    deleteFirewall: id => dispatch(deleteFirewall(id)),
+    refresh: () => dispatch(fetchFirewalls(undefined, true)),
   };
 }
 

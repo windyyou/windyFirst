@@ -128,7 +128,7 @@ export default class NetworkTopology extends React.Component {
     this.force = d3.layout.force()
       .charge(-700)
       .gravity(0.05)
-      .linkDistance((d) => {
+      .linkDistance(d => {
         const dist = 70;
         const { source, target } = d;
         if (source.nodeType === SERVER || target.nodeType === SERVER) {
@@ -180,14 +180,14 @@ export default class NetworkTopology extends React.Component {
     this.force.stop();
   }
 
-  handleMouseOver = (node) => (e) => {
+  handleMouseOver = node => e => {
     e.preventDefault();
     this.setState({
       mouseOverNodeId: node.id,
     });
   };
 
-  handleMouseOut = () => (e) => {
+  handleMouseOut = () => e => {
     e.preventDefault();
     this.setState({
       mouseOverNodeId: '',
@@ -206,7 +206,7 @@ export default class NetworkTopology extends React.Component {
     this.updateForce(...prepareNodesAndLinks(this.props.data, collapsedNets));
   };
 
-  handleSelect = (node) => (e) => {
+  handleSelect = node => e => {
     if (e.defaultPrevented) return;
 
     this.setState({
@@ -233,7 +233,7 @@ export default class NetworkTopology extends React.Component {
     });
   };
 
-  updateHulls = (nodes) => {
+  updateHulls = nodes => {
     const hulls = {};
     const offset = 40;
 

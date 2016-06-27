@@ -24,11 +24,11 @@ const INITIAL_STATE = {
 };
 
 export default handleActions({
-  [FETCH_BARE_METALS_REQUEST]: (state) => ({
+  [FETCH_BARE_METALS_REQUEST]: (state, action) => ({
     ...state,
     list: {
       ...state.list,
-      isFetching: true,
+      isFetching: !(action.meta && action.meta.refresh),
     },
   }),
 
@@ -57,7 +57,7 @@ export default handleActions({
     filter: action.payload,
   }),
 
-  [DELETE_BARE_METAL_REQUEST]: (state) => ({
+  [DELETE_BARE_METAL_REQUEST]: state => ({
     ...state,
     list: {
       ...state.list,

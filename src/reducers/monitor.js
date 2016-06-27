@@ -59,7 +59,7 @@ const INITIAL_STATE = {
 };
 
 export default handleActions({
-  [FETCH_CPUMONITORS_REQUEST]: (state) => ({
+  [FETCH_CPUMONITORS_REQUEST]: state => ({
     ...state,
     cpu: {
       isFetching: true,
@@ -86,7 +86,7 @@ export default handleActions({
     },
   }),
 
-  [FETCH_MEMORYMONITORS_REQUEST]: (state) => ({
+  [FETCH_MEMORYMONITORS_REQUEST]: state => ({
     ...state,
     memory: {
       isFetching: true,
@@ -113,7 +113,7 @@ export default handleActions({
     },
   }),
 
-  [FETCH_DISKWRITEMONITORS_REQUEST]: (state) => ({
+  [FETCH_DISKWRITEMONITORS_REQUEST]: state => ({
     ...state,
     diskwrite: {
       isFetching: true,
@@ -140,7 +140,7 @@ export default handleActions({
     },
   }),
 
-  [FETCH_DISKREADMONITORS_REQUEST]: (state) => ({
+  [FETCH_DISKREADMONITORS_REQUEST]: state => ({
     ...state,
     diskread: {
       isFetching: true,
@@ -167,7 +167,7 @@ export default handleActions({
     },
   }),
 
-  [FETCH_NETWORKINMONITORS_REQUEST]: (state) => ({
+  [FETCH_NETWORKINMONITORS_REQUEST]: state => ({
     ...state,
     networkin: {
       isFetching: true,
@@ -194,7 +194,7 @@ export default handleActions({
     },
   }),
 
-  [FETCH_NETWORKOUTMONITORS_REQUEST]: (state) => ({
+  [FETCH_NETWORKOUTMONITORS_REQUEST]: state => ({
     ...state,
     networkout: {
       isFetching: true,

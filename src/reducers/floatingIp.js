@@ -24,11 +24,11 @@ const INITIAL_STATE = {
 };
 
 export default handleActions({
-  [FETCH_FLOATING_IPS_REQUEST]: (state) => ({
+  [FETCH_FLOATING_IPS_REQUEST]: (state, action) => ({
     ...state,
     list: {
       ...state.list,
-      isFetching: true,
+      isFetching: !(action.meta && action.meta.refresh),
     },
   }),
 
@@ -57,7 +57,7 @@ export default handleActions({
     filter: action.payload,
   }),
 
-  [DELETE_FLOATING_IP_REQUEST]: (state) => ({
+  [DELETE_FLOATING_IP_REQUEST]: state => ({
     ...state,
     list: {
       ...state.list,

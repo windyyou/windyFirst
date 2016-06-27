@@ -1,4 +1,3 @@
-import React from 'react';
 import Node from './index';
 
 export default class Server extends Node {

@@ -23,8 +23,7 @@ export function fetchPoolConfig() {
 }
 
 export function createPool(params) {
-  const url = `${API}`;
-  return fetch(url, {
+  return fetch(API, {
     ...fetchOptions(),
     method: 'POST',
     body: JSON.stringify(params),
@@ -34,8 +33,7 @@ export function createPool(params) {
 }
 
 export function createPoolStack(params) {
-  const { pid } = params;
-  const url = `${API}/${pid}/stacks`;
+  const url = `${API}/${params.pid}/stacks`;
   return fetch(url, {
     ...fetchOptions(),
     method: 'POST',
@@ -46,8 +44,7 @@ export function createPoolStack(params) {
 }
 
 export function updatePoolStack(params) {
-  const { pid, id } = params;
-  const url = `${API}/${pid}/stacks/${id}`;
+  const url = `${API}/${params.pid}/stacks/${params.id}`;
   return fetch(url, {
     ...fetchOptions(),
     method: 'PUT',

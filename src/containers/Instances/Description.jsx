@@ -196,20 +196,20 @@ function mapStateToProps() {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchInstance: (key) => dispatch(fetchInstance(key)),
-    updateInstance: (param) => dispatch(updateInstance(param)),
-    deleteSnapshot: (params) => dispatch(deleteSnapshot(params)),
-    deleteVolume: (params) => dispatch(deleteVolume(params)),
-    deleteKeypair: (params) => dispatch(deleteKeypair(params)),
-    deleteNetwork: (params) => dispatch(deleteNetwork(params)),
+    fetchInstance: key => dispatch(fetchInstance(key)),
+    updateInstance: param => dispatch(updateInstance(param)),
+    deleteSnapshot: params => dispatch(deleteSnapshot(params)),
+    deleteVolume: params => dispatch(deleteVolume(params)),
+    deleteKeypair: params => dispatch(deleteKeypair(params)),
+    deleteNetwork: params => dispatch(deleteNetwork(params)),
     fetchSnapshots: () => dispatch(fetchSnapshots()),
     fetchVolumes: () => dispatch(fetchVolumes()),
     fetchKeypairs: () => dispatch(fetchKeypairs()),
     fetchNetworks: () => dispatch(fetchNetworks()),
-    addSnapshot: (param) => dispatch(addSnapshot(param)),
-    addKeypair: (param) => dispatch(addKeypair(param)),
-    addNetwork: (param) => dispatch(addNetwork(param)),
-    addVolume: (param) => dispatch(addVolume(param)),
+    addSnapshot: param => dispatch(addSnapshot(param)),
+    addKeypair: param => dispatch(addKeypair(param)),
+    addNetwork: param => dispatch(addNetwork(param)),
+    addVolume: param => dispatch(addVolume(param)),
   };
 }
 

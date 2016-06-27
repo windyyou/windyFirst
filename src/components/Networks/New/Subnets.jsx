@@ -27,16 +27,10 @@ class Subnets extends React.Component {
     };
   }
 
-  handleInputChange = (e) => {
-    this.setState({
-      content: e.target.value,
-    });
-  };
-
-  handleAddClick = (e) => {
+  handleAddClick = e => {
     e.preventDefault();
 
-    this.props.form.validateFields((errors) => {
+    this.props.form.validateFields(errors => {
       if (!!errors) {
         return;
       }
@@ -45,7 +39,7 @@ class Subnets extends React.Component {
     });
   };
 
-  handleDeleteClick = (index) => () => {
+  handleDeleteClick = index => () => {
     const subnets = this.state.subnets.slice(0);
     subnets.splice(index, 1);
     this.setState({
@@ -78,18 +72,18 @@ class Subnets extends React.Component {
     return (
       <div>
         {subnets.map((subnet, i) => <Row key={i}>
-          <Col span="3">{subnet.name}</Col>
-          <Col span="3">{subnet.cidr}</Col>
-          <Col span="3">{subnet.ipVersion}</Col>
-          <Col span="3">{subnet.gateway}</Col>
-          <Col span="3">{subnet.dhcp ? '启用' : '关闭'}</Col>
-          <Col span="3">
+          <Col span="4">{subnet.name}</Col>
+          <Col span="4">{subnet.cidr}</Col>
+          <Col span="4">{subnet.ipVersion}</Col>
+          <Col span="4">{subnet.gateway}</Col>
+          <Col span="4">{subnet.dhcp ? '启用' : '关闭'}</Col>
+          <Col span="4">
             <a
               href="#"
               className="delete"
               onClick={this.handleDeleteClick(i)}
             >
-              <i className={ classNames('portalicon', 'portalicon-delete') }></i>
+              <i className={classNames('portalicon', 'portalicon-delete')} />
             </a>
           </Col>
         </Row>)}
@@ -103,8 +97,8 @@ class Subnets extends React.Component {
     return (
       <div>
         <Row className="subnet-form">
-          <Col span="2">
-            <label>子网:</label>
+          <Col span="2" className="ant-form-item">
+            <label>子网</label>
           </Col>
           <Col offset="3">
             <Form inline form={this.props.form}>
@@ -152,30 +146,31 @@ class Subnets extends React.Component {
                 />
               </FormItem>
               <FormItem>
-                <Checkbox {...getFieldProps('dhcp', {
-                  valuePropName: 'checked',
-                })}
+                <Checkbox
+                  {...getFieldProps('dhcp', {
+                    valuePropName: 'checked',
+                  })}
                 >DHCP</Checkbox>
               </FormItem>
               <a
                 className="add"
                 onClick={this.handleAddClick}
               >
-                <i className={ classNames('portalicon', 'portalicon-add') }></i>
+                <i className={classNames('portalicon', 'portalicon-add')} />
               </a>
             </Form>
           </Col>
         </Row>
         <Row className="subnets">
-          <Col offset="3" span="21">
-            <div className="subnet-header">
+          <Col offset="3" span="16">
+            <div className="simple-table-header">
               <Row>
-                <Col span="3">名称</Col>
-                <Col span="3">CIDR</Col>
-                <Col span="3">IP版本</Col>
-                <Col span="3">网关</Col>
-                <Col span="3">DHCP</Col>
-                <Col span="3">操作</Col>
+                <Col span="4">名称</Col>
+                <Col span="4">CIDR</Col>
+                <Col span="4">IP版本</Col>
+                <Col span="4">网关</Col>
+                <Col span="4">DHCP</Col>
+                <Col span="4">操作</Col>
               </Row>
             </div>
             {this.renderSubnets()}

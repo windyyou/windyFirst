@@ -6,13 +6,13 @@ import {
 
   FILTER_SUBNETS,
 
-  FETCH_SUBNETS_COUNT_FAILURE,
-  FETCH_SUBNETS_COUNT_REQUEST,
-  FETCH_SUBNETS_COUNT_SUCCESS,
-
   FETCH_SUBNET_REQUEST,
   FETCH_SUBNET_SUCCESS,
   FETCH_SUBNET_FAILURE,
+
+  CREATE_SUBNET_REQUEST,
+  CREATE_SUBNET_SUCCESS,
+  CREATE_SUBNET_FAILURE,
 
   DELETE_SUBNET_REQUEST,
   DELETE_SUBNET_SUCCESS,
@@ -52,19 +52,14 @@ const INITIAL_STATE = {
 
   // 搜索内容
   filter: '',
-  count: {
-    isFetching: false,
-    error: null,
-    data: 0,
-  },
 };
 
 export default handleActions({
-  [FETCH_SUBNETS_REQUEST]: (state) => ({
+  [FETCH_SUBNETS_REQUEST]: (state, action) => ({
     ...state,
     list: {
       ...state.list,
-      isFetching: true,
+      isFetching: !(action.meta && action.meta.refresh),
     },
   }),
 
@@ -93,35 +88,8 @@ export default handleActions({
     filter: action.payload,
   }),
 
-  [FETCH_SUBNETS_COUNT_REQUEST]: (state) => ({
-    ...state,
-    count: {
-      ...state.count,
-      isFetching: true,
-    },
-  }),
 
-  [FETCH_SUBNETS_COUNT_SUCCESS]: (state, action) => ({
-    ...state,
-    count: {
-      ...state.count,
-      isFetching: false,
-      data: action.payload,
-      error: null,
-    },
-  }),
-
-  [FETCH_SUBNETS_COUNT_FAILURE]: (state, action) => ({
-    ...state,
-    count: {
-      ...state.count,
-      isFetching: false,
-      error: action.payload,
-      data: 0,
-    },
-  }),
-
-  [FETCH_SUBNET_REQUEST]: (state) => ({
+  [FETCH_SUBNET_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -148,7 +116,33 @@ export default handleActions({
     },
   }),
 
-  [DELETE_SUBNET_REQUEST]: (state) => ({
+  [CREATE_SUBNET_REQUEST]: state => ({
+    ...state,
+    current: {
+      ...state.current,
+      isFetching: true,
+    },
+  }),
+
+  [CREATE_SUBNET_SUCCESS]: (state, action) => ({
+    ...state,
+    current: {
+      ...state.current,
+      isFetching: false,
+      data: action.payload,
+      error: null,
+    },
+  }),
+
+  [CREATE_SUBNET_FAILURE]: (state, action) => ({
+    ...state,
+    current: {
+      ...INITIAL_STATE.current,
+      error: action.payload,
+    },
+  }),
+
+  [DELETE_SUBNET_REQUEST]: state => ({
     ...state,
     list: {
       ...state.list,
@@ -174,7 +168,7 @@ export default handleActions({
     },
   }),
 
-  [UPDATE_SUBNET_REQUEST]: (state) => ({
+  [UPDATE_SUBNET_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,

@@ -12,6 +12,8 @@ import includes from '../../../node_modules/lodash/includes';
 
 import { fetchBills, filterBills } from '../../actions/bill';
 
+import AbstractList from '../AbstractList';
+
 const InputGroup = Input.Group;
 
 function renderLink(text, row) {
@@ -26,11 +28,7 @@ function getColumns() {
   ];
 }
 
-function loadData(props) {
-  props.fetchBills();
-}
-
-class List extends React.Component {
+class List extends AbstractList {
   static propTypes = {
     bill: React.PropTypes.shape({
       filter: React.PropTypes.string,
@@ -61,25 +59,25 @@ class List extends React.Component {
     };
   }
 
-  componentDidMount() {
-    loadData(this.props);
+  loadData(props) {
+    props.fetchBills();
   }
 
   getRowKey(bill) {
     return bill.userId;
   }
 
-  handleChange = (selectedRowKeys) => {
+  handleChange = selectedRowKeys => {
     this.setState({ selectedRowKeys });
   };
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.props.filterBills(e.target.value);
   };
 
-  handleReload = (e) => {
+  handleReload = e => {
     e.preventDefault();
-    loadData(this.props);
+    this.loadData(this.props);
   };
 
   renderBill(rowSelection, columns, bill) {
@@ -160,7 +158,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchBills: () => dispatch(fetchBills()),
-    filterBills: (filter) => dispatch(filterBills(filter)),
+    filterBills: filter => dispatch(filterBills(filter)),
+    refresh: () => dispatch(fetchBills(undefined, true)),
   };
 }
 

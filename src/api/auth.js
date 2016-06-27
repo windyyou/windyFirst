@@ -1,7 +1,6 @@
 import 'whatwg-fetch';
 import { checkStatus, parseJSON, fetchOptions } from '../utils/fetch';
-
-// const jwtDecode = require('jwt-decode');
+import { decode } from '../utils/auth';
 
 export const LOGIN_API = '/api/auth/tokens';
 export const SIGN_UP_API = '/api/auth/sign-up';
@@ -15,7 +14,8 @@ export function login(credentials) {
     .then(parseJSON)
     .then(json => {
       // const token = json.token;
-      // const user = jwtDecode(token).user;
+      // const userAccount = decode(token).userAccount;
+
       // TODO: the following 2 lines are dummy code
       const token = {
         user: {
@@ -24,8 +24,10 @@ export function login(credentials) {
         },
         exp: '2016-01-12T00:00:00+08:00',
       };
-      const user = token.user;
-      return { token, user };
+      const userAccount = token.userAccount;
+      // dummy code above
+
+      return { token, userAccount };
     });
 }
 

@@ -11,13 +11,16 @@ import {
 } from '../constants/firewall';
 import * as firewallAPI from '../api/firewall';
 
-export function fetchFirewalls(params) {
-  return (dispatch) => dispatch({
+export function fetchFirewalls(params, refresh = false) {
+  return dispatch => dispatch({
     types: [
       FETCH_FIREWALLS_REQUEST,
       FETCH_FIREWALLS_SUCCESS,
       FETCH_FIREWALLS_FAILURE,
     ],
+    meta: {
+      refresh,
+    },
     payload: {
       promise: firewallAPI.fetchFirewalls(params),
     },
@@ -32,7 +35,7 @@ export function filterFirewalls(filter) {
 }
 
 export function deleteFirewall(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       DELETE_FIREWALL_REQUEST,
       DELETE_FIREWALL_SUCCESS,

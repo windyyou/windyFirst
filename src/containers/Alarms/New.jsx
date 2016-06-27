@@ -64,7 +64,7 @@ class New extends React.Component {
     loadData(this.props);
   }
 
-  handleSpecChange = (e) => {
+  handleSpecChange = e => {
     this.setState({
       ...this.state,
       spec: {
@@ -74,7 +74,7 @@ class New extends React.Component {
     });
   };
 
-  handleObjectChange = (targetKeys) => {
+  handleObjectChange = targetKeys => {
     this.setState({
       ...this.state,
       spec: {
@@ -84,7 +84,7 @@ class New extends React.Component {
     });
   };
 
-  handleObjectTypeChange = (type) => {
+  handleObjectTypeChange = type => {
     this.props.selectAlarmResourceType(type);
     this.props.fetchResources(type);
 
@@ -100,7 +100,7 @@ class New extends React.Component {
     });
   };
 
-  handleNextClick = (e) => {
+  handleNextClick = e => {
     e.preventDefault();
     let step = this.state.current + 1;
     if (step > steps.length) step = steps.length;
@@ -112,7 +112,7 @@ class New extends React.Component {
     this.context.router.push(`/app/alarms/new/step-${step}`);
   };
 
-  handlePreviousClick = (e) => {
+  handlePreviousClick = e => {
     e.preventDefault();
 
     let step = this.state.current - 1;
@@ -125,7 +125,7 @@ class New extends React.Component {
     this.context.router.push(`/app/alarms/new/step-${step}`);
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     e.preventDefault();
     this.props.createAlarm(this.state.spec);
     this.context.router.push('/app/alarms');
@@ -176,10 +176,10 @@ function mapStateToProps() {
 function mapDispatchToProps(dispatch) {
   return {
     fetchAlarmConfig: () => dispatch(fetchAlarmConfig()),
-    fetchResources: (type) => dispatch(functionMap[type]),
+    fetchResources: type => dispatch(functionMap[type]),
     fetchNotificationLists: () => dispatch(fetchNotificationLists()),
-    selectAlarmResourceType: (type) => dispatch(selectAlarmResourceType(type)),
-    createAlarm: (params) => dispatch(createAlarm(params)),
+    selectAlarmResourceType: type => dispatch(selectAlarmResourceType(type)),
+    createAlarm: params => dispatch(createAlarm(params)),
   };
 }
 

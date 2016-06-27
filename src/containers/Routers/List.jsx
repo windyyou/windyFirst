@@ -13,7 +13,7 @@ import { createSelector } from 'reselect';
 import classNames from 'classnames';
 import includes from '../../../node_modules/lodash/includes';
 import uniq from '../../../node_modules/lodash/uniq';
-
+import AbstractList from '../AbstractList';
 import { fetchRouters, filterRouters, deleteRouter } from '../../actions/router';
 
 const InputGroup = Input.Group;
@@ -21,10 +21,6 @@ const MenuItem = Menu.Item;
 
 function renderLink(text, row) {
   return <Link to={`/app/routers/${row.id}`}>{text}</Link>;
-}
-
-function renderFloatingIp(text) {
-  return <Link to={`/app/floating-ips/${text.id}`}>{text.name}</Link>;
 }
 
 function renderPublicGateway(text) {
@@ -42,17 +38,13 @@ function getColumns(data) {
         return record.status === value;
       },
     },
-    { title: '公网IP', dataIndex: 'floatingIp', render: renderFloatingIp },
-    { title: '公网网关', dataIndex: 'publicGateway', render: renderPublicGateway },
+    { title: '公网IP', dataIndex: 'floatingIp' },
+    { title: '公网网关', dataIndex: 'gateway', render: renderPublicGateway },
     { title: '创建时间', dataIndex: 'createdAt' },
   ];
 }
 
-function loadData(props) {
-  props.fetchRouters();
-}
-
-class List extends React.Component {
+class List extends AbstractList {
   static propTypes = {
     router: React.PropTypes.shape({
       filter: React.PropTypes.string,
@@ -86,8 +78,8 @@ class List extends React.Component {
     };
   }
 
-  componentDidMount() {
-    loadData(this.props);
+  loadData(props) {
+    props.fetchRouters();
   }
 
   getMenu(hasOneSelected) {
@@ -127,24 +119,24 @@ class List extends React.Component {
   handleDelete = () => {
     this.props.deleteRouter(this.state.selectedRowKeys[0]);
     this.setState({ ...this.state, selectedRowKeys: [] });
-    this.context.router.push('/app/routers/');
+    this.context.router.push('/app/routers');
   };
 
-  handleChange = (selectedRowKeys) => {
+  handleChange = selectedRowKeys => {
     this.setState({ selectedRowKeys });
   };
 
-  handleCreateClick = (event) => {
+  handleCreateClick = event => {
     event.preventDefault();
     this.context.router.push('/app/routers/new/step-1');
   };
 
-  handleReload = (e) => {
+  handleReload = e => {
     e.preventDefault();
-    loadData(this.props);
+    this.loadData(this.props);
   };
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.props.filterRouters(e.target.value);
   };
 
@@ -236,8 +228,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchRouters: () => dispatch(fetchRouters()),
-    filterRouters: (filter) => dispatch(filterRouters(filter)),
-    deleteRouter: (id) => dispatch(deleteRouter(id)),
+    filterRouters: filter => dispatch(filterRouters(filter)),
+    deleteRouter: id => dispatch(deleteRouter(id)),
+    refresh: () => dispatch(fetchRouters(undefined, true)),
   };
 }
 

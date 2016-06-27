@@ -28,7 +28,7 @@ import {
 import * as stackAPI from '../api/stack';
 
 export function fetchStacks(params) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       FETCH_STACKS_REQUEST,
       FETCH_STACKS_SUCCESS,
@@ -41,7 +41,7 @@ export function fetchStacks(params) {
 }
 
 export function fetchStack(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       FETCH_STACK_REQUEST,
       FETCH_STACK_SUCCESS,
@@ -61,7 +61,7 @@ export function filterStacks(filter) {
 }
 
 export function deleteStack(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       DELETE_STACK_REQUEST,
       DELETE_STACK_SUCCESS,
@@ -74,7 +74,7 @@ export function deleteStack(id) {
 }
 
 export function fetchStackConfig() {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       FETCH_STACK_CONFIG_REQUEST,
       FETCH_STACK_CONFIG_SUCCESS,
@@ -87,7 +87,7 @@ export function fetchStackConfig() {
 }
 
 export function updateStack(param) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       UPDATE_STACK_REQUEST,
       UPDATE_STACK_SUCCESS,
@@ -100,7 +100,7 @@ export function updateStack(param) {
 }
 
 export function createStack(param) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       CREATE_STACK_REQUEST,
       CREATE_STACK_SUCCESS,
@@ -108,7 +108,7 @@ export function createStack(param) {
     ],
     payload: {
       promise: stackAPI.createStack(param)
-        .then((data) => {
+        .then(data => {
           dispatch(fetchStacks());
           return data;
         }),

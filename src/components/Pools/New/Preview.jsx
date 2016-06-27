@@ -28,55 +28,55 @@ export default function Preview(props) {
       <div className="panel-body">
         <table className="table pool-table table-hover">
           <tbody>
-          <tr>
-            <th>CPU</th>
-            <td>{spec.cpus}核</td>
-          </tr>
-          <tr>
-            <th>内存</th>
-            <td>{spec.mems}GB</td>
-          </tr>
-          <tr>
-            <th>性能型硬盘</th>
-            <td>{spec.volumes.performance}GB</td>
-          </tr>
-          <tr>
-            <th>容量型硬盘</th>
-            <td>{spec.volumes.capacity}GB</td>
-          </tr>
-          <tr>
-            <th>公网IP</th>
-            <td>
-              <table>
-                <tbody>
-                  {CTCC}
-                  {CMCC}
-                  {CUCC}
-                  {BGP}
-                </tbody>
-              </table>
-            </td>
-          </tr>
-          <tr>
-            <th>数据库服务</th>
-            <td>{spec.dbaas === true ? '启用' : '禁用'}</td>
-          </tr>
-          <tr>
-            <th>监控服务</th>
-            <td>{spec.maas === true ? '启用' : '禁用'}</td>
-          </tr>
-          <tr>
-            <th>VPN服务</th>
-            <td>{spec.vpnaas === true ? '启用' : '禁用'}</td>
-          </tr>
-          <tr>
-            <th>均衡负载服务</th>
-            <td>{spec.lbaas === true ? '启用' : '禁用'}</td>
-          </tr>
-          <tr>
-            <th>防火墙服务</th>
-            <td>{spec.fwaas === true ? '启用' : '禁用'}</td>
-          </tr>
+            <tr>
+              <th>CPU</th>
+              <td>{spec.cpus}核</td>
+            </tr>
+            <tr>
+              <th>内存</th>
+              <td>{spec.mems}GB</td>
+            </tr>
+            <tr>
+              <th>性能型硬盘</th>
+              <td>{spec.volumes.performance}GB</td>
+            </tr>
+            <tr>
+              <th>容量型硬盘</th>
+              <td>{spec.volumes.capacity}GB</td>
+            </tr>
+            <tr>
+              <th>公网IP</th>
+              <td>
+                <table>
+                  <tbody>
+                    {CTCC}
+                    {CMCC}
+                    {CUCC}
+                    {BGP}
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <th>数据库服务</th>
+              <td>{spec.dbaas === true ? '启用' : '禁用'}</td>
+            </tr>
+            <tr>
+              <th>监控服务</th>
+              <td>{spec.maas === true ? '启用' : '禁用'}</td>
+            </tr>
+            <tr>
+              <th>VPN服务</th>
+              <td>{spec.vpnaas === true ? '启用' : '禁用'}</td>
+            </tr>
+            <tr>
+              <th>均衡负载服务</th>
+              <td>{spec.lbaas === true ? '启用' : '禁用'}</td>
+            </tr>
+            <tr>
+              <th>防火墙服务</th>
+              <td>{spec.fwaas === true ? '启用' : '禁用'}</td>
+            </tr>
           </tbody>
         </table>
         <hr />

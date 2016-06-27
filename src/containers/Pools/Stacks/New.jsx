@@ -35,6 +35,7 @@ class New extends React.Component {
     children: React.PropTypes.object.isRequired,
     params: React.PropTypes.object.isRequired,
     pool: React.PropTypes.object.isRequired,
+    stack: React.PropTypes.object.isRequired,
     image: React.PropTypes.object.isRequired,
     snapshot: React.PropTypes.object.isRequired,
     keypair: React.PropTypes.object.isRequired,
@@ -76,7 +77,7 @@ class New extends React.Component {
     loadData(this.props);
   }
 
-  handleSpecChange = (e) => {
+  handleSpecChange = e => {
     this.setState({
       ...this.state,
       spec: {
@@ -95,9 +96,9 @@ class New extends React.Component {
         sumNet,
       },
     });
-  }
+  };
 
-  handleNextClick = (e) => {
+  handleNextClick = e => {
     e.preventDefault();
     let step = this.state.current + 1;
     if (step > steps.length) step = steps.length;
@@ -111,7 +112,7 @@ class New extends React.Component {
     this.context.router.push(`/app/pools/${poolId}/stacks/new/step-${step}`);
   };
 
-  handlePreviousClick = (e) => {
+  handlePreviousClick = e => {
     e.preventDefault();
 
     const poolId = this.props.params.poolId;
@@ -125,12 +126,12 @@ class New extends React.Component {
     this.context.router.push(`/app/pools/${poolId}/stacks/new/step-${step}`);
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     e.preventDefault();
-    const newSpec = { ...this.state.spec, ram: this.state.spec.ram * 1024 }
+    const newSpec = { ...this.state.spec, ram: this.state.spec.ram * 1024 };
 
     this.props.createStack(newSpec);
-    this.context.router.push('/app/pools/');
+    this.context.router.push('/app/pools');
   };
 
   render() {
@@ -183,7 +184,7 @@ function mapDispatchToProps(dispatch) {
     fetchImages: () => dispatch(fetchImages()),
     fetchSnapshots: () => dispatch(fetchSnapshots()),
     fetchKeypairs: () => dispatch(fetchKeypairs()),
-    createStack: (params) => dispatch(createStack(params)),
+    createStack: params => dispatch(createStack(params)),
   };
 }
 

@@ -6,7 +6,7 @@ import {
 import * as imageAPI from '../api/image';
 
 export function fetchImages(params) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       FETCH_IMAGES_REQUEST,
       FETCH_IMAGES_SUCCESS,

@@ -69,7 +69,7 @@ function mapStateToProps() {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchNotification: (id) => dispatch(fetchNotification(id)),
+    fetchNotification: id => dispatch(fetchNotification(id)),
   };
 }
 

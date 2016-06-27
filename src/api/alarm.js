@@ -23,31 +23,13 @@ export function fetchAlarmConfig() {
 }
 
 export function createAlarm(params) {
-  const url = `${API}`;
-  return fetch(url, {
+  const data = { ...params };
+  delete data.isSend;
+
+  return fetch(API, {
     ...fetchOptions(),
     method: 'POST',
-    body: JSON.stringify({
-      ...params,
-      resource: [
-        {
-          id: '56fa52491b882e83369084f9',
-          name: '11',
-          status: '正常',
-          add: true,
-        },
-        {
-          id: '56fa52491f97403f1f899da7',
-          name: '111',
-          status: '数据不足',
-          add: true,
-        },
-      ],
-      enable: '启用',
-      status: '数据不足',
-      createdAt: '2016-03-03 04:27:21',
-      describe: 'xxx',
-    }),
+    body: JSON.stringify(data),
   }).then(checkStatus)
     .then(parseJSON)
     .then(json => json);
@@ -74,8 +56,7 @@ export function fetchAlarm(id) {
 }
 
 export function updateAlarm(params) {
-  const { id } = params;
-  const url = `${API}/${id}`;
+  const url = `${API}/${params.id}`;
   return fetch(url, {
     ...fetchOptions(),
     method: 'PUT',
@@ -119,8 +100,7 @@ export function addAlarmRule(params) {
 }
 
 export function deleteAlarmResource(params) {
-  const { pid, id } = params;
-  const url = `${API}/${pid}/resources/${id}`;
+  const url = `${API}/${params.pid}/resources/${params.id}`;
   return fetch(url, {
     ...fetchOptions(),
     method: 'DELETE',
@@ -130,8 +110,7 @@ export function deleteAlarmResource(params) {
 }
 
 export function deleteAlarmRule(params) {
-  const { pid, id } = params;
-  const url = `${API}/${pid}/rules/${id}`;
+  const url = `${API}/${params.pid}/rules/${params.id}`;
   return fetch(url, {
     ...fetchOptions(),
     method: 'DELETE',
@@ -141,8 +120,7 @@ export function deleteAlarmRule(params) {
 }
 
 export function deleteAlarmNotification(params) {
-  const { pid, id } = params;
-  const url = `${API}/${pid}/notifications/${id}`;
+  const url = `${API}/${params.pid}/notifications/${params.id}`;
   return fetch(url, {
     ...fetchOptions(),
     method: 'DELETE',

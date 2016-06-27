@@ -22,9 +22,9 @@ export default class BasicInfo extends React.Component {
             <label>系统</label>
           </Col>
           <Col span="10">
-          <span className="content">
-            {prop.systemName}
-          </span>
+            <span className="content">
+              {prop.systemName}
+            </span>
           </Col>
         </Row>
         <Row>

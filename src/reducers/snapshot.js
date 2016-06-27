@@ -37,11 +37,11 @@ const INITIAL_STATE = {
 };
 
 export default handleActions({
-  [FETCH_SNAPSHOTS_REQUEST]: (state) => ({
+  [FETCH_SNAPSHOTS_REQUEST]: (state, action) => ({
     ...state,
     list: {
       ...state.list,
-      isFetching: true,
+      isFetching: !(action.meta && action.meta.refresh),
     },
   }),
 
@@ -70,7 +70,7 @@ export default handleActions({
     filter: action.payload,
   }),
 
-  [FETCH_SNAPSHOT_REQUEST]: (state) => ({
+  [FETCH_SNAPSHOT_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -97,7 +97,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_SNAPSHOT_REQUEST]: (state) => ({
+  [DELETE_SNAPSHOT_REQUEST]: state => ({
     ...state,
     list: {
       ...state.list,

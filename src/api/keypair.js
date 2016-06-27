@@ -13,6 +13,16 @@ export function fetchKeypairs(params = {}) {
     .then(json => json);
 }
 
+export function createKeypair(params) {
+  return fetch(API, {
+    ...fetchOptions(),
+    method: 'POST',
+    body: JSON.stringify(params),
+  }).then(checkStatus)
+    .then(parseJSON)
+    .then(json => json);
+}
+
 export function deleteKeypair(id) {
   const url = `${API}/${id}`;
 

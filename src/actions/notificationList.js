@@ -31,13 +31,16 @@ import {
 } from '../constants/notificationList';
 import * as notificationListAPI from '../api/notificationList';
 
-export function fetchNotificationLists(params) {
-  return (dispatch) => dispatch({
+export function fetchNotificationLists(params, refresh = false) {
+  return dispatch => dispatch({
     types: [
       FETCH_NOTIFICATION_LISTS_REQUEST,
       FETCH_NOTIFICATION_LISTS_SUCCESS,
       FETCH_NOTIFICATION_LISTS_FAILURE,
     ],
+    meta: {
+      refresh,
+    },
     payload: {
       promise: notificationListAPI.fetchNotificationLists(params),
     },
@@ -52,7 +55,7 @@ export function filterNotificationLists(filter) {
 }
 
 export function fetchNotificationList(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       FETCH_NOTIFICATION_LIST_REQUEST,
       FETCH_NOTIFICATION_LIST_SUCCESS,
@@ -65,7 +68,7 @@ export function fetchNotificationList(id) {
 }
 
 export function updateNotificationList(params) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       UPDATE_NOTIFICATION_LIST_REQUEST,
       UPDATE_NOTIFICATION_LIST_SUCCESS,
@@ -78,7 +81,7 @@ export function updateNotificationList(params) {
 }
 
 export function deleteNotificationList(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       DELETE_NOTIFICATION_LIST_REQUEST,
       DELETE_NOTIFICATION_LIST_SUCCESS,
@@ -86,7 +89,7 @@ export function deleteNotificationList(id) {
     ],
     payload: {
       promise: notificationListAPI.deleteNotificationList(id)
-        .then((data) => {
+        .then(data => {
           dispatch(fetchNotificationLists());
           return data;
         }),
@@ -95,7 +98,7 @@ export function deleteNotificationList(id) {
 }
 
 export function createNotificationList(params) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       CREATE_NOTIFICATION_LIST_REQUEST,
       CREATE_NOTIFICATION_LIST_SUCCESS,
@@ -108,7 +111,7 @@ export function createNotificationList(params) {
 }
 
 export function deleteNotificationListTerminal(params) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       DELETE_NOTIFICATION_LIST_TERMINAL_REQUEST,
       DELETE_NOTIFICATION_LIST_TERMINAL_SUCCESS,
@@ -121,7 +124,7 @@ export function deleteNotificationListTerminal(params) {
 }
 
 export function createNotificationListTerminal(params) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       CREATE_NOTIFICATION_LIST_TERMINAL_REQUEST,
       CREATE_NOTIFICATION_LIST_TERMINAL_SUCCESS,

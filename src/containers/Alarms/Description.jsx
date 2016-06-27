@@ -114,20 +114,20 @@ function mapStateToProps() {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchAlarm: (key) => dispatch(fetchAlarm(key)),
-    updateAlarm: (params) => dispatch(updateAlarm(params)),
-    deleteAlarm: (params) => dispatch(deleteAlarm(params)),
+    fetchAlarm: key => dispatch(fetchAlarm(key)),
+    updateAlarm: params => dispatch(updateAlarm(params)),
+    deleteAlarm: params => dispatch(deleteAlarm(params)),
     fetchNotificationLists: () => dispatch(fetchNotificationLists()),
     fetchAlarmConfig: () => dispatch(fetchAlarmConfig()),
-    addAlarmRule: (params) => dispatch(addAlarmRule(params)),
-    addAlarmResource: (params) => dispatch(addAlarmResource(params)),
-    addAlarmNotification: (params) => dispatch(addAlarmNotification(params)),
+    addAlarmRule: params => dispatch(addAlarmRule(params)),
+    addAlarmResource: params => dispatch(addAlarmResource(params)),
+    addAlarmNotification: params => dispatch(addAlarmNotification(params)),
     fetchBareMetals: () => dispatch(fetchBareMetals()),
     fetchInstances: () => dispatch(fetchInstances()),
     fetchServices: () => dispatch(fetchServices()),
-    deleteAlarmRule: (params) => dispatch(deleteAlarmRule(params)),
-    deleteAlarmNotification: (params) => dispatch(deleteAlarmNotification(params)),
-    deleteAlarmResource: (params) => dispatch(deleteAlarmResource(params)),
+    deleteAlarmRule: params => dispatch(deleteAlarmRule(params)),
+    deleteAlarmNotification: params => dispatch(deleteAlarmNotification(params)),
+    deleteAlarmResource: params => dispatch(deleteAlarmResource(params)),
   };
 }
 

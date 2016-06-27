@@ -84,10 +84,10 @@ function mapStateToProps() {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchNotificationList: (key) => dispatch(fetchNotificationList(key)),
-    updateNotificationList: (params) => dispatch(updateNotificationList(params)),
-    deleteNotificationListTerminal: (params) => dispatch(deleteNotificationListTerminal(params)),
-    createNotificationListTerminal: (params) => dispatch(createNotificationListTerminal(params)),
+    fetchNotificationList: key => dispatch(fetchNotificationList(key)),
+    updateNotificationList: params => dispatch(updateNotificationList(params)),
+    deleteNotificationListTerminal: params => dispatch(deleteNotificationListTerminal(params)),
+    createNotificationListTerminal: params => dispatch(createNotificationListTerminal(params)),
   };
 }
 

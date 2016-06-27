@@ -13,6 +13,8 @@ import includes from '../../../node_modules/lodash/includes';
 import uniq from '../../../node_modules/lodash/uniq';
 import { fetchAlarms, filterAlarms, deleteAlarm } from '../../actions/alarm';
 
+import AbstractList from '../AbstractList';
+
 const InputGroup = Input.Group;
 
 function nameLink(text, row) {
@@ -56,11 +58,7 @@ function getColumns(data) {
   ];
 }
 
-function loadData(props) {
-  props.fetchAlarms();
-}
-
-class List extends React.Component {
+class List extends AbstractList {
   static propTypes = {
     alarm: React.PropTypes.object.isRequired,
     fetchAlarms: React.PropTypes.func.isRequired,
@@ -80,8 +78,8 @@ class List extends React.Component {
     };
   }
 
-  componentDidMount() {
-    loadData(this.props);
+  loadData(props) {
+    props.fetchAlarms();
   }
 
   getRowKey(alarm) {
@@ -92,24 +90,24 @@ class List extends React.Component {
     this.setState({ selectedRows });
   };
 
-  handleCreateClick = (event) => {
+  handleCreateClick = event => {
     event.preventDefault();
     this.context.router.push('/app/alarms/new/step-1');
   };
 
-  handleReload = (e) => {
+  handleReload = e => {
     e.preventDefault();
-    loadData(this.props);
+    this.loadData(this.props);
   };
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.props.filterAlarms(e.target.value);
   };
 
   handleDelete = () => {
     this.props.deleteAlarm(this.state.selectedRows[0].id);
     this.setState({ ...this.state, selectedRows: [] });
-    this.context.router.push('/app/alarms/');
+    this.context.router.push('/app/alarms');
   };
 
   renderAlarm(rowSelection, columns, alarm) {
@@ -206,8 +204,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchAlarms: () => dispatch(fetchAlarms()),
-    filterAlarms: (filter) => dispatch(filterAlarms(filter)),
-    deleteAlarm: (id) => dispatch(deleteAlarm(id)),
+    filterAlarms: filter => dispatch(filterAlarms(filter)),
+    deleteAlarm: id => dispatch(deleteAlarm(id)),
+    refresh: () => dispatch(fetchAlarms(undefined, true)),
   };
 }
 

@@ -27,13 +27,16 @@ import {
 } from '../constants/notification';
 import * as notificationAPI from '../api/notification';
 
-export function fetchNotifications(params) {
-  return (dispatch) => dispatch({
+export function fetchNotifications(params, refresh) {
+  return dispatch => dispatch({
     types: [
       FETCH_NOTIFICATIONS_REQUEST,
       FETCH_NOTIFICATIONS_SUCCESS,
       FETCH_NOTIFICATIONS_FAILURE,
     ],
+    meta: {
+      refresh,
+    },
     payload: {
       promise: notificationAPI.fetchNotifications(params),
     },
@@ -41,7 +44,7 @@ export function fetchNotifications(params) {
 }
 
 export function markRead(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       MARK_NOTIFICATION_AS_READ_REQUEST,
       MARK_NOTIFICATION_AS_READ_SUCCESS,
@@ -49,7 +52,7 @@ export function markRead(id) {
     ],
     payload: {
       promise: notificationAPI.markRead(id)
-        .then((data) => {
+        .then(data => {
           dispatch(fetchNotifications());
 
           return data;
@@ -66,7 +69,7 @@ export function filterNotifications(filter) {
 }
 
 export function fetchNotification(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       FETCH_NOTIFICATION_REQUEST,
       FETCH_NOTIFICATION_SUCCESS,
@@ -74,7 +77,7 @@ export function fetchNotification(id) {
     ],
     payload: {
       promise: notificationAPI.fetchNotification(id)
-        .then((data) => {
+        .then(data => {
           dispatch(markRead(id));
 
           return data;
@@ -84,7 +87,7 @@ export function fetchNotification(id) {
 }
 
 export function putNotification(params) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       UPDATE_NOTIFICATION_REQUEST,
       UPDATE_NOTIFICATION_SUCCESS,
@@ -97,7 +100,7 @@ export function putNotification(params) {
 }
 
 export function postNotification(params) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       CREATE_NOTIFICATION_REQUEST,
       CREATE_NOTIFICATION_SUCCESS,
@@ -110,7 +113,7 @@ export function postNotification(params) {
 }
 
 export function deleteNotification(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       DELETE_NOTIFICATION_REQUEST,
       DELETE_NOTIFICATION_SUCCESS,

@@ -12,9 +12,9 @@ const INITIAL_STATE = {
 };
 
 export default handleActions({
-  [FETCH_QUOTAS_REQUEST]: (state) => ({
+  [FETCH_QUOTAS_REQUEST]: (state, action) => ({
     ...state,
-    isFetching: true,
+    isFetching: !(action.meta && action.meta.refresh),
   }),
 
   [FETCH_QUOTAS_SUCCESS]: (state, action) => ({

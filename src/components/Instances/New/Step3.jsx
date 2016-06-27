@@ -36,8 +36,8 @@ class Step3 extends React.Component {
     handleSpecChange: React.PropTypes.func.isRequired,
   };
 
-  handleSubmit = (e) => {
-    this.props.form.validateFields((errors) => {
+  handleSubmit = e => {
+    this.props.form.validateFields(errors => {
       if (!!errors) {
         return;
       }
@@ -46,7 +46,7 @@ class Step3 extends React.Component {
     });
   };
 
-  handleKeypairChange = (value) => {
+  handleKeypairChange = value => {
     const event = {
       target: {
         name: 'keypair',
@@ -57,7 +57,7 @@ class Step3 extends React.Component {
     this.props.handleSpecChange(event);
   };
 
-  handleQuantityChange = (value) => {
+  handleQuantityChange = value => {
     const event = {
       target: {
         name: 'quantity',
@@ -131,8 +131,9 @@ class Step3 extends React.Component {
           style={{ width: 200 }}
           showSearch={false}
         >
-        {keypair.list.data.map((key) => <Option key={key.id} value={key.id}>{key.name}</Option>)}
-      </Select>);
+          {keypair.list.data.map(key => <Option key={key.id} value={key.id}>{key.name}</Option>)}
+        </Select>
+      );
     }
 
     return (

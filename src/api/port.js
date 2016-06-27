@@ -23,6 +23,16 @@ export function fetchPort(id) {
     .then(json => json);
 }
 
+export function createPort(params) {
+  return fetch(API, {
+    ...fetchOptions(),
+    method: 'POST',
+    body: JSON.stringify(params),
+  }).then(checkStatus)
+    .then(parseJSON)
+    .then(json => json);
+}
+
 export function deletePort(id) {
   const url = `${API}/${id}`;
 
@@ -35,8 +45,7 @@ export function deletePort(id) {
 }
 
 export function updatePort(params) {
-  const { id } = params;
-  const url = `${API}/${id}`;
+  const url = `${API}/${params.id}`;
 
   return fetch(url, {
     ...fetchOptions(),

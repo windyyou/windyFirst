@@ -61,7 +61,7 @@ function mapStateToProps() {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchNetwork: (key) => dispatch(fetchNetwork(key)),
+    fetchNetwork: key => dispatch(fetchNetwork(key)),
     updateNetwork: params => dispatch(updateNetwork(params)),
   };
 }

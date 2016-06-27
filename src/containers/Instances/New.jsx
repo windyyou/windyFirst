@@ -116,7 +116,7 @@ class New extends React.Component {
     loadData(this.props);
   }
 
-  handleSpecChange = (e) => {
+  handleSpecChange = e => {
     this.setState({
       ...this.state,
       spec: {
@@ -126,7 +126,7 @@ class New extends React.Component {
     });
   };
 
-  handleNextClick = (e) => {
+  handleNextClick = e => {
     e.preventDefault();
     let step = this.state.current + 1;
     if (step > steps.length) step = steps.length;
@@ -138,7 +138,7 @@ class New extends React.Component {
     this.context.router.push(`/app/instances/new/step-${step}`);
   };
 
-  handlePreviousClick = (e) => {
+  handlePreviousClick = e => {
     e.preventDefault();
 
     let step = this.state.current - 1;
@@ -151,7 +151,7 @@ class New extends React.Component {
     this.context.router.push(`/app/instances/new/step-${step}`);
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     e.preventDefault();
     const source = this.state.spec.sourceType === 'image' ? this.props.image : this.props.snapshot;
     const sourceName = dict(this.state.spec.source, source.list.data, 'id', 'name');
@@ -163,7 +163,7 @@ class New extends React.Component {
     delete newSpec.source;
     delete newSpec.keypair;
     this.props.createInstance(newSpec);
-    this.context.router.push('/app/instances/');
+    this.context.router.push('/app/instances');
   };
 
   render() {
@@ -222,7 +222,7 @@ function mapDispatchToProps(dispatch) {
     fetchNetworks: () => dispatch(fetchNetworks()),
     fetchSnapshots: () => dispatch(fetchSnapshots()),
     fetchSubnets: () => dispatch(fetchSubnets()),
-    createInstance: (params) => dispatch(createInstance(params)),
+    createInstance: params => dispatch(createInstance(params)),
   };
 }
 

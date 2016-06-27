@@ -23,8 +23,7 @@ export function fetchNotificationList(id) {
 }
 
 export function updateNotificationList(params) {
-  const { id } = params;
-  const url = `${API}/${id}`;
+  const url = `${API}/${params.id}`;
   return fetch(url, {
     ...fetchOptions(),
     method: 'PUT',
@@ -45,8 +44,7 @@ export function deleteNotificationList(id) {
 }
 
 export function createNotificationList(params) {
-  const url = `${API}`;
-  return fetch(url, {
+  return fetch(API, {
     ...fetchOptions(),
     method: 'POST',
     body: JSON.stringify({
@@ -58,8 +56,7 @@ export function createNotificationList(params) {
 }
 
 export function deleteNotificationListTerminal(params) {
-  const { pid, id } = params;
-  const url = `${API}/${pid}/terminals/${id}`;
+  const url = `${API}/${params.pid}/terminals/${params.id}`;
   return fetch(url, {
     ...fetchOptions(),
     method: 'DELETE',
@@ -69,13 +66,13 @@ export function deleteNotificationListTerminal(params) {
 }
 
 export function createNotificationListTerminal(params) {
-  const { pid } = params;
-  delete params.pid;
+  const { pid, ...data } = params;
   const url = `${API}/${pid}/terminals`;
+
   return fetch(url, {
     ...fetchOptions(),
     method: 'POST',
-    body: JSON.stringify(params),
+    body: JSON.stringify(data),
   }).then(checkStatus)
     .then(parseJSON)
     .then(json => json);

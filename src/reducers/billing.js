@@ -12,9 +12,9 @@ const INITIAL_STATE = {
 };
 
 export default handleActions({
-  [FETCH_BILLINGS_REQUEST]: (state) => ({
+  [FETCH_BILLINGS_REQUEST]: (state, action) => ({
     ...state,
-    isFetching: true,
+    isFetching: !(action.meta && action.meta.refresh),
   }),
 
   [FETCH_BILLINGS_SUCCESS]: (state, action) => ({

@@ -23,8 +23,7 @@ export function fetchUser(id) {
 }
 
 export function enableUser(params) {
-  const { id } = params;
-  const url = `${API}/${id}`;
+  const url = `${API}/${params.id}`;
   return fetch(url, {
     ...fetchOptions(),
     method: 'PUT',
@@ -35,8 +34,7 @@ export function enableUser(params) {
 }
 
 export function disableUser(params) {
-  const { id } = params;
-  const url = `${API}/${id}`;
+  const url = `${API}/${params.id}`;
   return fetch(url, {
     ...fetchOptions(),
     method: 'PUT',
@@ -47,8 +45,7 @@ export function disableUser(params) {
 }
 
 export function resetUserPassword(param) {
-  const { id } = param;
-  const url = `${API}/${id}`;
+  const url = `${API}/${param.id}`;
   return fetch(url, {
     ...fetchOptions(),
     method: 'PUT',

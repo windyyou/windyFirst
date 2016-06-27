@@ -1,6 +1,7 @@
 import React from 'react';
 
 // component in ReactTransitionGroup can not be stateless function
+// noinspection Eslint
 export default class Hull extends React.Component {
   static propTypes = {
     path: React.PropTypes.string.isRequired,

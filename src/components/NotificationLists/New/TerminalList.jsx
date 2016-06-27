@@ -16,6 +16,7 @@ class TerminalList extends React.Component {
   static propTypes = {
     form: React.PropTypes.object.isRequired,
     handleTerminalsChane: React.PropTypes.func.isRequired,
+    handleSubnetsChange: React.PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -29,14 +30,14 @@ class TerminalList extends React.Component {
     };
   }
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.setState({
       content: e.target.value,
     });
   };
 
-  handleAddClick = (e) => {
-    this.props.form.validateFields((errors) => {
+  handleAddClick = e => {
+    this.props.form.validateFields(errors => {
       e.preventDefault();
       if (!!errors) {
         return;
@@ -46,14 +47,14 @@ class TerminalList extends React.Component {
     });
   };
 
-  handleSelectChange = (value) => {
+  handleSelectChange = value => {
     this.setState({
       select: value,
       terminalValidate: '',
     });
   };
 
-  handleDeleteClick = (index) => () => {
+  handleDeleteClick = index => () => {
     const terminals = this.state.terminals.slice(0);
     terminals.splice(index, 1);
     this.setState({
@@ -102,7 +103,7 @@ class TerminalList extends React.Component {
               className="delete"
               onClick={this.handleDeleteClick(i)}
             >
-              <i className={ classNames('portalicon', 'portalicon-delete') }></i>
+              <i className={classNames('portalicon', 'portalicon-delete')}></i>
             </a>
           </Col>
         </Row>)}
@@ -175,7 +176,7 @@ class TerminalList extends React.Component {
                 className="add"
                 onClick={this.handleAddClick}
               >
-                <i className={ classNames('portalicon', 'portalicon-add') }></i>
+                <i className={classNames('portalicon', 'portalicon-add')}></i>
               </a>
             </Col>
             <Col span="8" className="lineHeight30px">
@@ -194,7 +195,7 @@ class TerminalList extends React.Component {
                   <Col span="4">操作</Col>
                 </Row>
               </div>
-              { this.renderTerminalList() }
+              {this.renderTerminalList()}
             </Col>
           </Row>
         </FormItem>

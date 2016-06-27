@@ -44,11 +44,11 @@ const INITIAL_STATE = {
 };
 
 export default handleActions({
-  [FETCH_BACKUPS_REQUEST]: (state) => ({
+  [FETCH_BACKUPS_REQUEST]: (state, action) => ({
     ...state,
     list: {
       ...state.list,
-      isFetching: true,
+      isFetching: !(action.meta && action.meta.refresh),
     },
   }),
 
@@ -77,7 +77,7 @@ export default handleActions({
     filter: action.payload,
   }),
 
-  [FETCH_BACKUP_REQUEST]: (state) => ({
+  [FETCH_BACKUP_REQUEST]: state => ({
     ...state,
     current: {
       ...state.list,
@@ -105,7 +105,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_BACKUP_REQUEST]: (state) => ({
+  [DELETE_BACKUP_REQUEST]: state => ({
     ...state,
     list: {
       ...state.list,

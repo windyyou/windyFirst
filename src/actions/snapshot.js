@@ -15,13 +15,16 @@ import {
 } from '../constants/snapshot';
 import * as snapshotAPI from '../api/snapshot';
 
-export function fetchSnapshots(params) {
-  return (dispatch) => dispatch({
+export function fetchSnapshots(params, refresh = false) {
+  return dispatch => dispatch({
     types: [
       FETCH_SNAPSHOTS_REQUEST,
       FETCH_SNAPSHOTS_SUCCESS,
       FETCH_SNAPSHOTS_FAILURE,
     ],
+    meta: {
+      refresh,
+    },
     payload: {
       promise: snapshotAPI.fetchSnapshots(params),
     },
@@ -36,7 +39,7 @@ export function filterSnapshots(filter) {
 }
 
 export function fetchSnapshot(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       FETCH_SNAPSHOT_REQUEST,
       FETCH_SNAPSHOT_SUCCESS,
@@ -49,7 +52,7 @@ export function fetchSnapshot(id) {
 }
 
 export function deleteSnapshot(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       DELETE_SNAPSHOT_REQUEST,
       DELETE_SNAPSHOT_SUCCESS,

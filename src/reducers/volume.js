@@ -70,11 +70,11 @@ const INITIAL_STATE = {
 };
 
 export default handleActions({
-  [FETCH_VOLUMES_REQUEST]: (state) => ({
+  [FETCH_VOLUMES_REQUEST]: (state, action) => ({
     ...state,
     list: {
       ...state.list,
-      isFetching: true,
+      isFetching: !(action.meta && action.meta.refresh),
     },
   }),
 
@@ -106,7 +106,7 @@ export default handleActions({
     filter: action.payload,
   }),
 
-  [DELETE_VOLUME_REQUEST]: (state) => ({
+  [DELETE_VOLUME_REQUEST]: state => ({
     ...state,
     list: {
       ...state.list,
@@ -132,7 +132,7 @@ export default handleActions({
     },
   }),
 
-  [FETCH_VOLUME_REQUEST]: (state) => ({
+  [FETCH_VOLUME_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -160,7 +160,7 @@ export default handleActions({
     },
   }),
 
-  [UPDATE_VOLUME_REQUEST]: (state) => ({
+  [UPDATE_VOLUME_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -188,7 +188,7 @@ export default handleActions({
     },
   }),
 
-  [FETCH_VOLUME_CONFIG_REQUEST]: (state) => ({
+  [FETCH_VOLUME_CONFIG_REQUEST]: state => ({
     ...state,
     config: {
       ...state.config,
@@ -216,7 +216,7 @@ export default handleActions({
     },
   }),
 
-  [CREATE_VOLUME_REQUEST]: (state) => ({
+  [CREATE_VOLUME_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,

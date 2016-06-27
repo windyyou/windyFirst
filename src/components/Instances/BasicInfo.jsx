@@ -3,7 +3,6 @@ import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import Icon from 'antd/lib/icon';
 import Spin from 'antd/lib/spin';
-import { Link } from 'react-router';
 import classNames from 'classnames';
 import { Input } from 'antd';
 
@@ -37,7 +36,7 @@ export default class BasicInfo extends React.Component {
     };
   }
 
-  handleNameEditClick = (e) => {
+  handleNameEditClick = e => {
     e.preventDefault();
 
     this.setState({
@@ -46,7 +45,7 @@ export default class BasicInfo extends React.Component {
     });
   };
 
-  handleNameSaveClick = (e) => {
+  handleNameSaveClick = e => {
     e.preventDefault();
 
     let current = this.props.instance.current.data;
@@ -64,7 +63,7 @@ export default class BasicInfo extends React.Component {
     });
   };
 
-  handleNameCancelClick = (e) => {
+  handleNameCancelClick = e => {
     e.preventDefault();
 
     this.setState({
@@ -74,7 +73,7 @@ export default class BasicInfo extends React.Component {
     });
   };
 
-  handleNameChange = (e) => {
+  handleNameChange = e => {
     this.setState({
       ...this.state,
       name: e.target.value,
@@ -119,7 +118,7 @@ export default class BasicInfo extends React.Component {
               onClick={this.handleNameSaveClick}
             >
               <i
-                className={ classNames('portalicon', 'portalicon-save', 'save', 'verticalCenter') }
+                className={classNames('portalicon', 'portalicon-save', 'save', 'verticalCenter')}
               >
               </i>
             </a>
@@ -149,9 +148,9 @@ export default class BasicInfo extends React.Component {
             <label>状态</label>
           </Col>
           <Col span="10">
-          <span className="content">
-            {props.status}
-          </span>
+            <span className="content">
+              {props.status}
+            </span>
           </Col>
           <Col span="2">
             <label>公网IP</label>

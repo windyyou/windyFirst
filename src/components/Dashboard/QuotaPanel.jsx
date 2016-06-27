@@ -5,8 +5,9 @@ import Icon from 'antd/lib/icon';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import Spin from 'antd/lib/spin';
+import AbstractList from '../../containers/AbstractList';
 
-export default class QuotaPanel extends React.Component {
+export default class QuotaPanel extends AbstractList {
   renderQuota(entities) {
     if (entities.length) {
       return (
@@ -15,18 +16,18 @@ export default class QuotaPanel extends React.Component {
             <label>{quotaType}</label>
             <Row className="quota-group">
               {data.map((d, j) => <Col key={j} span="12">
-                  <div className="quota-progress">
-                    <div>
-                      {`${d.type}(${d.unit})`}
-                      <span className="pull-right">{`${d.used}/${d.total}`}</span>
-                    </div>
-                    <Progress
-                      percent={d.used / d.total * 100}
-                      showInfo={false}
-                      strokeWidth={12}
-                    />
+                <div className="quota-progress">
+                  <div>
+                    {`${d.type}(${d.unit})`}
+                    <span className="pull-right">{`${d.used}/${d.total}`}</span>
                   </div>
-                </Col>)}
+                  <Progress
+                    percent={d.used / d.total * 100}
+                    showInfo={false}
+                    strokeWidth={12}
+                  />
+                </div>
+              </Col>)}
             </Row>
           </div>)}
         </Row>
@@ -81,4 +82,5 @@ QuotaPanel.propTypes = {
     ),
     })),
   }).isRequired,
+  refresh: React.PropTypes.func.isRequired,
 };

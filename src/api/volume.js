@@ -32,7 +32,6 @@ export function fetchVolume(id) {
 }
 
 export function createVolume(params) {
-  const url = `${API}`;
   const data = {
     volume: {
       name: params.name,
@@ -43,7 +42,7 @@ export function createVolume(params) {
     },
   };
 
-  return fetch(url, {
+  return fetch(API, {
     ...fetchOptions(),
     method: 'POST',
     body: JSON.stringify(data),
@@ -81,8 +80,7 @@ export function addBackup(params) {
 }
 
 export function updateVolume(params) {
-  const { id } = params;
-  const url = `${API}/${id}`;
+  const url = `${API}/${params.id}`;
   return fetch(url, {
     ...fetchOptions(),
     method: 'PUT',

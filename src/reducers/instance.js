@@ -103,11 +103,11 @@ const INITIAL_STATE = {
 };
 
 export default handleActions({
-  [FETCH_INSTANCES_REQUEST]: (state) => ({
+  [FETCH_INSTANCES_REQUEST]: (state, action) => ({
     ...state,
     list: {
       ...state.list,
-      isFetching: true,
+      isFetching: !(action.meta && action.meta.refresh),
     },
   }),
 
@@ -131,7 +131,7 @@ export default handleActions({
     },
   }),
 
-  [FETCH_INSTANCE_CONFIG_REQUEST]: (state) => ({
+  [FETCH_INSTANCE_CONFIG_REQUEST]: state => ({
     ...state,
     config: {
       ...state.config,
@@ -168,7 +168,7 @@ export default handleActions({
     filter: action.payload,
   }),
 
-  [FETCH_INSTANCE_REQUEST]: (state) => ({
+  [FETCH_INSTANCE_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -196,7 +196,7 @@ export default handleActions({
     },
   }),
 
-  [CREATE_INSTANCE_REQUEST]: (state) => ({
+  [CREATE_INSTANCE_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -224,7 +224,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_INSTANCE_REQUEST]: (state) => ({
+  [DELETE_INSTANCE_REQUEST]: state => ({
     ...state,
     list: {
       ...state.list,
@@ -232,7 +232,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_INSTANCE_SUCCESS]: (state) => ({
+  [DELETE_INSTANCE_SUCCESS]: state => ({
     ...state,
     list: {
       ...state.list,
@@ -240,7 +240,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_INSTANCE_FAILURE]: (state) => ({
+  [DELETE_INSTANCE_FAILURE]: state => ({
     ...state,
     list: {
       ...state.list,
@@ -248,7 +248,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_SNAPSHOT_REQUEST]: (state) => ({
+  [DELETE_SNAPSHOT_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -266,7 +266,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_SNAPSHOT_FAILURE]: (state) => ({
+  [DELETE_SNAPSHOT_FAILURE]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -274,7 +274,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_NETWORK_REQUEST]: (state) => ({
+  [DELETE_NETWORK_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -282,7 +282,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_NETWORK_SUCCESS]: (state) => ({
+  [DELETE_NETWORK_SUCCESS]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -290,7 +290,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_NETWORK_FAILURE]: (state) => ({
+  [DELETE_NETWORK_FAILURE]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -298,7 +298,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_VOLUME_REQUEST]: (state) => ({
+  [DELETE_VOLUME_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -306,7 +306,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_VOLUME_SUCCESS]: (state) => ({
+  [DELETE_VOLUME_SUCCESS]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -314,7 +314,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_VOLUME_FAILURE]: (state) => ({
+  [DELETE_VOLUME_FAILURE]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -322,7 +322,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_KEYPAIR_REQUEST]: (state) => ({
+  [DELETE_KEYPAIR_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -330,7 +330,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_KEYPAIR_SUCCESS]: (state) => ({
+  [DELETE_KEYPAIR_SUCCESS]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -338,7 +338,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_KEYPAIR_FAILURE]: (state) => ({
+  [DELETE_KEYPAIR_FAILURE]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -346,7 +346,7 @@ export default handleActions({
     },
   }),
 
-  [UPDATE_INSTANCE_REQUEST]: (state) => ({
+  [UPDATE_INSTANCE_REQUEST]: state => ({
     ...state,
     isFetching: true,
   }),
@@ -371,7 +371,7 @@ export default handleActions({
     },
   }),
 
-  [ADD_SNAPSHOT_REQUEST]: (state) => ({
+  [ADD_SNAPSHOT_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -398,7 +398,7 @@ export default handleActions({
     },
   }),
 
-  [ADD_NETWORK_REQUEST]: (state) => ({
+  [ADD_NETWORK_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -406,7 +406,7 @@ export default handleActions({
     },
   }),
 
-  [ADD_NETWORK_SUCCESS]: (state) => ({
+  [ADD_NETWORK_SUCCESS]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -423,7 +423,7 @@ export default handleActions({
     },
   }),
 
-  [ADD_VOLUME_REQUEST]: (state) => ({
+  [ADD_VOLUME_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -431,7 +431,7 @@ export default handleActions({
     },
   }),
 
-  [ADD_VOLUME_SUCCESS]: (state) => ({
+  [ADD_VOLUME_SUCCESS]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -448,7 +448,7 @@ export default handleActions({
     },
   }),
 
-  [ADD_KEYPAIR_REQUEST]: (state) => ({
+  [ADD_KEYPAIR_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -456,7 +456,7 @@ export default handleActions({
     },
   }),
 
-  [ADD_KEYPAIR_SUCCESS]: (state) => ({
+  [ADD_KEYPAIR_SUCCESS]: state => ({
     ...state,
     current: {
       ...state.current,

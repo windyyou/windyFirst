@@ -46,8 +46,7 @@ export function markRead(id, read = true) {
 }
 
 export function updateNotification(params = { id: '' }) {
-  const { id } = params;
-  const url = `${API}/${id}`;
+  const url = `${API}/${params.id}`;
   return fetch(url, {
     ...fetchOptions(),
     method: 'PUT',
@@ -58,8 +57,7 @@ export function updateNotification(params = { id: '' }) {
 }
 
 export function createNotification(params) {
-  const url = `${API}`;
-  return fetch(url, {
+  return fetch(API, {
     ...fetchOptions(),
     method: 'POST',
     body: JSON.stringify(params),

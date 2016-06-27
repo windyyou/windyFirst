@@ -35,8 +35,7 @@ export function deleteRouter(id) {
 }
 
 export function updateRouter(params) {
-  const { id } = params;
-  const url = `${API}/${id}`;
+  const url = `${API}/${params.id}`;
 
   return fetch(url, {
     ...fetchOptions(),

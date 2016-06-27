@@ -53,7 +53,7 @@ function mapStateToProps() {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchSnapshot: (key) => dispatch(fetchSnapshot(key)),
+    fetchSnapshot: key => dispatch(fetchSnapshot(key)),
   };
 }
 

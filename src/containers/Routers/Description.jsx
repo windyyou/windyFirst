@@ -57,7 +57,7 @@ function mapStateToProps() {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchRouter: (key) => dispatch(fetchRouter(key)),
+    fetchRouter: key => dispatch(fetchRouter(key)),
     updateRouter: params => dispatch(updateRouter(params)),
   };
 }

@@ -6,6 +6,10 @@ import {
 
   FILTER_SECURITY_GROUPS,
 
+  CREATE_SECURITY_GROUP_REQUEST,
+  CREATE_SECURITY_GROUP_SUCCESS,
+  CREATE_SECURITY_GROUP_FAILURE,
+
   DELETE_SECURITY_GROUP_REQUEST,
   DELETE_SECURITY_GROUP_SUCCESS,
   DELETE_SECURITY_GROUP_FAILURE,
@@ -22,17 +26,20 @@ const INITIAL_STATE = {
     error: null,
     data: {
       id: '',
+      name: '',
+      description: '',
+      createdAt: '',
     },
   },
   filter: '',
 };
 
 export default handleActions({
-  [FETCH_SECURITY_GROUPS_REQUEST]: (state) => ({
+  [FETCH_SECURITY_GROUPS_REQUEST]: (state, action) => ({
     ...state,
     list: {
       ...state.list,
-      isFetching: true,
+      isFetching: !(action.meta && action.meta.refresh),
     },
   }),
 
@@ -61,7 +68,33 @@ export default handleActions({
     filter: action.payload,
   }),
 
-  [DELETE_SECURITY_GROUP_REQUEST]: (state) => ({
+  [CREATE_SECURITY_GROUP_REQUEST]: state => ({
+    ...state,
+    current: {
+      ...state.current,
+      isFetching: true,
+    },
+  }),
+
+  [CREATE_SECURITY_GROUP_SUCCESS]: (state, action) => ({
+    ...state,
+    current: {
+      ...state.current,
+      isFetching: false,
+      data: action.payload,
+    },
+  }),
+
+  [CREATE_SECURITY_GROUP_FAILURE]: (state, action) => ({
+    ...state,
+    current: {
+      ...state.current,
+      isFetching: false,
+      error: action.payload,
+    },
+  }),
+
+  [DELETE_SECURITY_GROUP_REQUEST]: state => ({
     ...state,
     list: {
       ...state.list,

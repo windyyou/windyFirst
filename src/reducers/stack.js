@@ -43,6 +43,10 @@ const INITIAL_STATE = {
       status: '',
       createdAt: '',
       updatedAt: '',
+      compute: [],
+      storage: [],
+      network: [],
+      router: [],
     },
   },
 
@@ -54,13 +58,18 @@ const INITIAL_STATE = {
     isFetching: false,
     error: null,
     data: {
+      ipVersion: [],
+      core: { core: [] },
+      ram: { size: [] },
+      volume: { size: 0 },
+      instanceType: [],
     },
   },
 
 };
 
 export default handleActions({
-  [FETCH_STACKS_REQUEST]: (state) => ({
+  [FETCH_STACKS_REQUEST]: state => ({
     ...state,
     list: {
       ...state.list,
@@ -93,7 +102,7 @@ export default handleActions({
     filter: action.payload,
   }),
 
-  [DELETE_STACK_REQUEST]: (state) => ({
+  [DELETE_STACK_REQUEST]: state => ({
     ...state,
     list: {
       ...state.list,
@@ -119,7 +128,7 @@ export default handleActions({
     },
   }),
 
-  [FETCH_STACK_CONFIG_REQUEST]: (state) => ({
+  [FETCH_STACK_CONFIG_REQUEST]: state => ({
     ...state,
     config: {
       ...state.config,
@@ -147,7 +156,7 @@ export default handleActions({
     },
   }),
 
-  [FETCH_STACK_REQUEST]: (state) => ({
+  [FETCH_STACK_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -175,7 +184,7 @@ export default handleActions({
     },
   }),
 
-  [UPDATE_STACK_REQUEST]: (state) => ({
+  [UPDATE_STACK_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -203,7 +212,7 @@ export default handleActions({
     },
   }),
 
-  [CREATE_STACK_REQUEST]: (state) => ({
+  [CREATE_STACK_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,

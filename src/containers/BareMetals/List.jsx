@@ -16,6 +16,8 @@ import uniq from '../../../node_modules/lodash/uniq';
 
 import { fetchBareMetals, filterBareMetals, deleteBareMetal } from '../../actions/bareMetal';
 
+import AbstractList from '../AbstractList';
+
 const InputGroup = Input.Group;
 const MenuItem = Menu.Item;
 
@@ -39,11 +41,7 @@ function getColumns(data) {
   ];
 }
 
-function loadData(props) {
-  props.fetchBareMetals();
-}
-
-class List extends React.Component {
+class List extends AbstractList {
   static propTypes = {
     bareMetal: React.PropTypes.shape({
       filter: React.PropTypes.string,
@@ -77,8 +75,8 @@ class List extends React.Component {
     };
   }
 
-  componentDidMount() {
-    loadData(this.props);
+  loadData(props) {
+    props.fetchBareMetals();
   }
 
   getRowKey(record) {
@@ -103,24 +101,24 @@ class List extends React.Component {
   handleDelete = () => {
     this.props.deleteBareMetal(this.state.selectedRows[0].id);
     this.setState({ ...this.state, selectedRows: [] });
-    this.context.router.push('/app/bare-metals/');
+    this.context.router.push('/app/bare-metals');
   };
 
   handleChange = (selectedRowKeys, selectedRows) => {
     this.setState({ selectedRows });
   };
 
-  handleCreateClick = (event) => {
+  handleCreateClick = event => {
     event.preventDefault();
     this.context.router.push('/app/bare-metals/new/step-1');
   };
 
-  handleReload = (e) => {
+  handleReload = e => {
     e.preventDefault();
-    loadData(this.props);
+    this.loadData(this.props);
   };
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.props.filterBareMetals(e.target.value);
   };
 
@@ -220,8 +218,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchBareMetals: () => dispatch(fetchBareMetals()),
-    filterBareMetals: (filter) => dispatch(filterBareMetals(filter)),
-    deleteBareMetal: (id) => dispatch(deleteBareMetal(id)),
+    filterBareMetals: filter => dispatch(filterBareMetals(filter)),
+    deleteBareMetal: id => dispatch(deleteBareMetal(id)),
+    refresh: () => dispatch(fetchBareMetals(undefined, true)),
   };
 }
 

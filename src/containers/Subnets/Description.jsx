@@ -70,7 +70,7 @@ function mapStateToProps() {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchSubnet: (key) => dispatch(fetchSubnet(key)),
+    fetchSubnet: key => dispatch(fetchSubnet(key)),
     updateSubnet: params => dispatch(updateSubnet(params)),
   };
 }

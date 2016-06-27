@@ -38,7 +38,7 @@ export default class Rules extends React.Component {
     });
   };
 
-  handleSaveClick = (e) => {
+  handleSaveClick = e => {
     e.preventDefault();
     const isService = this.props.alarm.current.data.type === 'service';
 
@@ -76,7 +76,7 @@ export default class Rules extends React.Component {
     });
   };
 
-  handleCancelClick = (e) => {
+  handleCancelClick = e => {
     e.preventDefault();
 
     this.setState({
@@ -85,40 +85,40 @@ export default class Rules extends React.Component {
     });
   };
 
-  handleDeleteClick = (id) => () => {
+  handleDeleteClick = id => () => {
     const pid = this.props.alarm.current.data.id;
     this.props.deleteAlarmRule({ pid, id });
   };
 
-  handleSelectCondition = (value) => {
+  handleSelectCondition = value => {
     this.setState({
       ...this.state,
       condition: value,
     });
   };
 
-  handleSelectStatus = (value) => {
+  handleSelectStatus = value => {
     this.setState({
       ...this.state,
       status: value,
     });
   };
 
-  handleSelectPeriod = (value) => {
+  handleSelectPeriod = value => {
     this.setState({
       ...this.state,
       period: value,
     });
   };
 
-  handleSelectItem = (value) => {
+  handleSelectItem = value => {
     this.setState({
       ...this.state,
       item: value,
     });
   };
 
-  handleInputChange = (value) => {
+  handleInputChange = value => {
     this.setState({
       ...this.state,
       threshold: value,
@@ -142,7 +142,7 @@ export default class Rules extends React.Component {
                 cancelText="取消"
                 onConfirm={this.handleDeleteClick(rule.id)}
               >
-                <i className={ classNames('portalicon', 'portalicon-delete', 'delete') }></i>
+                <i className={classNames('portalicon', 'portalicon-delete', 'delete')}></i>
               </Popconfirm>
             </a>
           </Col>
@@ -168,7 +168,7 @@ export default class Rules extends React.Component {
                 cancelText="取消"
                 onConfirm={this.handleDeleteClick(rule.id)}
               >
-                <i className={ classNames('portalicon', 'portalicon-delete', 'delete') }></i>
+                <i className={classNames('portalicon', 'portalicon-delete', 'delete')}></i>
               </Popconfirm>
             </a>
           </Col>
@@ -306,16 +306,16 @@ export default class Rules extends React.Component {
               {isService ? status : input}
               {isService ? null : inputStatus}
               <a
-                className={ classNames('save') }
+                className={classNames('save')}
                 onClick={this.handleSaveClick}
               >
-                <i className={ classNames('portalicon', 'portalicon-save', 'save') }></i>
+                <i className={classNames('portalicon', 'portalicon-save', 'save')}></i>
               </a>
               <a
-                className={ classNames('cancel') }
+                className={classNames('cancel')}
                 onClick={this.handleCancelClick}
               >
-                <i className={ classNames('portalicon', 'portalicon-cancel', 'cancel') }></i>
+                <i className={classNames('portalicon', 'portalicon-cancel', 'cancel')}></i>
               </a>
             </FormItem>
           </Row>

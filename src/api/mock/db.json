@@ -1033,15 +1033,12 @@
       ]
     }
   ],
-  "netWorksCount": {
-    "count": 10
-  },
   "subnets": [
     {
       "id": "56fa52498b4407db209e7a8f1",
       "name": "subnet1",
       "cidr": "192.168.0.0/24",
-      "ipVersion": 4,
+      "ipVersion": "4",
       "gateway": "192.168.1.1",
       "dhcp": true,
       "status": "available",
@@ -1067,7 +1064,7 @@
       "id": "56fa52498b4407db209e7a8f2",
       "name": "subnet2",
       "cidr": "192.168.0.0/24",
-      "ipVersion": 6,
+      "ipVersion": "6",
       "gateway": "192.168.1.1",
       "dhcp": true,
       "status": "available",
@@ -1093,7 +1090,7 @@
       "id": "56fa52498b4407db209e7a8f3",
       "name": "subnet3",
       "cidr": "192.168.0.0/24",
-      "ipVersion": 6,
+      "ipVersion": "6",
       "gateway": "192.168.1.1",
       "dhcp": true,
       "status": "available",
@@ -1119,7 +1116,7 @@
       "id": "56fa52498b4407db209e7a8f4",
       "name": "subnet4",
       "cidr": "192.168.0.0/24",
-      "ipVersion": 4,
+      "ipVersion": "4",
       "gateway": "192.168.1.1",
       "dhcp": true,
       "status": "available",
@@ -1145,7 +1142,7 @@
       "id": "56fa52498b4407db209e7a8f5",
       "name": "subnet5",
       "cidr": "192.168.0.0/24",
-      "ipVersion": 6,
+      "ipVersion": "6",
       "gateway": "192.168.1.1",
       "dhcp": true,
       "status": "available",
@@ -1171,7 +1168,7 @@
       "id": "56fa52498b4407db209e7a8f6",
       "name": "subnet6",
       "cidr": "192.168.0.0/24",
-      "ipVersion": 6,
+      "ipVersion": "6",
       "gateway": "192.168.1.1",
       "dhcp": true,
       "status": "available",
@@ -1197,7 +1194,7 @@
       "id": "56fa52498b4407db209e7a8f7",
       "name": "subnet7",
       "cidr": "192.168.0.0/24",
-      "ipVersion": 4,
+      "ipVersion": "4",
       "gateway": "192.168.1.1",
       "dhcp": true,
       "status": "available",
@@ -1223,7 +1220,7 @@
       "id": "56fa52498b4407db209e7a8f8",
       "name": "subnet8",
       "cidr": "192.168.0.0/24",
-      "ipVersion": 6,
+      "ipVersion": "6",
       "gateway": "192.168.1.1",
       "dhcp": true,
       "status": "available",
@@ -1249,7 +1246,7 @@
       "id": "56fa52498b4407db209e7a8f9",
       "name": "subnet9",
       "cidr": "192.168.0.0/24",
-      "ipVersion": 4,
+      "ipVersion": "4",
       "gateway": "192.168.1.1",
       "dhcp": true,
       "status": "available",
@@ -1272,9 +1269,6 @@
       ]
     }
   ],
-  "subnetsCount": {
-    "count": 10
-  },
   "floatingIps": [
     {
       "id": "57047098f597fdb6c3920db6",
@@ -2384,66 +2378,48 @@
       "id": "57046e28604d9f2d2e225263",
       "name": "路由0",
       "status": "删除中",
-      "floatingIp": {
-        "id": "57047098f597fdb6c3920db6",
-        "name": "Cloverdale"
-      },
-      "publicGateway": false,
+      "floatingIp": "1.1.1.1",
+      "gateway": "enabled",
       "createdAt": "4分钟前"
     },
     {
       "id": "57046e28c86ee2a77ef1a333",
       "name": "路由1",
       "status": "创建中",
-      "floatingIp": {
-        "id": "57047098f597fdb6c3920db6",
-        "name": "Cloverdale"
-      },
-      "publicGateway": false,
+      "floatingIp": "1.1.1.1",
+      "gateway": "enabled",
       "createdAt": "几秒钟前"
     },
     {
       "id": "57046e28b05eb6b6ee862324",
       "name": "路由2",
       "status": "使用中",
-      "floatingIp": {
-        "id": "57047098f597fdb6c3920db6",
-        "name": "Cloverdale"
-      },
-      "publicGateway": false,
+      "floatingIp": "1.1.1.1",
+      "gateway": "enabled",
       "createdAt": "4天前"
     },
     {
       "id": "57046e28f381bd9c918c41a5",
       "name": "路由3",
       "status": "创建中",
-      "floatingIp": {
-        "id": "57047098f597fdb6c3920db6",
-        "name": "Cloverdale"
-      },
-      "publicGateway": false,
+      "floatingIp": "1.1.1.1",
+      "gateway": "enabled",
       "createdAt": "2小时前"
     },
     {
       "id": "57046e2868329c9e239e758b",
       "name": "路由4",
       "status": "删除中",
-      "floatingIp": {
-        "id": "57047098f597fdb6c3920db6",
-        "name": "Cloverdale"
-      },
-      "publicGateway": false,
+      "floatingIp": "1.1.1.1",
+      "gateway": "enabled",
       "createdAt": "2小时前"
     },
     {
       "id": "57046e28bc885a54a5206a6d",
       "name": "路由5",
       "status": "创建中",
-      "floatingIp": {
-        "id": "57047098f597fdb6c3920db6",
-        "name": "Cloverdale"
-      },
-      "publicGateway": false,
+      "floatingIp": "1.1.1.1",
+      "gateway": "enabled",
       "createdAt": "1月前"
     }
   ],
@@ -2984,6 +2960,7 @@
     }
   ],
   "tokens": [],
+  "signup": [],
   "users": [
     {
       "id": "1asdfua0sdf8a12346",
@@ -2991,7 +2968,7 @@
       "name": "name3",
       "email": "5xxx@xxx.com",
       "phone": "12345678910",
-      "company": "fnst",
+      "company": "sds",
       "enabled": true,
       "createdAt": "2016-03-03 04:27:21",
       "password": "*************"
@@ -3002,7 +2979,7 @@
       "name": "name4",
       "email": "6xxx@xxx.com",
       "phone": "10987654321",
-      "company": "fnst",
+      "company": "sds",
       "enabled": false,
       "createdAt": "2016-03-03 04:27:21",
       "password": "***************"
@@ -3012,7 +2989,6 @@
     {
       "id":"3d0313eb-3e0a-4fc0-90dc-0bbe584c6bbf",
       "name":"pool1",
-      "tenant":"4446cfc297c949198f1d1b80e123e60f",
       "t_cpus":10,
       "t_mems":10240,
       "u_cpus":4,
@@ -3023,9 +2999,9 @@
         "CUCCIps":1,
         "BGPIps":1
       },
-      "t_volumes":{
-        "performance":21,
-        "capacity":31
+      "t_volumes": {
+        "performance": 1024,
+        "capacity": 1024
       },
       "u_fips":{
         "CTCCIps":0,
@@ -3064,8 +3040,30 @@
           "name": "default",
           "type": "instance",
           "status": "running",
+          "image": {
+            "id": "259eb7ec-6714-465d-ad67-75858d10b501",
+            "name": "cent os"
+          },
+          "ips": ["192.168.1.2"],
+          "floatingIps": ["223.45.6.26"],
           "createdAt": "2016-03-03 04:27:21",
-          "updatedAt": "2016-03-03 04:27:21"
+          "updatedAt": "2016-03-03 04:27:21",
+          "networks": ["57047098f597fdb6c3920db6","57047098f597fdb6c3920db61"]
+        },
+        {
+          "id": "259eb7ec-6714-465d-ad67-75858d10b5001",
+          "name": "default",
+          "type": "instance",
+          "status": "running",
+          "image": {
+            "id": "259eb7ec-6714-465d-ad67-75858d10b501",
+            "name": "cent os"
+          },
+          "ips": ["192.168.1.2"],
+          "floatingIps": ["223.45.6.26"],
+          "createdAt": "2016-03-03 04:27:21",
+          "updatedAt": "2016-03-03 04:27:21",
+          "networks": ["57047098f597fdb6c3920db61"]
         }
       ],
       "storage": [
@@ -3085,7 +3083,37 @@
           "type": "floatingIp",
           "status": "创建中",
           "createdAt": "2016-03-03 04:27:21",
-          "updatedAt": "2016-03-03 04:27:21"
+          "updatedAt": "2016-03-03 04:27:21",
+          "servers": ["259eb7ec-6714-465d-ad67-75858d10b500","259eb7ec-6714-465d-ad67-75858d10b5001"]
+        },
+        {
+          "id": "57047098f597fdb6c3920db61",
+          "name": "default",
+          "type": "floatingIp",
+          "status": "创建中",
+          "createdAt": "2016-03-03 04:27:21",
+          "updatedAt": "2016-03-03 04:27:21",
+          "servers": ["259eb7ec-6714-465d-ad67-75858d10b5001"]
+        }
+      ],
+      "router": [
+        {
+          "id": "g",
+          "name": "router",
+          "networks": ["57047098f597fdb6c3920db6","57047098f597fdb6c3920db61"],
+          "servers": ["259eb7ec-6714-465d-ad67-75858d10b500","259eb7ec-6714-465d-ad67-75858d10b5001"],
+          "status": "active",
+          "gateway": "192.168.1.1",
+          "createdAt": "2016-04-21T15:14:07+08:00"
+        },
+        {
+          "id": "h",
+          "name": "router",
+          "networks": ["57047098f597fdb6c3920db61"],
+          "servers": ["259eb7ec-6714-465d-ad67-75858d10b5001"],
+          "status": "active",
+          "gateway": "192.168.1.1",
+          "createdAt": "2016-04-21T15:14:07+08:00"
         }
       ]
     },

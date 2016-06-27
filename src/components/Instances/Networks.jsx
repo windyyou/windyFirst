@@ -69,7 +69,7 @@ export default class Networks extends React.Component {
     });
   };
 
-  handleSaveClick = (e) => {
+  handleSaveClick = e => {
     e.preventDefault();
 
     const pid = this.props.instance.current.data.id;
@@ -85,7 +85,7 @@ export default class Networks extends React.Component {
     });
   };
 
-  handleCancelClick = (e) => {
+  handleCancelClick = e => {
     e.preventDefault();
 
     this.setState({
@@ -95,14 +95,14 @@ export default class Networks extends React.Component {
     });
   };
 
-  handleSelectChange = (value) => {
+  handleSelectChange = value => {
     this.setState({
       ...this.state,
       ids: value,
     });
   };
 
-  handleDeleteNetwork = (id) => () => {
+  handleDeleteNetwork = id => () => {
     const pid = this.props.instance.current.data.id;
     this.props.deleteNetwork({ pid, id });
   };
@@ -135,7 +135,7 @@ export default class Networks extends React.Component {
                 cancelText="取消"
                 onConfirm={this.handleDeleteNetwork(network.port.id)}
               >
-                <i className={ classNames('portalicon', 'portalicon-delete', 'delete') }></i>
+                <i className={classNames('portalicon', 'portalicon-delete', 'delete')}></i>
               </Popconfirm>
             </a>
           </Col>
@@ -162,7 +162,7 @@ export default class Networks extends React.Component {
     const hasNetwork = network.list.data.length > 0;
     const props = this.props.instance.current.data.networks;
     const data = !hasNetwork ? null : differenceBy(network.list.data, props, 'id');
-    const networkSelect = !hasNetwork ? null : data.map((datum) =>
+    const networkSelect = !hasNetwork ? null : data.map(datum =>
       <Option key={datum.id} value={datum.id}>{datum.name}</Option>
     );
     const message = !hasNetwork ? 'loading...' : '请选择网络';
@@ -192,16 +192,16 @@ export default class Networks extends React.Component {
           </Col>
           <Col span="2" className="verticalCenter">
             <a
-              className={ classNames('save') }
+              className={classNames('save')}
               onClick={this.handleSaveClick}
             >
-              <i className={ classNames('portalicon', 'portalicon-save', 'save') }></i>
+              <i className={classNames('portalicon', 'portalicon-save', 'save')}></i>
             </a>
             <a
-              className={ classNames('cancel') }
+              className={classNames('cancel')}
               onClick={this.handleCancelClick}
             >
-              <i className={ classNames('portalicon', 'portalicon-cancel', 'cancel') }></i>
+              <i className={classNames('portalicon', 'portalicon-cancel', 'cancel')}></i>
             </a>
           </Col>
         </Row>

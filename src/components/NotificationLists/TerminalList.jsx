@@ -39,7 +39,7 @@ export default class TerminalList extends React.Component {
   }
 
   componentWillUnmount() {
-    lodashValues(this.state.timers).forEach((idTimer) => {
+    lodashValues(this.state.timers).forEach(idTimer => {
       clearInterval(idTimer.timer);
     });
   }
@@ -47,7 +47,7 @@ export default class TerminalList extends React.Component {
   setTimersInitState = () => {
     const terminals = this.props.notificationList.current.data.terminals;
     const timers = {};
-    terminals.forEach((terminal) => {
+    terminals.forEach(terminal => {
       if (!terminal.verified) {
         timers[terminal.id] = {
           seconds: 0,
@@ -80,7 +80,7 @@ export default class TerminalList extends React.Component {
     });
   };
 
-  handleSaveClick = (e) => {
+  handleSaveClick = e => {
     e.preventDefault();
 
     const pid = this.props.notificationList.current.data.id;
@@ -96,7 +96,7 @@ export default class TerminalList extends React.Component {
     });
   };
 
-  handleCancelClick = (e) => {
+  handleCancelClick = e => {
     e.preventDefault();
 
     this.setState({
@@ -105,12 +105,12 @@ export default class TerminalList extends React.Component {
     });
   };
 
-  handleDeleteClick = (id) => () => {
+  handleDeleteClick = id => () => {
     const pid = this.props.notificationList.current.data.id;
     this.props.deleteNotificationListTerminal({ pid, id });
   };
 
-  handleSelectChange = (value) => {
+  handleSelectChange = value => {
     const tips = value === 'EMail' ? '邮箱地址' : '手机号码';
 
     this.setState({
@@ -120,14 +120,14 @@ export default class TerminalList extends React.Component {
     });
   };
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.setState({
       ...this.state,
       inputValue: e.target.value,
     });
   };
 
-  handleSendLink = (id) => () => {
+  handleSendLink = id => () => {
     this.initTimers(id, 60);
 
     const timer = window.setInterval(() => {
@@ -183,34 +183,34 @@ export default class TerminalList extends React.Component {
             />
           </Col>
           <Col span="2" className="lineHeight30px">
-          <a
-            className={ classNames('save', 'marginLeft10px') }
-            href="#"
-            onClick={this.handleSaveClick}
-          >
-            <i className={ classNames('portalicon', 'portalicon-save', 'save') }></i>
-          </a>
-          <a
-            className={ classNames('cancel', 'marginLeft10px') }
-            href="#"
-            onClick={this.handleCancelClick}
-          >
-            <i className={ classNames('portalicon', 'portalicon-cancel', 'cancel') }></i>
-          </a>
+            <a
+              className={classNames('save', 'marginLeft10px')}
+              href="#"
+              onClick={this.handleSaveClick}
+            >
+              <i className={classNames('portalicon', 'portalicon-save', 'save')}></i>
+            </a>
+            <a
+              className={classNames('cancel', 'marginLeft10px')}
+              href="#"
+              onClick={this.handleCancelClick}
+            >
+              <i className={classNames('portalicon', 'portalicon-cancel', 'cancel')}></i>
+            </a>
           </Col>
         </Row>
       </div>
     );
   }
 
-  renderVerifiedStatus = (terminal) => (
+  renderVerifiedStatus = terminal => (
     <Col span="8">
-      { terminal.verified ? '已验证' : '验证码已发送' } <br />
-      { terminal.verified ? '' : this.renderSendLink(terminal.id) }
+      {terminal.verified ? '已验证' : '验证码已发送'} <br />
+      {terminal.verified ? '' : this.renderSendLink(terminal.id)}
     </Col>
   );
 
-  renderSendLink = (id) => {
+  renderSendLink = id => {
     const seconds = this.state.timers[id].seconds;
     const tips = `${seconds}秒后重新发送`;
 
@@ -238,7 +238,7 @@ export default class TerminalList extends React.Component {
               href="#"
               onClick={this.handleDeleteClick(terminal.id)}
             >
-              <i className={ classNames('portalicon', 'portalicon-delete', 'delete') }></i>
+              <i className={classNames('portalicon', 'portalicon-delete', 'delete')}></i>
             </a>
           </Col>
         </Row>)}

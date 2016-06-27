@@ -3,6 +3,7 @@ const autoprefixer = require('autoprefixer');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
 module.exports = {
   context: path.join(__dirname, './src'),
@@ -12,28 +13,50 @@ module.exports = {
       'webpack-hot-middleware/client?reload=true',
       './index.js',
     ],
-    vendors: ['react', 'react-dom', 'redux', 'react-redux', 'react-router', 'react-router-redux'],
+    vendors: [
+      'antd',
+      'classnames',
+      'd3',
+      'jwt-decode',
+      'lodash',
+      'query-string',
+      'react',
+      'react-addons-transition-group',
+      'react-dom',
+      'react-redux',
+      'react-router',
+      'react-router-redux',
+      'react-router-scroll',
+      'recharts',
+      'redux',
+      'redux-actions',
+      'redux-thunk',
+      'reselect',
+      'whatwg-fetch',
+    ],
   },
 
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: '[name].js',
+    filename: '[name].[hash].js',
     publicPath: '/',
-    sourceMapFilename: '[name].js.map',
-    chunkFilename: '[id].js',
+    sourceMapFilename: '[name].[hash].js.map',
+    chunkFilename: '[id].[hash].js',
   },
 
   devtool: 'cheap-module-eval-source-map',
 
   plugins: [
+    new ProgressBarPlugin(),
     new HtmlWebpackPlugin({
       template: './index.html',
       inject: 'body',
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
-    new webpack.optimize.CommonsChunkPlugin('vendors', '[name].js'),
-    new ExtractTextPlugin('[name].css'),
+    new webpack.optimize.CommonsChunkPlugin('vendors', '[name].[hash].js'),
+    new webpack.optimize.OccurrenceOrderPlugin(true),
+    new ExtractTextPlugin('[name].[hash].css'),
     new webpack.DefinePlugin({
       'process.env': { NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development') },
     }),

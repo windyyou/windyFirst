@@ -1,5 +1,7 @@
 import isPromise from '../utils/isPromise';
 import isNil from 'lodash/isNil';
+import notification from 'antd/lib/notification';
+import message from '../utils/message';
 
 export default () => next => action => {
   if (!(action.payload && isPromise(action.payload.promise))) {
@@ -22,8 +24,21 @@ export default () => next => action => {
   next({
     type: REQUEST,
     ...(!isNil(data) && { payload: data }),
-    ...(!isNil(meta) && meta),
+    ...(!isNil(meta) && { meta }),
   });
+
+  notification.config({
+    top: 74,
+    duration: 3,
+  });
+
+  // hide fetch success messages, cause they are too noisy...
+  if (!/^FETCH/.test(REQUEST)) {
+    notification.info({
+      message: message(REQUEST),
+      description: message(REQUEST),
+    });
+  }
 
   return promise.then(
     response => {
@@ -31,6 +46,14 @@ export default () => next => action => {
         type: SUCCESS,
         payload: response,
       });
+
+      // hide fetch success messages, cause they are too noisy...
+      if (!/^FETCH/.test(SUCCESS)) {
+        notification.success({
+          message: message(SUCCESS),
+          description: message(SUCCESS),
+        });
+      }
 
       return response;
     }
@@ -40,6 +63,11 @@ export default () => next => action => {
         type: FAILURE,
         payload: error,
         error: true,
+      });
+
+      notification.error({
+        message: message(FAILURE),
+        description: error.message,
       });
 
       return error;

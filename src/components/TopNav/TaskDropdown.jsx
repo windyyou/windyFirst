@@ -35,8 +35,8 @@ export default class TaskDropdown extends React.Component {
     return (
       <li>
         <Dropdown
-          overlay={ this.getContent() }
-          trigger={ ['click'] }
+          overlay={this.getContent()}
+          trigger={['click']}
         >
           <a href="#"><Icon type="bars" /> 任务</a>
         </Dropdown>

@@ -10,7 +10,7 @@ import Input from 'antd/lib/input';
 
 const FormItem = Form.Item;
 
-export default class Volumes extends React.Component {
+class Volumes extends React.Component {
   static propTypes = {
     volume: React.PropTypes.shape({
       current: React.PropTypes.shape({
@@ -46,8 +46,8 @@ export default class Volumes extends React.Component {
     });
   };
 
-  handleSaveClick = (e) => {
-    this.props.form.validateFields((errors) => {
+  handleSaveClick = e => {
+    this.props.form.validateFields(errors => {
       e.preventDefault();
       if (!!errors) {
         this.setState({
@@ -71,7 +71,7 @@ export default class Volumes extends React.Component {
     });
   };
 
-  handleCancelClick = (e) => {
+  handleCancelClick = e => {
     e.preventDefault();
 
     this.setState({
@@ -81,12 +81,12 @@ export default class Volumes extends React.Component {
     this.props.form.resetFields();
   };
 
-  handleDeleteBackup = (id) => () => {
+  handleDeleteBackup = id => () => {
     const pid = this.props.volume.current.data.id;
     this.props.deleteBackup({ pid, id });
   };
 
-  handleNameChange = (e) => {
+  handleNameChange = e => {
     this.setState({
       name: e.target.value,
     });
@@ -110,7 +110,7 @@ export default class Volumes extends React.Component {
                 cancelText="取消"
                 onConfirm={this.handleDeleteBackup(backup.id)}
               >
-                <i className={ classNames('portalicon', 'portalicon-delete', 'delete') }></i>
+                <i className={classNames('portalicon', 'portalicon-delete', 'delete')}></i>
               </Popconfirm>
             </a>
           </Col>
@@ -165,18 +165,18 @@ export default class Volumes extends React.Component {
             </FormItem>
             <FormItem>
               <a
-                className={ classNames('save') }
+                className={classNames('save')}
                 onClick={this.handleSaveClick}
               >
-                <i className={ classNames('portalicon', 'portalicon-save', 'save') }></i>
+                <i className={classNames('portalicon', 'portalicon-save', 'save')}></i>
               </a>
-              </FormItem>
+            </FormItem>
             <FormItem>
               <a
-                className={ classNames('cancel') }
+                className={classNames('cancel')}
                 onClick={this.handleCancelClick}
               >
-                <i className={ classNames('portalicon', 'portalicon-cancel', 'cancel') }></i>
+                <i className={classNames('portalicon', 'portalicon-cancel', 'cancel')}></i>
               </a>
             </FormItem>
           </Row>

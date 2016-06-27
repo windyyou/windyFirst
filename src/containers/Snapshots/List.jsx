@@ -11,7 +11,7 @@ import { createSelector } from 'reselect';
 import classNames from 'classnames';
 import includes from '../../../node_modules/lodash/includes';
 import uniq from '../../../node_modules/lodash/uniq';
-
+import AbstractList from '../AbstractList';
 import { fetchSnapshots, filterSnapshots, deleteSnapshot } from '../../actions/snapshot';
 
 const InputGroup = Input.Group;
@@ -36,11 +36,7 @@ function getColumns(data) {
   ];
 }
 
-function loadData(props) {
-  props.fetchSnapshots();
-}
-
-class List extends React.Component {
+class List extends AbstractList {
   static propTypes = {
     snapshot: React.PropTypes.shape({
       filter: React.PropTypes.string,
@@ -73,8 +69,8 @@ class List extends React.Component {
     };
   }
 
-  componentDidMount() {
-    loadData(this.props);
+  loadData(props) {
+    props.fetchSnapshots();
   }
 
   getRowKey(snapshot) {
@@ -84,24 +80,24 @@ class List extends React.Component {
   handleDelete = () => {
     this.props.deleteSnapshot(this.state.selectedRowKeys[0]);
     this.setState({ ...this.state, selectedRowKeys: [] });
-    this.context.router.push('/app/snapshots/');
+    this.context.router.push('/app/snapshots');
   };
 
-  handleChange = (selectedRowKeys) => {
+  handleChange = selectedRowKeys => {
     this.setState({ selectedRowKeys });
   };
 
-  handleCreateClick = (event) => {
+  handleCreateClick = event => {
     event.preventDefault();
     this.context.router.push('/app/instances/new/step-1');
   };
 
-  handleReload = (e) => {
+  handleReload = e => {
     e.preventDefault();
-    loadData(this.props);
+    this.loadData(this.props);
   };
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.props.filterSnapshots(e.target.value);
   };
 
@@ -195,8 +191,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchSnapshots: () => dispatch(fetchSnapshots()),
-    filterSnapshots: (filter) => dispatch(filterSnapshots(filter)),
-    deleteSnapshot: (id) => dispatch(deleteSnapshot(id)),
+    filterSnapshots: filter => dispatch(filterSnapshots(filter)),
+    deleteSnapshot: id => dispatch(deleteSnapshot(id)),
+    refresh: () => dispatch(fetchSnapshots(undefined, true)),
   };
 }
 

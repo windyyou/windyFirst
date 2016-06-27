@@ -52,11 +52,11 @@ const INITIAL_STATE = {
 };
 
 export default handleActions({
-  [FETCH_USERS_REQUEST]: (state) => ({
+  [FETCH_USERS_REQUEST]: (state, action) => ({
     ...state,
     list: {
       ...state.list,
-      isFetching: true,
+      isFetching: !(action.meta && action.meta.refresh),
     },
   }),
 
@@ -80,7 +80,7 @@ export default handleActions({
     },
   }),
 
-  [FETCH_USER_REQUEST]: (state) => ({
+  [FETCH_USER_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -113,7 +113,7 @@ export default handleActions({
     filter: action.payload,
   }),
 
-  [ENABLE_USER_REQUEST]: (state) => ({
+  [ENABLE_USER_REQUEST]: state => ({
     ...state,
     isFetching: true,
   }),
@@ -138,7 +138,7 @@ export default handleActions({
     },
   }),
 
-  [DISABLE_USER_REQUEST]: (state) => ({
+  [DISABLE_USER_REQUEST]: state => ({
     ...state,
     isFetching: true,
   }),
@@ -163,7 +163,7 @@ export default handleActions({
     },
   }),
 
-  [RESET_USER_PASSWORD_REQUEST]: (state) => ({
+  [RESET_USER_PASSWORD_REQUEST]: state => ({
     ...state,
     isFetching: true,
   }),

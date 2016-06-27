@@ -14,7 +14,7 @@ class Step3 extends React.Component {
     handleSpecChange: React.PropTypes.func.isRequired,
   };
 
-  handleChangeCheck = (name) => (e) => {
+  handleChangeCheck = name => e => {
     const event = {
       target: {
         name,
@@ -25,8 +25,8 @@ class Step3 extends React.Component {
     this.props.handleSpecChange(event);
   };
 
-  handleSubmit = (e) => {
-    this.props.form.validateFields((errors) => {
+  handleSubmit = e => {
+    this.props.form.validateFields(errors => {
       if (!!errors) {
         return;
       }

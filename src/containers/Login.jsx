@@ -39,7 +39,7 @@ class Login extends React.Component {
     document.body.style.backgroundColor = 'transparent';
   }
 
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((errors, values) => {
       if (!!errors) {
@@ -53,7 +53,7 @@ class Login extends React.Component {
     });
   };
 
-  handleRedirectToSignUp = (e) => {
+  handleRedirectToSignUp = e => {
     e.preventDefault();
     this.context.router.push('/sign-up');
   };
@@ -127,7 +127,7 @@ class Login extends React.Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    login: (credentials) => dispatch(login(credentials)),
+    login: credentials => dispatch(login(credentials)),
   };
 }
 

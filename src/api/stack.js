@@ -44,8 +44,7 @@ export function fetchStackConfig() {
 }
 
 export function updateStack(param) {
-  const { id } = param;
-  const url = `${API}/${id}`;
+  const url = `${API}/${param.id}`;
   return fetch(url, {
     ...fetchOptions(),
     method: 'PUT',
@@ -56,8 +55,7 @@ export function updateStack(param) {
 }
 
 export function createStack(param) {
-  const url = `${API}`;
-  return fetch(url, {
+  return fetch(API, {
     ...fetchOptions(),
     method: 'POST',
 

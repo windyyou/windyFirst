@@ -4,8 +4,9 @@ import Col from 'antd/lib/col';
 import AggregationInfoPanel from './AggregationInfoPanel.jsx';
 
 import aggregationConfig from '../../api/mock/aggregation.json';
+import AbstractList from '../../containers/AbstractList';
 
-export default class AggregationInfos extends React.Component {
+export default class AggregationInfos extends AbstractList {
   renderShow(entities) {
     const aggregations = entities.map((entry, i) => ({
       ...aggregationConfig[i],
@@ -72,4 +73,5 @@ AggregationInfos.propTypes = {
       value: React.PropTypes.number.isRequired,
     })),
   }).isRequired,
+  refresh: React.PropTypes.func.isRequired,
 };

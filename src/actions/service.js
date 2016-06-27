@@ -6,7 +6,7 @@ import {
 import * as serviceAPI from '../api/service';
 
 export function fetchServices(params) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       FETCH_SERVICES_REQUEST,
       FETCH_SERVICES_SUCCESS,

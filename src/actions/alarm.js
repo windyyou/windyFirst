@@ -53,13 +53,16 @@ import {
 } from '../constants/alarm';
 import * as alarmAPI from '../api/alarm';
 
-export function fetchAlarms(params) {
-  return (dispatch) => dispatch({
+export function fetchAlarms(params, refresh = false) {
+  return dispatch => dispatch({
     types: [
       FETCH_ALARMS_REQUEST,
       FETCH_ALARMS_SUCCESS,
       FETCH_ALARMS_FAILURE,
     ],
+    meta: {
+      refresh,
+    },
     payload: {
       promise: alarmAPI.fetchAlarms(params),
     },
@@ -67,7 +70,7 @@ export function fetchAlarms(params) {
 }
 
 export function fetchAlarmConfig() {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       FETCH_ALARM_CONFIG_REQUEST,
       FETCH_ALARM_CONFIG_SUCCESS,
@@ -94,7 +97,7 @@ export function selectAlarmResourceType(type) {
 }
 
 export function fetchAlarm(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       FETCH_ALARM_REQUEST,
       FETCH_ALARM_SUCCESS,
@@ -107,7 +110,7 @@ export function fetchAlarm(id) {
 }
 
 export function updateAlarm(params) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       UPDATE_ALARM_REQUEST,
       UPDATE_ALARM_SUCCESS,
@@ -120,7 +123,7 @@ export function updateAlarm(params) {
 }
 
 export function createAlarm(params) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       CREATE_ALARM_REQUEST,
       CREATE_ALARM_SUCCESS,
@@ -133,7 +136,7 @@ export function createAlarm(params) {
 }
 
 export function deleteAlarm(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       DELETE_ALARM_REQUEST,
       DELETE_ALARM_SUCCESS,
@@ -141,7 +144,7 @@ export function deleteAlarm(id) {
     ],
     payload: {
       promise: alarmAPI.deleteAlarm(id)
-        .then((data) => {
+        .then(data => {
           dispatch(fetchAlarms());
           return data;
         }),
@@ -150,7 +153,7 @@ export function deleteAlarm(id) {
 }
 
 export function addAlarmResource(params) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       ADD_ALARM_RESOURCE_REQUEST,
       ADD_ALARM_RESOURCE_SUCCESS,
@@ -163,7 +166,7 @@ export function addAlarmResource(params) {
 }
 
 export function addAlarmRule(params) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       ADD_ALARM_RULE_REQUEST,
       ADD_ALARM_RULE_SUCCESS,
@@ -176,7 +179,7 @@ export function addAlarmRule(params) {
 }
 
 export function addAlarmNotification(params) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       ADD_ALARM_NOTIFICATION_REQUEST,
       ADD_ALARM_NOTIFICATION_SUCCESS,
@@ -190,7 +193,7 @@ export function addAlarmNotification(params) {
 
 export function deleteAlarmRule(params) {
   const { pid } = params;
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       DELETE_ALARM_RULE_REQUEST,
       DELETE_ALARM_RULE_SUCCESS,
@@ -198,7 +201,7 @@ export function deleteAlarmRule(params) {
     ],
     payload: {
       promise: alarmAPI.deleteAlarmRule(params)
-        .then((data) => {
+        .then(data => {
           dispatch(fetchAlarms(pid));
           return data;
         }),
@@ -208,7 +211,7 @@ export function deleteAlarmRule(params) {
 
 export function deleteAlarmResource(params) {
   const { pid } = params;
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       DELETE_ALARM_RESOURCE_REQUEST,
       DELETE_ALARM_RESOURCE_SUCCESS,
@@ -216,7 +219,7 @@ export function deleteAlarmResource(params) {
     ],
     payload: {
       promise: alarmAPI.deleteAlarmResource(params)
-        .then((data) => {
+        .then(data => {
           dispatch(fetchAlarm(pid));
           return data;
         }),
@@ -226,7 +229,7 @@ export function deleteAlarmResource(params) {
 
 export function deleteAlarmNotification(params) {
   const { pid } = params;
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       DELETE_ALARM_NOTIFICATION_REQUEST,
       DELETE_ALARM_NOTIFICATION_SUCCESS,
@@ -234,7 +237,7 @@ export function deleteAlarmNotification(params) {
     ],
     payload: {
       promise: alarmAPI.deleteAlarmNotification(params)
-        .then((data) => {
+        .then(data => {
           dispatch(fetchAlarm(pid));
           return data;
         }),

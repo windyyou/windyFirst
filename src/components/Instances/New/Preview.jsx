@@ -34,37 +34,37 @@ export default function Preview(props) {
       <div className="panel-body">
         <table className="table table-hover">
           <tbody>
-          <tr>
-            <th>名称</th>
-            <td>{spec.name}</td>
-          </tr>
-          <tr>
-            <th>镜像</th>
-            <td>{dict(spec.source, source.list.data, 'id', 'name')}</td>
-          </tr>
-          <tr>
-            <th>CPU</th>
-            <td>{spec.core}核</td>
-          </tr>
-          <tr>
-            <th>内存</th>
-            <td>{spec.ram}G</td>
-          </tr>
-          <tr>
-            <th>系统盘类型</th>
-            <td>{dict(spec.volumeType, instance.config.data.volume.type, 'id', 'name')}</td>
-          </tr>
-          <tr>
-            <th>系统盘容量</th>
-            <td>{instance.config.data.volume.size}G</td>
-          </tr>
-          <tr>
-            <th>子网</th>
-            <td>{spec.networkType === 'basic' ?
-              '基础网络' :
-              dict(spec.subnet, subnet.list.data, 'id', 'name')}
-            </td>
-          </tr>
+            <tr>
+              <th>名称</th>
+              <td>{spec.name}</td>
+            </tr>
+            <tr>
+              <th>镜像</th>
+              <td>{dict(spec.source, source.list.data, 'id', 'name')}</td>
+            </tr>
+            <tr>
+              <th>CPU</th>
+              <td>{spec.core}核</td>
+            </tr>
+            <tr>
+              <th>内存</th>
+              <td>{spec.ram}G</td>
+            </tr>
+            <tr>
+              <th>系统盘类型</th>
+              <td>{dict(spec.volumeType, instance.config.data.volume.type, 'id', 'name')}</td>
+            </tr>
+            <tr>
+              <th>系统盘容量</th>
+              <td>{instance.config.data.volume.size}G</td>
+            </tr>
+            <tr>
+              <th>子网</th>
+              <td>{spec.networkType === 'basic' ?
+                '基础网络' :
+                dict(spec.subnet, subnet.list.data, 'id', 'name')}
+              </td>
+            </tr>
           </tbody>
         </table>
         <hr />

@@ -15,7 +15,7 @@ const INITIAL_STATE = {
 };
 
 export default handleActions({
-  [FETCH_SERVICES_REQUEST]: (state) => ({
+  [FETCH_SERVICES_REQUEST]: state => ({
     ...state,
     list: {
       ...state.list,

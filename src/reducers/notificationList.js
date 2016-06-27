@@ -51,11 +51,11 @@ const INITIAL_STATE = {
 };
 
 export default handleActions({
-  [FETCH_NOTIFICATION_LISTS_REQUEST]: (state) => ({
+  [FETCH_NOTIFICATION_LISTS_REQUEST]: (state, action) => ({
     ...state,
     list: {
       ...state.list,
-      isFetching: true,
+      isFetching: !(action.meta && action.meta.refresh),
     },
   }),
 
@@ -84,7 +84,7 @@ export default handleActions({
     filter: action.payload,
   }),
 
-  [FETCH_NOTIFICATION_LIST_REQUEST]: (state) => ({
+  [FETCH_NOTIFICATION_LIST_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -112,7 +112,7 @@ export default handleActions({
     },
   }),
 
-  [UPDATE_NOTIFICATION_LIST_REQUEST]: (state) => ({
+  [UPDATE_NOTIFICATION_LIST_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -140,7 +140,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_NOTIFICATION_LIST_REQUEST]: (state) => ({
+  [DELETE_NOTIFICATION_LIST_REQUEST]: state => ({
     ...state,
     list: {
       ...state.list,
@@ -148,7 +148,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_NOTIFICATION_LIST_SUCCESS]: (state) => ({
+  [DELETE_NOTIFICATION_LIST_SUCCESS]: state => ({
     ...state,
     list: {
       ...state.list,
@@ -166,7 +166,7 @@ export default handleActions({
     },
   }),
 
-  [CREATE_NOTIFICATION_LIST_REQUEST]: (state) => ({
+  [CREATE_NOTIFICATION_LIST_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -194,7 +194,7 @@ export default handleActions({
     },
   }),
 
-  [DELETE_NOTIFICATION_LIST_TERMINAL_REQUEST]: (state) => ({
+  [DELETE_NOTIFICATION_LIST_TERMINAL_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,
@@ -222,7 +222,7 @@ export default handleActions({
     },
   }),
 
-  [CREATE_NOTIFICATION_LIST_TERMINAL_REQUEST]: (state) => ({
+  [CREATE_NOTIFICATION_LIST_TERMINAL_REQUEST]: state => ({
     ...state,
     current: {
       ...state.current,

@@ -21,7 +21,7 @@ const INITIAL_STATE = {
 };
 
 export default handleActions({
-  [FETCH_IMAGES_REQUEST]: (state) => ({
+  [FETCH_IMAGES_REQUEST]: state => ({
     ...state,
     list: {
       ...state.list,

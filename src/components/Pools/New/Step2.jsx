@@ -33,11 +33,11 @@ class Step2 extends React.Component {
     handleSubmit: React.PropTypes.func.isRequired,
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     this.props.handleSubmit(e);
   };
 
-  handleInputNumberChange = (ename) => (e) => {
+  handleInputNumberChange = ename => e => {
     const event = {
       target: {
         name: ename,

@@ -32,8 +32,7 @@ export function fetchInstance(id) {
 }
 
 export function createInstance(params) {
-  const url = `${API}`;
-  return fetch(url, {
+  return fetch(API, {
     ...fetchOptions(),
     method: 'POST',
     body: JSON.stringify(params),
@@ -93,8 +92,7 @@ export function deleteVolume(param) {
 }
 
 export function updateInstance(param) {
-  const { id } = param;
-  const url = `${API}/${id}`;
+  const url = `${API}/${param.id}`;
   return fetch(url, {
     ...fetchOptions(),
     method: 'PUT',

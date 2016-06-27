@@ -16,6 +16,8 @@ import uniq from '../../../node_modules/lodash/uniq';
 
 import { fetchFloatingIps, filterFloatingIps, deleteFloatingIp } from '../../actions/floatingIp';
 
+import AbstractList from '../AbstractList';
+
 const InputGroup = Input.Group;
 const MenuItem = Menu.Item;
 
@@ -62,11 +64,7 @@ function getColumns(data) {
   ];
 }
 
-function loadData(props) {
-  props.fetchFloatingIps();
-}
-
-class List extends React.Component {
+class List extends AbstractList {
   static propTypes = {
     floatingIp: React.PropTypes.shape({
       filter: React.PropTypes.string,
@@ -102,8 +100,8 @@ class List extends React.Component {
     };
   }
 
-  componentDidMount() {
-    loadData(this.props);
+  loadData(props) {
+    props.fetchFloatingIps();
   }
 
   getRowKey(record) {
@@ -131,24 +129,24 @@ class List extends React.Component {
   handleDelete = () => {
     this.props.deleteFloatingIp(this.state.selectedRows[0].id);
     this.setState({ ...this.state, selectedRows: [] });
-    this.context.router.push('/app/floating-ips/');
+    this.context.router.push('/app/floating-ips');
   };
 
   handleChange = (selectedRowKeys, selectedRows) => {
     this.setState({ selectedRows });
   };
 
-  handleCreateClick = (event) => {
+  handleCreateClick = event => {
     event.preventDefault();
     this.context.router.push('/app/floating-ips/new/step-1');
   };
 
-  handleReload = (e) => {
+  handleReload = e => {
     e.preventDefault();
-    loadData(this.props);
+    this.loadData(this.props);
   };
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.props.filterFloatingIps(e.target.value);
   };
 
@@ -241,8 +239,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchFloatingIps: () => dispatch(fetchFloatingIps()),
-    filterFloatingIps: (filter) => dispatch(filterFloatingIps(filter)),
-    deleteFloatingIp: (id) => dispatch(deleteFloatingIp(id)),
+    filterFloatingIps: filter => dispatch(filterFloatingIps(filter)),
+    deleteFloatingIp: id => dispatch(deleteFloatingIp(id)),
+    refresh: () => dispatch(fetchFloatingIps(undefined, true)),
   };
 }
 

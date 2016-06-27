@@ -35,13 +35,16 @@ import {
 } from '../constants/volume';
 import * as volumeAPI from '../api/volume';
 
-export function fetchVolumes(params) {
-  return (dispatch) => dispatch({
+export function fetchVolumes(params, refresh = false) {
+  return dispatch => dispatch({
     types: [
       FETCH_VOLUMES_REQUEST,
       FETCH_VOLUMES_SUCCESS,
       FETCH_VOLUMES_FAILURE,
     ],
+    meta: {
+      refresh,
+    },
     payload: {
       promise: volumeAPI.fetchVolumes(params),
     },
@@ -56,7 +59,7 @@ export function filterVolumes(filter) {
 }
 
 export function deleteVolume(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       DELETE_VOLUME_REQUEST,
       DELETE_VOLUME_SUCCESS,
@@ -69,7 +72,7 @@ export function deleteVolume(id) {
 }
 
 export function fetchVolume(id) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       FETCH_VOLUME_REQUEST,
       FETCH_VOLUME_SUCCESS,
@@ -82,7 +85,7 @@ export function fetchVolume(id) {
 }
 
 export function updateVolume(params) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       UPDATE_VOLUME_REQUEST,
       UPDATE_VOLUME_SUCCESS,
@@ -95,7 +98,7 @@ export function updateVolume(params) {
 }
 
 export function deleteBackup(params) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       DELETE_VOLUME_BACKUP_REQUEST,
       DELETE_VOLUME_BACKUP_SUCCESS,
@@ -108,7 +111,7 @@ export function deleteBackup(params) {
 }
 
 export function addBackup(params) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       ADD_VOLUME_BACKUP_REQUEST,
       ADD_VOLUME_BACKUP_SUCCESS,
@@ -121,7 +124,7 @@ export function addBackup(params) {
 }
 
 export function fetchVolumeConfig() {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       FETCH_VOLUME_CONFIG_REQUEST,
       FETCH_VOLUME_CONFIG_SUCCESS,
@@ -134,7 +137,7 @@ export function fetchVolumeConfig() {
 }
 
 export function createVolume(params) {
-  return (dispatch) => dispatch({
+  return dispatch => dispatch({
     types: [
       CREATE_VOLUME_REQUEST,
       CREATE_VOLUME_SUCCESS,

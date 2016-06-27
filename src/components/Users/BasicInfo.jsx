@@ -42,9 +42,9 @@ export default class BasicInfo extends React.Component {
             <label>状态</label>
           </Col>
           <Col span="10">
-          <span className="content">
-            {enabled}
-          </span>
+            <span className="content">
+              {enabled}
+            </span>
           </Col>
         </Row>
         <Row className="rowHeight">

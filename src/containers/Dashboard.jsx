@@ -23,6 +23,9 @@ const propTypes = {
   fetchBillings: React.PropTypes.func.isRequired,
   aggregation: React.PropTypes.object.isRequired,
   fetchAggregations: React.PropTypes.func.isRequired,
+  refreshAggregations: React.PropTypes.func.isRequired,
+  refreshQuotas: React.PropTypes.func.isRequired,
+  refreshOperations: React.PropTypes.func.isRequired,
 };
 
 function loadData(props) {
@@ -40,14 +43,20 @@ class Dashboard extends React.Component {
   render() {
     return (
       <div>
-        <AggregationInfos aggregation={this.props.aggregation} />
+        <AggregationInfos
+          aggregation={this.props.aggregation}
+          refresh={this.props.refreshAggregations}
+        />
         <Row type="flex">
           <Col span="16">
             <BillingTrendsPanel data={this.props.billing} />
-            <QuotaPanel data={this.props.quota} />
+            <QuotaPanel data={this.props.quota} refresh={this.props.refreshQuotas} />
           </Col>
           <Col span="8">
-            <OperationsPanel operation={this.props.operation} />
+            <OperationsPanel
+              operation={this.props.operation}
+              refresh={this.props.refreshOperations}
+            />
           </Col>
         </Row>
       </div>
@@ -68,10 +77,13 @@ function mapStateToProps() {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchOperations: () => dispatch(fetchOperations({ _limit: 5 })),
+    fetchOperations: () => dispatch(fetchOperations({ limit: 5 })),
     fetchQuotas: () => dispatch(fetchQuotas()),
     fetchBillings: () => dispatch(fetchBillings()),
     fetchAggregations: () => dispatch(fetchAggregations()),
+    refreshOperations: () => dispatch(fetchOperations({ limit: 5 }, true)),
+    refreshQuotas: () => dispatch(fetchQuotas(undefined, true)),
+    refreshAggregations: () => dispatch(fetchAggregations(undefined, true)),
   };
 }
 

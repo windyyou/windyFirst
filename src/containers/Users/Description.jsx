@@ -64,7 +64,7 @@ function mapStateToProps() {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchUser: (key) => dispatch(fetchUser(key)),
+    fetchUser: key => dispatch(fetchUser(key)),
   };
 }
 

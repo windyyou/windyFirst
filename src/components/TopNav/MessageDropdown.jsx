@@ -54,14 +54,14 @@ export default class MessageDropdown extends React.Component {
     );
   }
 
-  handleClick = (id) =>
+  handleClick = id =>
     () => {
       this.props.fetchNotification(id);
     };
 
   render() {
     const messages = this.props.notification.list.data;
-    const unReadMessages = messages.filter((message) => !message.read);
+    const unReadMessages = messages.filter(message => !message.read);
     const hasDot = unReadMessages.length > 0;
 
     return (

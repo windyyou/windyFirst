@@ -6,7 +6,6 @@ import operation from './operation';
 import quota from './quota';
 import instance from './instance';
 import billing from './billing';
-import config from './config';
 import image from './image';
 import keypair from './keypair';
 import network from './network';
@@ -33,7 +32,6 @@ import stack from './stack';
 
 const rootReducer = combineReducers({
   router,
-  config,
   image,
   keypair,
   network,

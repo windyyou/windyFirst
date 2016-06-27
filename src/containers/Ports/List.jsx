@@ -7,13 +7,13 @@ import Popconfirm from 'antd/lib/popconfirm';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-
+import AbstractList from '../AbstractList';
 import classNames from 'classnames';
 import includes from '../../../node_modules/lodash/includes';
 import uniq from '../../../node_modules/lodash/uniq';
 
 import { fetchPorts, filterPorts, deletePort } from '../../actions/port';
-import { fetchSubnetsCount } from '../../actions/subnet';
+import { fetchNetworks } from '../../actions/network';
 
 const InputGroup = Input.Group;
 
@@ -58,12 +58,7 @@ function getColumns(data) {
   ];
 }
 
-function loadData(props) {
-  props.fetchPorts();
-  props.fetchSubnetsCount();
-}
-
-class List extends React.Component {
+class List extends AbstractList {
   static propTypes = {
     port: React.PropTypes.shape({
       filter: React.PropTypes.string,
@@ -78,14 +73,20 @@ class List extends React.Component {
           subnet: React.PropTypes.object.isRequired,
           instance: React.PropTypes.object,
           createdAt: React.PropTypes.string.isRequired,
-        })),
-      }),
-    }),
-    subnet: React.PropTypes.object.isRequired,
+        })).isRequired,
+      }).isRequired,
+    }).isRequired,
+    network: React.PropTypes.shape({
+      list: React.PropTypes.shape({
+        data: React.PropTypes.arrayOf(React.PropTypes.shape({
+          subnets: React.PropTypes.array.isRequired,
+        })).isRequired,
+      }).isRequired,
+    }).isRequired,
     fetchPorts: React.PropTypes.func.isRequired,
     filterPorts: React.PropTypes.func.isRequired,
-    fetchSubnetsCount: React.PropTypes.func.isRequired,
     deletePort: React.PropTypes.func.isRequired,
+    fetchNetworks: React.PropTypes.func.isRequired,
   };
 
   static contextTypes = {
@@ -100,9 +101,11 @@ class List extends React.Component {
     };
   }
 
-  componentDidMount() {
-    loadData(this.props);
+  loadData(props) {
+    props.fetchPorts();
+    props.fetchNetworks();
   }
+
 
   getRowKey(record) {
     return record.id;
@@ -111,24 +114,24 @@ class List extends React.Component {
   handleDelete = () => {
     this.props.deletePort(this.state.selectedRows[0].id);
     this.setState({ ...this.state, selectedRows: [] });
-    this.context.router.push('/app/ports/');
+    this.context.router.push('/app/ports');
   };
 
   handleChange = (selectedRowKeys, selectedRows) => {
     this.setState({ selectedRows });
   };
 
-  handleCreateClick = (event) => {
+  handleCreateClick = event => {
     event.preventDefault();
-    this.context.router.push('/app/ports/new/step-1');
+    this.context.router.push('/app/ports/new');
   };
 
-  handleReload = (e) => {
+  handleReload = e => {
     e.preventDefault();
-    loadData(this.props);
+    this.loadData(this.props);
   };
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.props.filterPorts(e.target.value);
   };
 
@@ -149,14 +152,14 @@ class List extends React.Component {
   }
 
   render() {
-    const { port, subnet } = this.props;
+    const { port, network } = this.props;
     const { selectedRows } = this.state;
     const columns = getColumns(port.list.data);
     const rowSelection = {
       onChange: this.handleChange,
     };
 
-    const hasSubnet = subnet.count.data.count > 0;
+    const hasSubnet = network.list.data.some(net => net.subnets.length > 0);
     const hasSelected = selectedRows.length === 1;
     const hasInstance = !!(hasSelected && selectedRows[0].instance);
 
@@ -221,16 +224,20 @@ function mapStateToProps(state) {
       ...state.port,
       list: { ...state.port.list, data: getFilteredPorts(state) },
     },
-    subnet: { ...state.subnet },
+    network: { ...state.network },
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     fetchPorts: () => dispatch(fetchPorts()),
-    filterPorts: (filter) => dispatch(filterPorts(filter)),
-    fetchSubnetsCount: () => dispatch(fetchSubnetsCount()),
-    deletePort: (id) => dispatch(deletePort(id)),
+    filterPorts: filter => dispatch(filterPorts(filter)),
+    deletePort: id => dispatch(deletePort(id)),
+    fetchNetworks: () => dispatch(fetchNetworks()),
+    refresh: () => {
+      dispatch(fetchPorts(undefined, true));
+      dispatch(fetchNetworks(undefined, true));
+    },
   };
 }
 
